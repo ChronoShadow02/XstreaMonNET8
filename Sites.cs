@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace XstreaMonNET8
 {
     internal class Sites
     {
         internal static List<Class_Website> Website_List;
-
 
         internal static Class_Website Website_Find(int platformId)
         {
@@ -18,7 +16,7 @@ namespace XstreaMonNET8
                 }
             }
 
-            return null;
+            return null!;
         }
 
         internal static void WebSiteOpen(int websiteId, string userName)
@@ -40,7 +38,7 @@ namespace XstreaMonNET8
 
         internal static void WebOpen(string webAddress)
         {
-            int browser = Value_Back.get_CInteger(INI_File.Read(Parameter.INI_Common, "Browser", "Product", "-1"));
+            int browser = ValueBack.Get_CInteger(IniFile.Read(Parameter.INI_Common, "Browser", "Product", "-1"));
 
             switch (browser)
             {
@@ -132,7 +130,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Parameter.Stream_Adressen_Load");
-                return null;
+                return null!;
             }
         }
 
@@ -537,61 +535,61 @@ namespace XstreaMonNET8
         {
             Sites.Website_List =
             [
-                new Class_Website(-1, TXT.TXT_Description("Modelordner"), "", (Image)XstreaMon.My.Resources.Resources.Folder16, 0, 0,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "0", Conversions.ToString(true))),
+                new(-1, TXT.TXT_Description("Modelordner"), "", Resources.Folder16, 0, 0,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "0", true.ToString())),
                     "", "", "", "", "", false),
 
-                new Class_Website(0, "Chaturbate", Chaturbate.Site_URL(false), (Image)XstreaMon.My.Resources.Resources.Chaturbate, 250, 5000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "0", Conversions.ToString(true))),
-                    "chaturbate.", Chaturbate.Site_URL() + "{0}", "https://chaturbate.com/in/?tour=g4pe&campaign=NbZCW&track=default",
+                new(0, "Chaturbate", Chaturbate.Site_URL(false), Resources.Chaturbate, 250, 5000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "0", true.ToString())),
+                    "chaturbate.", $"{Chaturbate.Site_URL()}{{0}}", "https://chaturbate.com/in/?tour=g4pe&campaign=NbZCW&track=default",
                     "", "https://chaturbate.com/{0}", false),
 
-                new Class_Website(1, "Camsoda", "https://camsoda.com/", (Image)XstreaMon.My.Resources.Resources.Camsoda, 30000, 30000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "1", Conversions.ToString(true))),
+                new(1, "Camsoda", "https://camsoda.com/", Resources.Camsoda, 30000, 30000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "1", true.ToString())),
                     "camsoda.", "https://camsoda.com/{0}", "https://camsoda.com", "", "https://camsoda.com/{0}", true),
 
-                new Class_Website(2, "Stripchat", "https://stripchat.com/", (Image)XstreaMon.My.Resources.Resources.Stripchat, 30000, 30000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "2", Conversions.ToString(true))),
+                new(2, "Stripchat", "https://stripchat.com/", Resources.Stripchat, 30000, 30000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "2", true.ToString())),
                     "stripchat.", "https://stripchat.com/{0}", "https://stripchat.com", "&_HLS_msn={0}", "https://stripchat.com/{0}", true),
 
-                new Class_Website(3, "BongaCams", "https://bongacams.com/", (Image)XstreaMon.My.Resources.Resources.Bongacams, 250, 5000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "3", Conversions.ToString(true))),
+                new(3, "BongaCams", "https://bongacams.com/", Resources.Bongacams, 250, 5000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "3", true.ToString())),
                     "bongacams.", "https://bongacams.com/{0}", "https://bongacams.com", "", "https://bongacams.com/{0}", true),
 
-                new Class_Website(4, "Cam4", "https://cam4.com/", (Image)XstreaMon.My.Resources.Resources.Cam4, 10000, 10000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "4", Conversions.ToString(true))),
+                new(4, "Cam4", "https://cam4.com/", Resources.Cam4, 10000, 10000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "4", true.ToString())),
                     "cam4.", "https://cam4.com/{0}", "https://cam4.com/", "", "https://cam4.com/{0}", false),
 
-                new Class_Website(5, "Streamate", "https://streamate.com/", (Image)XstreaMon.My.Resources.Resources.Streammate, 20000, 20000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "5", Conversions.ToString(true))),
+                new(5, "Streamate", "https://streamate.com/", Resources.Streammate, 20000, 20000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "5", true.ToString())),
                     "streamate.", "https://streamate.com/cam/{0}", "https://streamate.com", "", "https://streamate.com/cam/{0}", false),
 
-                new Class_Website(6, "Flirt4Free", "https://flirt4free.com/", (Image)XstreaMon.My.Resources.Resources.Flirt4Free, 10000, 10000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "6", Conversions.ToString(true))),
+                new(6, "Flirt4Free", "https://flirt4free.com/", Resources.Flirt4Free, 10000, 10000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "6", true.ToString())),
                     "flirt4free.", "https://flirt4free.com/?model={0}", "https://flirt4free.com", "", "https://flirt4free.com/?model={0}", false),
 
-                new Class_Website(7, "MyFreeCams", "https://myfreecams.com/", (Image)XstreaMon.My.Resources.Resources.mfc, 500, 10000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "7", Conversions.ToString(true))),
+                new(7, "MyFreeCams", "https://myfreecams.com/", Resources.mfc, 500, 10000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "7", true.ToString())),
                     "myfreecams.", "https://myfreecams.com/#{0}", "https://myfreecams.com", "", "https://myfreecams.com/#{0}", false),
 
-                new Class_Website(8, "Jerkmate", "https://jerkmate.com/", (Image)XstreaMon.My.Resources.Resources.Jerkmate, 20000, 20000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "8", Conversions.ToString(true))),
+                new Class_Website(8, "Jerkmate", "https://jerkmate.com/", Resources.Jerkmate, 20000, 20000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "8", true.ToString())),
                     "jerkmate.", "https://jerkmate.com/cam/{0}", "https://jerkmate.com", "", "https://jerkmate.com/cam/{0}", false),
 
-                new Class_Website(9, "Cams.com", "https://cams.com/", (Image)XstreaMon.My.Resources.Resources.CamsCom, 30000, 30000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "9", Conversions.ToString(true))),
+                new(9, "Cams.com", "https://cams.com/", Resources.CamsCom, 30000, 30000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "9", true.ToString())),
                     "cams.", "https://cams.com/{0}", "https://cams.com", "", "https://cams.com/{0}", false),
 
-                new Class_Website(10, "Camster.com", "https://camster.com/", (Image)XstreaMon.My.Resources.Resources.Camster16, 10000, 10000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "10", Conversions.ToString(true))),
+                new(10, "Camster.com", "https://camster.com/", Resources.Camster16, 10000, 10000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "10", true.ToString())),
                     "camster.", "https://camster.com/?model={0}", "https://camster.com", "", "https://camster.com/?model={0}", false),
 
-                new Class_Website(11, "FreeOnesLIVE.com", "https://freeoneslive.com/", (Image)XstreaMon.My.Resources.Resources.fol16, 5000, 5000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "11", Conversions.ToString(true))),
+                new(11, "FreeOnesLIVE.com", "https://freeoneslive.com/", Resources.fol16, 5000, 5000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "11", true.ToString())),
                     "freeoneslive.", "https://freeoneslive.com/?model={0}", "https://freeoneslive.com", "", "https://freeoneslive.com/?model={0}", false),
 
-                new Class_Website(12, "eplay.com", "https://eplay.com/", (Image)XstreaMon.My.Resources.Resources.eplay16, 10000, 10000,
-                    Value_Back.get_CBoolean((object)INI_File.Read(Parameter.INI_Common, "Showall", "12", Conversions.ToString(true))),
+                new(12, "eplay.com", "https://eplay.com/", Resources.eplay16, 10000, 10000,
+                    ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Showall", "12", true.ToString())),
                     "eplay.", "https://eplay.com/{0}/live", "https://eplay.com", "", "https://eplay.com/{0}/live", false)
             ];
         }

@@ -3,30 +3,29 @@
     public class Stream_Info
     {
         internal int Bandwith { get; set; }
-        internal string Resolution { get; set; }
-        internal string Name { get; set; }
-        internal string M3U8String { get; set; }
+        internal string Resolution { get; set; } = string.Empty;
+        internal string Name { get; set; } = string.Empty;
+        internal string M3U8String { get; set; } = string.Empty;
 
         internal Stream_Info(string Stream_String)
         {
-            if (Stream_String.Length <= 0)
+            if (string.IsNullOrWhiteSpace(Stream_String))
                 return;
 
-            // Intenta obtener el ancho de banda desde la etiqueta BANDWIDTH
-            this.Bandwith = Value_Back.get_CInteger((object)VParse.HTML_Value(Stream_String.ToLower(), "bandwidth=", ","));
+            string lowered = Stream_String.ToLowerInvariant();
 
-            // Si no se encontró bandwidth, intenta deducirlo desde la resolución
-            if (this.Bandwith == 0)
-                this.Bandwith = Conversions.ToInteger(VParse.HTML_Value(Stream_String.ToLower(), "resolution=", "x"));
+            Bandwith = ValueBack.Get_CInteger(VParse.HTML_Value(lowered, "bandwidth=", ","));
 
-            // Obtiene la resolución (por ejemplo: 1280x720)
-            this.Resolution = VParse.HTML_Value(Stream_String.ToLower(), "resolution=", ",");
+            if (Bandwith == 0)
+            {
+                string resolutionBandwidth = VParse.HTML_Value(lowered, "resolution=", "x");
+                if (int.TryParse(resolutionBandwidth, out int parsedBandwidth))
+                    Bandwith = parsedBandwidth;
+            }
 
-            // Obtiene el nombre del stream (si existe)
-            this.Name = VParse.HTML_Value(Stream_String.ToLower(), "name=", "https");
-
-            // Obtiene la URL HTTPS del stream
-            this.M3U8String = "https:" + VParse.HTML_Value(Stream_String.ToLower(), "https:", "");
+            Resolution = VParse.HTML_Value(lowered, "resolution=", ",");
+            Name = VParse.HTML_Value(lowered, "name=", "https");
+            M3U8String = "https:" + VParse.HTML_Value(lowered, "https:", "");
         }
     }
 }

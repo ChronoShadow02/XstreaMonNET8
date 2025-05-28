@@ -42,10 +42,10 @@ namespace XstreaMonNET8
         {
             if (_Record_Max_Lenght == -1)
             {
-                int num = Value_Back.get_CInteger(INI_File.Read(INI_Common, "Record", "RecordTime", "-1"));
+                int num = ValueBack.Get_CInteger(IniFile.Read(INI_Common, "Record", "RecordTime", "-1"));
                 if (num == -1)
                 {
-                    INI_File.Write(INI_Common, "Directory", "Records", "30");
+                    IniFile.Write(INI_Common, "Directory", "Records", "30");
                 }
                 _Record_Max_Lenght = num;
             }
@@ -100,7 +100,7 @@ namespace XstreaMonNET8
         {
             await Task.CompletedTask;
 
-            if (Value_Back.get_CInteger(processId) <= 0)
+            if (ValueBack.Get_CInteger(processId) <= 0)
                 return false;
 
             if (!Task_Runs(processId))
