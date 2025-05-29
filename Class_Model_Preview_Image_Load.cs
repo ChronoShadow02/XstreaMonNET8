@@ -42,10 +42,10 @@
                     {
                         try
                         {
-                            int newWidth = (int)Math.Round((double)Image_Size.Height / ValueBack.Get_CInteger(original.Height) * Value_Back.get_CInteger(original.Width) - 4.0);
+                            int newWidth = (int)Math.Round((double)Image_Size.Height / ValueBack.Get_CInteger(original.Height) * ValueBack.Get_CInteger(original.Width) - 4.0);
                             int newHeight = Image_Size.Height - 4;
 
-                            Bitmap bitmap = new Bitmap(original, new Size(newWidth, newHeight));
+                            Bitmap bitmap = new(original, new Size(newWidth, newHeight));
 
                             if (Model_Class.Pro_Model_Stream_Record != null)
                             {
