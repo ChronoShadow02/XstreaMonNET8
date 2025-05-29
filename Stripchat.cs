@@ -242,5 +242,87 @@ namespace XstreaMonNET8
                 Parameter.Error_Message(ex, "Stripchat.Galerie_Movie_Download");
             }
         }
+
+        internal static async Task<Channel_Info> Profil(string modelName)
+        {
+            try
+            {
+                await Task.CompletedTask;
+
+                var channelInfo = new Channel_Info
+                {
+                    Pro_Exist = false,
+                    Pro_Website_ID = 2,
+                    Pro_Name = modelName
+                };
+
+                using var client = new HttpClient();
+                var response = await client.GetStringAsync($"https://stripchat.com/api/front/v2/models/username/{modelName.ToLower()}/cam");
+
+                string html = VParse.HTML_Value(response, "user:{user:{id:", "");
+                if (html.Length == 0)
+                    return channelInfo;
+
+                string gender = VParse.HTML_Value(html, "broadcastGender:", ",");
+                channelInfo.Pro_Gender = gender switch
+                {
+                    "female" => 1,
+                    "male" => 2,
+                    "group" => 3,
+                    "tranny" => 4,
+                    _ => 0
+                };
+
+                channelInfo.Pro_Exist = !string.IsNullOrEmpty(gender);
+
+                if (channelInfo.Pro_Exist)
+                {
+                    string birthDate = VParse.HTML_Value(html, "birthDate:", ",");
+                    if (birthDate != "null")
+                        channelInfo.Pro_Birthday = birthDate;
+
+                    string country = VParse.HTML_Value(html, "country:", ",");
+                    string region = VParse.HTML_Value(html, "region:", ",");
+                    string city = VParse.HTML_Value(html, "city:", ",");
+
+                    if (!string.IsNullOrEmpty(country) && !string.IsNullOrEmpty(region))
+                        country += ", " + region;
+
+                    if (!string.IsNullOrEmpty(city))
+                        country += ", " + city;
+
+                    channelInfo.Pro_Country = country;
+
+                    string languages = VParse.HTML_Value(html, "languages:[", "]");
+                    if (languages != "null")
+                        channelInfo.Pro_Languages = languages;
+
+                    string lastOnline = VParse.HTML_Value(html, "statusChangedAt:", "T");
+                    if (!lastOnline.StartsWith("null"))
+                        channelInfo.Pro_Last_Online = lastOnline;
+
+                    channelInfo.Pro_Profil_Beschreibung = country;
+
+                    string avatar = VParse.HTML_Value(html, "avatarUrlThumb:", ",").Trim();
+                    if (await Parameter.URL_Response(avatar))
+                    {
+                        using var webClient = new WebClient();
+                        using var stream = webClient.OpenRead(avatar);
+                        if (stream != null)
+                            channelInfo.Pro_Profil_Image = Image.FromStream(stream);
+                    }
+
+                    channelInfo.Pro_Online = (await Stripchat.Online(channelInfo.Pro_Name)) != 0;
+                }
+
+                return channelInfo;
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, $"Stripchat.Profil(Model_Name) = {modelName}");
+                return null!;
+            }
+        }
+
     }
 }

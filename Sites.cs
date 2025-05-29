@@ -84,7 +84,7 @@ namespace XstreaMonNET8
                 {
                     0 => Chaturbate.StreamAdresses(modelStream).Result,
                     1 => Camsoda.StreamAdresses(modelStream).Result,
-                    2 => Stripchat.StreamAdresses(modelStream).Result,
+                    2 => Stripchat.Stream_Adresses(modelStream).Result,
                     3 => Bongacams.StreamAdresses(modelStream).Result,
                     4 => Cam4.StreamAdresses(modelStream).Result,
                     5 => Streamate.Stream_Adresses(modelStream).Result,
@@ -113,7 +113,7 @@ namespace XstreaMonNET8
                 {
                     0 => Chaturbate.StreamAdresses(modelStream, htmlText).Result,
                     1 => Camsoda.StreamAdresses(modelStream).Result,
-                    2 => Stripchat.StreamAdresses(modelStream, htmlText).Result,
+                    2 => Stripchat.Stream_Adresses(modelStream, htmlText).Result,
                     3 => Bongacams.StreamAdresses(modelStream, htmlText).Result,
                     4 => Cam4.StreamAdresses(modelStream).Result,
                     5 => Streamate.Stream_Adresses(modelStream).Result,
