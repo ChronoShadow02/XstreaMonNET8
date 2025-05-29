@@ -1,13 +1,246 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace XstreaMonNET8
 {
-    internal class Stripchat
+    internal static class Stripchat
     {
-        //TODO: Implement Stripchat functionality
+        internal static async Task<StreamAdresses> Stream_Adresses(StreamAdresses modelStream)
+        {
+            try
+            {
+                await Task.CompletedTask;
+                string json = VParse.Replace_Space(await VParse.HTML_Load("https://stripchat.com/api/front/v2/models/username/" + modelStream.Pro_Model_Name + "/cam"));
+                if (string.IsNullOrEmpty(json))
+                    return null;
+
+                return Read_Model_Stream(Find_M3u8_Path(json), modelStream, json);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Stream_Adresses");
+                return null;
+            }
+        }
+
+        internal static async Task<StreamAdresses> Stream_Adresses(StreamAdresses modelStream, string htmlText)
+        {
+            try
+            {
+                await Task.CompletedTask;
+                return await Stream_Adresses(modelStream);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Stream_Adresses");
+                return null;
+            }
+        }
+
+        private static StreamAdresses Read_Model_Stream(string streamUrl, StreamAdresses modelStream, string txt)
+        {
+            try
+            {
+                if (streamUrl == null)
+                    return null;
+
+                string content = await VParse.HTML_Load(streamUrl, true);
+                if (string.IsNullOrEmpty(content))
+                    return null;
+
+                string[] playlist = VParse.Replace_Space(content).Split('#');
+                string chunk = Find_Chunk_File(playlist, modelStream.Pro_Qualität_ID)?.ToString();
+                modelStream.Pro_Record_Resolution = Sites.Resolution_Find(playlist, chunk);
+                modelStream.Pro_M3U8_Path = chunk?.Trim();
+                modelStream.Pro_TS_Path = null;
+                modelStream.Pro_Preview_Image = "https://img.strpst.com/thumbs/{0}/" + VParse.HTML_Value(txt, "streamName:", ",") + "_webp";
+
+                return modelStream;
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Read_Model_Stream");
+                return null;
+            }
+        }
+
+        private static string Find_M3u8_Path(string html)
+        {
+            try
+            {
+                html = html.Replace("\"", "");
+                if (html.Length == 0) return null;
+
+                string streamName = VParse.HTML_Value(html, "streamName:", ",").Replace("\\/", "/");
+                if (string.IsNullOrEmpty(streamName)) return null;
+
+                return $"https://edge-hls.doppiocdn.com/hls/{streamName}/master/{streamName}_auto.m3u8?playlistType=lowLatency";
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Find_M3U8_Path");
+                return null;
+            }
+        }
+
+        private static object Find_Chunk_File(string[] m3u8File, int qualityId)
+        {
+            string chunkFile = "";
+            int maxBandwidth = 0;
+
+            try
+            {
+                foreach (string line in m3u8File)
+                {
+                    if (line.Contains(".m3u8"))
+                    {
+                        var streamInfo = new Stream_Info(line);
+
+                        if (qualityId == 0 && streamInfo.Bandwith > maxBandwidth)
+                        {
+                            chunkFile = streamInfo.M3U8String;
+                            maxBandwidth = streamInfo.Bandwith;
+                        }
+                        else if (qualityId == 1 && line.Contains("284x160")) return line[line.IndexOf("https://")..];
+                        else if (qualityId == 2 && line.Contains("426x240")) return line[line.IndexOf("https://")..];
+                        else if (qualityId == 3 && line.Contains("854x480")) return line[line.IndexOf("https://")..];
+                        else if (qualityId == 4 && line.Contains("1280x720")) return line[line.IndexOf("https://")..];
+                    }
+                }
+
+                if (string.IsNullOrEmpty(chunkFile) && m3u8File.Length > 1)
+                {
+                    foreach (string line in m3u8File)
+                    {
+                        if (line.Contains(".m3u8"))
+                        {
+                            var streamInfo = new Stream_Info(line);
+                            if (streamInfo.Bandwith > maxBandwidth)
+                            {
+                                chunkFile = streamInfo.M3U8String;
+                                maxBandwidth = streamInfo.Bandwith;
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(chunkFile))
+                    {
+                        var last = m3u8File.LastOrDefault(l => l.Contains("https://"));
+                        chunkFile = last[last.IndexOf("https://")..];
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Find_Chunk_File");
+            }
+
+            return chunkFile;
+        }
+
+        internal static async Task<int> Online(string modelName)
+        {
+            try
+            {
+                await Task.CompletedTask;
+
+                var model = await Class_Model_List.Class_Model_Find(0, modelName);
+                if (model != null && await Parameter.URL_Response(model.Pro_Model_M3U8)) return 1;
+
+                string result = await VParse.HTML_Load($"https://stripchat.com/api/front/v2/models/username/{modelName}/cam");
+                string text = VParse.Replace_Space(result).Replace("\"", "");
+
+                if (text.Contains("isCamAvailable:true")) return 1;
+                if (!text.Contains("show:null"))
+                {
+                    if (text.Contains("mode:groupShow")) return 5;
+                    if (text.Contains("mode:virtualPrivate")) return 2;
+                }
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, $"Stripchat.Online({modelName})");
+                return 0;
+            }
+        }
+
+        internal static async Task<Image> Image_FromWeb(Class_Model model)
+        {
+            await Task.CompletedTask;
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.Pro_Model_Preview_Path))
+                    return null;
+
+                string tempPath = Path.Combine(Parameter.CommonPath, "Temp");
+                Directory.CreateDirectory(tempPath);
+
+                long seconds = Convert.ToInt64(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                string path = Path.Combine(tempPath, $"{DateTime.Now.Ticks}.webp");
+
+                using WebClient client = new();
+                string downloadUrl = string.Format(model.Pro_Model_Preview_Path, seconds);
+                client.DownloadFile(downloadUrl, path);
+
+                if (File.Exists(path))
+                {
+                    WebPWrapper.WebP decoder = new();
+                    Image img = decoder.Load(path);
+                    File.Delete(path);
+                    return img;
+                }
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, $"Stripchat.Image_FromWeb({model.Pro_Model_Name})");
+            }
+
+            return null;
+        }
+
+        internal static async Task<bool> IsGalerie(string url, string html, Class_Model model)
+        {
+            await Task.CompletedTask;
+            return url.Contains("stripchat.com/collection") || url.Contains("/videos/") && html.Contains("video-player__video src=") && model != null;
+        }
+
+        internal static async void Galerie_Movie_Download(string url, string html, Class_Model model = null)
+        {
+            await Task.CompletedTask;
+
+            try
+            {
+                string downloadUrl = "";
+                string videoName = "";
+
+                if (url.Contains("/videos/") && html.Contains(".mp4"))
+                {
+                    downloadUrl = VParse.HTML_Value(html, "video-player__video src=", "></video>").Replace("amp;", "");
+                    if (await Parameter.URL_Response(downloadUrl))
+                        videoName = VParse.HTML_Value(html, "div class=media-gallery__info-title>", "</div>");
+                }
+
+                string savePath = model?.Pro_Model_Directory ?? Modul_Ordner.Ordner_Pfad();
+                if (string.IsNullOrEmpty(downloadUrl) || string.IsNullOrEmpty(savePath)) return;
+
+                Dialog_Save dlg = new()
+                {
+                    StartPosition = FormStartPosition.CenterParent,
+                    TopMost = true,
+                    Pro_Download_Path = downloadUrl,
+                    Pro_Target_Path = savePath,
+                    Pro_Class_Model = model,
+                    Pro_Target_Name = videoName
+                };
+
+                dlg.Show();
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "Stripchat.Galerie_Movie_Download");
+            }
+        }
     }
 }

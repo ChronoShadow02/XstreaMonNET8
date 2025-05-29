@@ -87,21 +87,21 @@ namespace XstreaMonNET8
                     2 => Stripchat.StreamAdresses(modelStream).Result,
                     3 => Bongacams.StreamAdresses(modelStream).Result,
                     4 => Cam4.StreamAdresses(modelStream).Result,
-                    5 => Streamate.StreamAdresses(modelStream).Result,
-                    6 => Flirt4Free.StreamAdresses(modelStream).Result,
-                    7 => MyFreeCams.StreamAdresses(modelStream).Result,
-                    8 => Jerkmate.StreamAdresses(modelStream).Result,
+                    5 => Streamate.Stream_Adresses(modelStream).Result,
+                    6 => Flirt4Free.Stream_Adresses(modelStream).Result,
+                    7 => MyFreeCams.Stream_Adresses(modelStream).Result,
+                    8 => Jerkmate.Stream_Adresses(modelStream).Result,
                     9 => CamsCom.StreamAdresses(modelStream).Result,
-                    10 => Camster.StreamAdresses(modelStream).Result,
-                    11 => Freeoneslive.StreamAdresses(modelStream).Result,
-                    12 => EPlay.StreamAdresses(modelStream).Result,
+                    10 => Camster.Stream_Adresses(modelStream).Result,
+                    11 => Freeoneslive.Stream_Adresses(modelStream).Result,
+                    12 => EPlay.Stream_Adresses(modelStream).Result,
                     _ => null
                 };
             }
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Parameter.Stream_Adressen_Load");
-                return null;
+                return null!;
             }
         }
 
@@ -118,12 +118,12 @@ namespace XstreaMonNET8
                     4 => Cam4.StreamAdresses(modelStream).Result,
                     5 => Streamate.Stream_Adresses(modelStream).Result,
                     6 => Flirt4Free.Stream_Adresses(modelStream).Result,
-                    7 => MyFreeCams.StreamAdresses(modelStream).Result,
+                    7 => MyFreeCams.Stream_Adresses(modelStream).Result,
                     8 => Jerkmate.Stream_Adresses(modelStream).Result,
                     9 => CamsCom.StreamAdresses(modelStream).Result,
                     10 => Camster.Stream_Adresses(modelStream).Result,
-                    11 => Freeoneslive.StreamAdresses(modelStream).Result,
-                    12 => EPlay.StreamAdresses(modelStream).Result,
+                    11 => Freeoneslive.Stream_Adresses(modelStream).Result,
+                    12 => EPlay.Stream_Adresses(modelStream).Result,
                     _ => null
                 };
             }
