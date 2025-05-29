@@ -39,7 +39,7 @@
                 int proOnline = 0;
                 foreach (Class_Model model in Model_List)
                 {
-                    if (model.get_Pro_Model_Online())
+                    if (model.Get_Pro_Model_Online())
                         proOnline++;
                 }
                 return proOnline;

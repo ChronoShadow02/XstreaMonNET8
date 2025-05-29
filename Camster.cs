@@ -1,108 +1,98 @@
 ﻿using System.Net;
+using System.Net.Http;
 
 namespace XstreaMonNET8
 {
     internal sealed class Camster
     {
-        internal static async Task<StreamAdresses> Stream_Adresses(StreamAdresses Model_Stream)
+        private static readonly HttpClient httpClient = new();
+
+        internal static async Task<StreamAdresses?> Stream_Adresses(StreamAdresses modelStream)
         {
             try
             {
-                await Task.CompletedTask;
-                string result = VParse.HTML_Load("https://www.camster.com/ws/rooms/check-model-status.php?model_name=" + Model_Stream.Pro_Model_Name, true).Result;
-                if (result.Length <= 0 || result.IndexOf("online,model_id:") <= -1)
-                    return null!;
+                string statusUrl = $"https://www.camster.com/ws/rooms/check-model-status.php?model_name={modelStream.Pro_Model_Name}";
+                string statusResult = await VParse.HTML_Load(statusUrl, true);
 
-                string URLString = "https://hls.vscdns.com/manifest.m3u8?key=nil&provider=cdn5&is_ll=true&model_id=" + VParse.HTML_Value(result, "online,model_id:", ",DATA", false);
-                string[] strArray1 = VParse.HTML_Load(URLString, true).Result.Split('#');
-                string ChunkString = "";
-                string str1 = "";
+                if (string.IsNullOrEmpty(statusResult) || !statusResult.Contains("online,model_id:"))
+                    return null;
 
-                foreach (string str2 in strArray1)
+                string modelId = VParse.HTML_Value(statusResult, "online,model_id:", ",DATA", false);
+                string m3u8Url = $"https://hls.vscdns.com/manifest.m3u8?key=nil&provider=cdn5&is_ll=true&model_id={modelId}";
+                string m3u8Content = await VParse.HTML_Load(m3u8Url, true);
+
+                string[] lines = m3u8Content.Split('#');
+                string chunkPath = string.Empty;
+                string audioPath = string.Empty;
+
+                foreach (var line in lines)
                 {
-                    if (str2.StartsWith("EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID"))
+                    if (line.StartsWith("EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID"))
                     {
-                        str1 = str2.Substring(str2.IndexOf("URI=") + 4);
-                        if (str1.IndexOf(',') > -1)
-                        {
-                            str1 = str1.Substring(0, str1.LastIndexOf(","));
-                            break;
-                        }
+                        int uriIndex = line.IndexOf("URI=") + 4;
+                        audioPath = line.Substring(uriIndex);
+                        if (audioPath.Contains(','))
+                            audioPath = audioPath.Substring(0, audioPath.LastIndexOf(','));
                         break;
                     }
                 }
 
-                foreach (string str3 in strArray1)
+                foreach (var line in lines)
                 {
-                    switch (Model_Stream.Pro_Qualität_ID)
+                    bool found = modelStream.Pro_Qualität_ID switch
                     {
-                        case 0:
-                            if (strArray1.Last().IndexOf(".m3u8") > -1)
-                            {
-                                ChunkString = strArray1.Last().Substring(strArray1.Last().IndexOf("chunklist"));
-                                goto label_23;
-                            }
+                        0 => lines.Last().Contains(".m3u8"),
+                        1 => line.Contains("480x270"),
+                        2 => line.Contains("640x360"),
+                        3 => line.Contains("1280x720"),
+                        4 => line.Contains("1920x1080"),
+                        _ => false
+                    };
+
+                    if (found)
+                    {
+                        string source = modelStream.Pro_Qualität_ID == 0 ? lines.Last() : line;
+                        int chunkIndex = source.IndexOf("chunklist");
+                        if (chunkIndex > -1)
+                        {
+                            chunkPath = source.Substring(chunkIndex);
                             break;
-                        case 1:
-                            if (str3.IndexOf("480x270") > -1)
-                            {
-                                ChunkString = str3.Substring(str3.IndexOf("chunklist"));
-                                goto label_23;
-                            }
-                            break;
-                        case 2:
-                            if (str3.IndexOf("640x360") > -1)
-                            {
-                                ChunkString = str3.Substring(str3.IndexOf("chunklist"));
-                                goto label_23;
-                            }
-                            break;
-                        case 3:
-                            if (str3.IndexOf("1280x720") > -1)
-                            {
-                                ChunkString = str3.Substring(str3.IndexOf("chunklist"));
-                                goto label_23;
-                            }
-                            break;
-                        case 4:
-                            if (str3.IndexOf("1920x1080") > -1)
-                            {
-                                ChunkString = str3.Substring(str3.IndexOf("chunklist"));
-                                goto label_23;
-                            }
-                            break;
+                        }
                     }
                 }
 
-            label_23:
-                Model_Stream.Pro_M3U8_Path = "https://hls.vscdns.com/" + ChunkString.Trim();
-                Model_Stream.Pro_Audio_Path = "https://hls.vscdns.com/" + str1.Trim();
-                Model_Stream.Pro_FFMPEG_Path = URLString;
-                Model_Stream.Pro_Record_Resolution = Sites.Resolution_Find(strArray1, ChunkString);
-                Model_Stream.Pro_TS_Path = "";
-                return Model_Stream;
+                modelStream.Pro_M3U8_Path = $"https://hls.vscdns.com/{chunkPath.Trim()}";
+                modelStream.Pro_Audio_Path = $"https://hls.vscdns.com/{audioPath.Trim()}";
+                modelStream.Pro_FFMPEG_Path = m3u8Url;
+                modelStream.Pro_Record_Resolution = Sites.Resolution_Find(lines, chunkPath);
+                modelStream.Pro_TS_Path = "";
+
+                return modelStream;
             }
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Camster.Stream_Adresses");
-                return null!;
+                return null;
             }
         }
 
-        internal static async Task<int> Online(string Model_Name)
+        internal static async Task<int> Online(string modelName)
         {
             try
             {
-                await Task.CompletedTask;
-                string HTML_Page = VParse.HTML_Load("https://www.camster.com/ws/rooms/check-model-status.php?model_name=" + Model_Name, true).Result.Replace("\"", "");
-                if (HTML_Page.Length <= 0)
+                string statusUrl = $"https://www.camster.com/ws/rooms/check-model-status.php?model_name={modelName}";
+                string htmlPage = await VParse.HTML_Load(statusUrl, true);
+
+                htmlPage = htmlPage.Replace("\"", "");
+                if (string.IsNullOrWhiteSpace(htmlPage) || !htmlPage.ToLower().Contains("status:online"))
                     return 0;
 
-                if (HTML_Page.ToLower().IndexOf("status:online") <= -1)
-                    return 0;
+                string modelId = VParse.HTML_Value(htmlPage, "model_id:", ",DATA");
 
-                string model_id = VParse.HTML_Value(HTML_Page, "model_id:", ",DATA");
-                return Parameter.URL_Response("https://hls.vscdns.com/manifest.m3u8?key=nil&provider=cdn5&is_ll=true&model_id=" + model_id).Result ? 1 : 0;
+                string manifestUrl = $"https://hls.vscdns.com/manifest.m3u8?key=nil&provider=cdn5&is_ll=true&model_id={modelId}";
+                bool isReachable = await Parameter.URL_Response(manifestUrl);
+
+                return isReachable ? 1 : 0;
             }
             catch
             {
@@ -110,17 +100,20 @@ namespace XstreaMonNET8
             }
         }
 
-        internal static async Task<Image> Image_FromWeb(Class_Model Model_Class)
+        internal static async Task<Image?> Image_FromWeb(Class_Model model)
         {
-            await Task.CompletedTask;
             try
             {
-                string result = VParse.HTML_Load("https://www.camster.com/ws/rooms/check-model-status.php?model_name=" + Model_Class.Pro_Model_Name, true).Result;
-                if (result.Length > 0 && result.IndexOf("online,model_id:") > -1)
+                string statusUrl = $"https://www.camster.com/ws/rooms/check-model-status.php?model_name={model.Pro_Model_Name}";
+                string result = await VParse.HTML_Load(statusUrl, true);
+
+                if (!string.IsNullOrWhiteSpace(result) && result.Contains("online,model_id:"))
                 {
-                    string address = "https://live-screencaps.vscdns.com/" + VParse.HTML_Value(result, "online,model_id:", ",DATA", false) + "-desktop.jpg";
-                    using WebClient webClient = new();
-                    using MemoryStream ms = new(webClient.DownloadData(address));
+                    string modelId = VParse.HTML_Value(result, "online,model_id:", ",DATA", false);
+                    string imageUrl = $"https://live-screencaps.vscdns.com/{modelId}-desktop.jpg";
+
+                    byte[] imageData = await httpClient.GetByteArrayAsync(imageUrl);
+                    using MemoryStream ms = new(imageData);
                     return Image.FromStream(ms);
                 }
             }
@@ -129,86 +122,97 @@ namespace XstreaMonNET8
                 Parameter.Error_Message(ex, "Camster.Image_FromWeb");
             }
 
-            return null!;
+            return null;
         }
 
-        internal static async Task<Channel_Info> Profil(string Model_Name)
+        internal static async Task<Channel_Info> Profil(string modelName)
         {
-            await Task.CompletedTask;
-            Channel_Info channelInfo1 = new();
+            Channel_Info info = new()
+            {
+                Pro_Exist = false,
+                Pro_Website_ID = 10,
+                Pro_Name = modelName
+            };
+
             try
             {
-                channelInfo1.Pro_Exist = false;
-                channelInfo1.Pro_Website_ID = 10;
-                channelInfo1.Pro_Name = Model_Name;
+                string url = $"https://www.camster.com/models/bios/{modelName.ToLower()}/about.php";
+                string result = await VParse.HTML_Load(url, true);
 
-                string result = VParse.HTML_Load("https://www.camster.com/models/bios/" + Model_Name.ToLower() + "/about.php").Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    return info;
 
-                if (result.Length > 0)
+                string genderUrl = VParse.HTML_Value(result, "var listsUrl", ";");
+
+                info.Pro_Gender = genderUrl.Contains("/girls/") ? 1 :
+                                  genderUrl.Contains("/guys/") ? 2 :
+                                  genderUrl.Contains("/trans/") ? 4 : 0;
+
+                info.Pro_Exist = genderUrl.Length > 0;
+
+                if (!info.Pro_Exist)
+                    return info;
+
+                info.Pro_Country = VParse.HTML_Value(result, "<div>Location:</div><div>", "</div>");
+                info.Pro_Profil_Beschreibung = info.Pro_Country;
+
+                string birthdayString = VParse.HTML_Value(result, "<div>Birthday:</div><div>", "</div>");
+                if (!string.IsNullOrWhiteSpace(birthdayString))
                 {
-                    string str1 = VParse.HTML_Value(result, "var listsUrl", ";");
-                    channelInfo1.Pro_Gender = str1.Contains("/girls/") ? 1 :
-                                               str1.Contains("/guys/") ? 2 :
-                                               str1.Contains("/trans/") ? 4 : 0;
-                    channelInfo1.Pro_Exist = str1.Length > 0;
+                    int month = ValueBack.Month_From_String(birthdayString);
+                    int day = ValueBack.Get_Int_From_String(birthdayString);
+                    int age = ValueBack.Get_Int_From_String(VParse.HTML_Value(result, "<div>Age:</div><div>", "</div>"));
+                    int year = DateTime.Today.Year - age;
+                    if (DateTime.Now < new DateTime(DateTime.Now.Year, month, day))
+                        year--;
 
-                    if (channelInfo1.Pro_Exist)
-                    {
-                        channelInfo1.Pro_Country = VParse.HTML_Value(result, "<div>Location:</div><div>", "</div>");
-                        channelInfo1.Pro_Profil_Beschreibung = channelInfo1.Pro_Country;
-
-                        string Item_String = VParse.HTML_Value(result, "<div>Birthday:</div><div>", "</div>");
-                        if (Item_String.Length > 0)
-                        {
-                            int month = ValueBack.Month_From_String(Item_String);
-                            int day = ValueBack.Get_Int_From_String(Item_String);
-                            int age = ValueBack.Get_Int_From_String(VParse.HTML_Value(result, "<div>Age:</div><div>", "</div>"));
-                            int year = DateTime.Today.Year - age;
-                            if (DateTime.Compare(new DateTime(DateTime.Now.Year, month, day), DateTime.Now) > 0)
-                                year--;
-                            channelInfo1.Pro_Birthday = new DateTime(year, month, day);
-                        }
-
-                        string Left = VParse.HTML_Value(result, "<div>Languages:</div><div>", "</div>");
-                        while (Left.IndexOf("<a href=") > 0)
-                        {
-                            int start = Left.IndexOf("<");
-                            int end = Left.IndexOf(">", start);
-                            Left = Left.Remove(start, end - start + 1);
-                            if (Left.IndexOf("</a>") > 0)
-                                Left = Left.Remove(Left.IndexOf("</a>"), 4);
-                        }
-
-                        if (Left.StartsWith(" "))
-                            Left = Left.Substring(1);
-
-                        if (!Left.Equals("null", StringComparison.OrdinalIgnoreCase))
-                            channelInfo1.Pro_Languages = Left;
-
-                        channelInfo1.Pro_Profil_Beschreibung += (channelInfo1.Pro_Profil_Beschreibung.Length > 0 ? " " : "") +
-                                                                TXT.TXT_Description("Alter") + ": " +
-                                                                VParse.HTML_Value(result, "<div>Age:</div><div>", "</div>");
-
-                        channelInfo1.Pro_Last_Online = VParse.HTML_Value(result, "<div>Last Online:</div><div>", "</div>").Trim();
-
-                        string str3 = VParse.HTML_Value(result, "<img class=model-photo src=", "/>").Trim();
-
-                        if (await Parameter.URL_Response(str3))
-                        {
-                            using HttpClient httpClient = new();
-                            using Stream stream = await httpClient.GetStreamAsync(str3);
-                            channelInfo1.Pro_Profil_Image = Image.FromStream(stream);
-                        }
-                        channelInfo1.Pro_Online = Camster.Online(channelInfo1.Pro_Name).Result == 1;
-                    }
+                    info.Pro_Birthday = new DateTime(year, month, day);
                 }
 
-                return channelInfo1;
+                string languages = VParse.HTML_Value(result, "<div>Languages:</div><div>", "</div>");
+
+                while (languages.Contains("<a href="))
+                {
+                    int start = languages.IndexOf("<");
+                    int end = languages.IndexOf(">", start);
+                    if (start >= 0 && end > start)
+                        languages = languages.Remove(start, end - start + 1);
+
+                    int close = languages.IndexOf("</a>");
+                    if (close >= 0)
+                        languages = languages.Remove(close, 4);
+                }
+
+                languages = languages.TrimStart();
+                if (!languages.Equals("null", StringComparison.OrdinalIgnoreCase))
+                    info.Pro_Languages = languages;
+
+                string ageText = VParse.HTML_Value(result, "<div>Age:</div><div>", "</div>");
+                if (!string.IsNullOrWhiteSpace(ageText))
+                {
+                    if (!string.IsNullOrWhiteSpace(info.Pro_Profil_Beschreibung))
+                        info.Pro_Profil_Beschreibung += " ";
+                    info.Pro_Profil_Beschreibung += TXT.TXT_Description("Alter") + ": " + ageText;
+                }
+
+                info.Pro_Last_Online = VParse.HTML_Value(result, "<div>Last Online:</div><div>", "</div>").Trim();
+
+                string imageUrl = VParse.HTML_Value(result, "<img class=model-photo src=", "/>").Trim();
+
+                if (await Parameter.URL_Response(imageUrl))
+                {
+                    using Stream stream = await httpClient.GetStreamAsync(imageUrl);
+                    info.Pro_Profil_Image = Image.FromStream(stream);
+                }
+
+                info.Pro_Online = await Camster.Online(info.Pro_Name) == 1;
+
+                return info;
             }
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Camster.Profil");
-                return channelInfo1;
+                return info;
             }
         }
     }

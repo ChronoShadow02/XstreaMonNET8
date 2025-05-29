@@ -1,12 +1,12 @@
 ﻿using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
-using System.Text;
 
 namespace XstreaMonNET8
 {
-    public class Class_Stream_Record
+    public class Class_Stream_Record : IDisposable
     {
+        private bool disposedValue;
         internal int ProzessID;
         internal Guid Record_GUID;
 
@@ -18,127 +18,143 @@ namespace XstreaMonNET8
         internal DateTime Pro_Record_Ende { get; set; }
         internal int Pro_Record_PID { get; set; }
         internal int Pro_Auflösung { get; set; }
-        internal object Pro_Maschine { get; set; }
+        private object _Pro_Maschine;
+        internal object Pro_Maschine
+        {
+            get => _Pro_Maschine;
+            set => _Pro_Maschine = value;
+        }
+
         internal bool Pro_Favorite { get; set; }
         internal int Pro_Website_ID { get; set; }
         internal Class_Decoder_Item Pro_Decoder_item { get; set; }
         internal string Pro_Stream_Extension { get; set; }
+
+        internal event Stream_RunEventHandler Stream_Run;
+        internal event Stream_StopEventHandler Stream_Stop;
 
         public Class_Stream_Record()
         {
             ProzessID = 0;
         }
 
-        public Class_Stream_Record(Class_Model Model_Class)
+        internal Class_Stream_Record(Class_Model Model_Class)
         {
-            ProzessID = 0;
-
+            this.ProzessID = 0;
             try
             {
-                string str1 = File_Name_Generate(Model_Class);
-                Pro_Decoder_item = Decoder.Decoder_Find(Value_Back.get_CInteger(Model_Class.Pro_Decoder));
-                if (Pro_Decoder_item == null || Model_Class.Pro_Model_M3U8 == null)
+                string str1 = this.File_Name_Generate(Model_Class);
+                this.Pro_Decoder_item = Decoder.Decoder_Find(ValueBack.Get_CInteger((object)Model_Class.Pro_Decoder));
+                if (this.Pro_Decoder_item == null || Model_Class.Pro_Model_M3U8 == null)
                     return;
 
-                string m3u8 = VParse.GetPOST(Model_Class.Pro_Model_M3U8, "True").Result;
-                if (string.IsNullOrEmpty(m3u8))
-                    m3u8 = VParse.Chrome_Load(Model_Class.Pro_Model_M3U8, true).Result;
+                string str2 = null;
+                if (string.IsNullOrEmpty(str2))
+                    str2 = VParse.GetPOST(Model_Class.Pro_Model_M3U8, true.ToString()).Result;
+                if (string.IsNullOrEmpty(str2))
+                    str2 = VParse.Chrome_Load(Model_Class.Pro_Model_M3U8, true).Result;
 
-                string[] lines = m3u8?.Split('\n') ?? Array.Empty<string>();
-                string extension = Pro_Decoder_item.Decoder_Extension;
+                string[] strArray1 = str2?.Split('\n');
+                string str3 = this.Pro_Decoder_item.Decoder_Extension;
 
-                foreach (string line in lines)
+                if (strArray1 != null)
                 {
-                    if (line.StartsWith("#EXT-X-MAP:URI="))
+                    foreach (string str4 in strArray1)
                     {
-                        string cleaned = line.Replace("\"", "");
-                        extension = cleaned.Substring(cleaned.LastIndexOf('.'));
-                        break;
-                    }
-
-                    if (line.StartsWith("http") || line.StartsWith("media") || line.Contains(".ts"))
-                    {
-                        string temp = line.Replace("\"", "");
-                        int dotIndex = temp.LastIndexOf('.');
-                        if (dotIndex > -1)
+                        if (str4.StartsWith("#EXT-X-MAP:URI="))
                         {
-                            extension = temp.Substring(dotIndex);
-                            int queryIndex = extension.IndexOf('?');
-                            if (queryIndex > -1)
-                                extension = extension.Substring(0, queryIndex);
+                            str3 = str4.Replace("\"", "").Substring(str4.Replace("\"", "").LastIndexOf('.'));
+                            break;
                         }
-                        break;
+                        if (str4.StartsWith("http") || str4.StartsWith("media") || str4.Contains(".ts"))
+                        {
+                            string str5 = str4.Replace("\"", "");
+                            str5 = str5.Substring(str5.LastIndexOf('.'));
+                            if (str5.Contains("?"))
+                                str5 = str5.Substring(0, str5.IndexOf('?'));
+                            str3 = str5;
+                            break;
+                        }
                     }
                 }
 
-                if (!extension.StartsWith(".ts") && !extension.StartsWith(".mp4"))
-                    extension = ".mp4";
+                if (!str3.StartsWith(".ts") && !str3.StartsWith(".mp4"))
+                    str3 = ".mp4";
 
-                string fullFileName = Modul_Ordner.DateiName(Model_Class.Pro_Model_Directory, str1 + Pro_Decoder_item.Decoder_Extension);
-                if (fullFileName == null)
-                    return;
+                string str6 = Modul_Ordner.DateiName(Model_Class.Pro_Model_Directory, str1 + this.Pro_Decoder_item.Decoder_Extension);
+                if (str6 == null) return;
 
-                var driveInfo = new Class_Driveinfo(Model_Class.Pro_Model_Directory);
-                if (!driveInfo.Letter.StartsWith("\\\\") && (driveInfo.Total_Size == 0.0 || driveInfo.Freespace / 1024.0 / 1024.0 < 1024.0))
+                Class_Driveinfo classDriveinfo = new(Model_Class.Pro_Model_Directory);
+                if (!classDriveinfo.Letter.StartsWith("\\\\") &&
+                    (classDriveinfo.Total_Size == 0.0 || classDriveinfo.Freespace / 1024.0 / 1024.0 < 1024.0))
                 {
-                    ProzessID = 0;
+                    this.ProzessID = 0;
                 }
                 else
                 {
-                    bool needsReload = !Parameter.URL_Response(Model_Class.Pro_Model_M3U8).Result;
-                    bool validAudio = string.IsNullOrEmpty(Model_Class.Pro_Model_Audio_Path) || Parameter.URL_Response(Model_Class.Pro_Model_Audio_Path).Result;
-                    if (needsReload || !validAudio)
+                    bool noStream = !Parameter.URL_Response(Model_Class.Pro_Model_M3U8).Result;
+                    bool noAudio = string.IsNullOrEmpty(Model_Class.Pro_Model_Audio_Path) ||
+                                   !Parameter.URL_Response(Model_Class.Pro_Model_Audio_Path).Result;
+
+                    if (noStream || noAudio)
                         Model_Class.Model_Stream_Adressen_Load();
 
-                    if (!string.IsNullOrEmpty(Model_Class.Pro_Model_M3U8) && Model_Class.get_Pro_Model_Online(true))
+                    if (!string.IsNullOrEmpty(Model_Class.Pro_Model_M3U8) && Model_Class.Get_Pro_Model_Online(true))
                     {
-                        bool convert = (Model_Class.Pro_SaveFormat.Pro_ID > 0 ? Model_Class.Pro_SaveFormat.Pro_Speicherformat_File_Ext : Pro_Decoder_item.Decoder_Extension) != extension;
-                        ProzessID = Stream_Record_Start(Model_Class, fullFileName, convert).Result;
+                        string ext = Model_Class.Pro_SaveFormat.Pro_ID > 0
+                            ? Model_Class.Pro_SaveFormat.Pro_Speicherformat_File_Ext
+                            : this.Pro_Decoder_item.Decoder_Extension;
+
+                        this.ProzessID = this.Stream_Record_Start(Model_Class, str6, ext != str3).Result;
                     }
                 }
 
-                if (ProzessID <= 0)
+                if (this.ProzessID <= 0)
                     return;
 
-                Record_GUID = Guid.NewGuid();
-                string streamExt = Model_Class.Pro_SaveFormat.Pro_ID > 0 ? Model_Class.Pro_SaveFormat.Pro_Speicherformat_File_Ext : extension;
+                this.Record_GUID = Guid.NewGuid();
+                string str7 = Model_Class.Pro_SaveFormat.Pro_ID > 0
+                    ? Model_Class.Pro_SaveFormat.Pro_Speicherformat_File_Ext
+                    : str3;
 
-                using var connection = new OleDbConnection(Database_Connect.Aktiv_Datenbank());
-                using var adapter = new OleDbDataAdapter("Select * From DT_Record where Record_GUID = '" + Record_GUID.ToString() + "'", connection.ConnectionString);
-                using var builder = new OleDbCommandBuilder(adapter);
-                using var ds = new DataSet();
-
-                connection.Open();
-                if (connection.State == ConnectionState.Open)
+                using OleDbConnection oleDbConnection = new OleDbConnection
                 {
-                    adapter.Fill(ds, "DT_Records");
-                    connection.Close();
+                    ConnectionString = Database_Connect.Aktiv_Datenbank()
+                };
+                using OleDbDataAdapter adapter = new OleDbDataAdapter("Select * From DT_Record where Record_GUID = '" + this.Record_GUID + "'", oleDbConnection.ConnectionString);
+                using OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter);
+                using DataSet dataSet = new DataSet();
 
-                    var row = ds.Tables[0].NewRow();
-                    row["Record_GUID"] = Record_GUID;
+                oleDbConnection.Open();
+                if (oleDbConnection.State == ConnectionState.Open)
+                {
+                    adapter.Fill(dataSet, "DT_Records");
+                    oleDbConnection.Close();
+
+                    DataRow row = dataSet.Tables[0].NewRow();
+                    row["Record_GUID"] = this.Record_GUID;
                     row["User_GUID"] = Model_Class.Pro_Model_GUID;
                     row["User_Name"] = Model_Class.Pro_Model_Name;
-                    row["Record_Name"] = new FileInfo(fullFileName).Name;
+                    row["Record_Name"] = new FileInfo(str6).Name;
                     row["Record_Beginn"] = DateTime.Now;
-                    row["Record_PID"] = ProzessID;
-                    row["Maschine"] = MyProject.Computer.Name;
-                    row["Record_Convert_Ext"] = streamExt;
-                    row["Record_Encoder_ID"] = Pro_Decoder_item.Decoder_ID;
+                    row["Record_PID"] = this.ProzessID;
+                    row["Maschine"] = Environment.MachineName;
+                    row["Record_Convert_Ext"] = str7;
+                    row["Record_Encoder_ID"] = this.Pro_Decoder_item.Decoder_ID;
                     row["Record_M3U8"] = Model_Class.Pro_Model_M3U8;
+                    dataSet.Tables[0].Rows.Add(row);
+                    adapter.Update(dataSet.Tables[0]);
 
-                    ds.Tables[0].Rows.Add(row);
-                    adapter.Update(ds.Tables[0]);
+                    this.Pro_Record_GUID = this.Record_GUID;
+                    this.Pro_User_GUID = Model_Class.Pro_Model_GUID;
+                    this.Pro_User_Name = Model_Class.Pro_Model_Name;
+                    this.Pro_Recordname = Path.Combine(Model_Class.Pro_Model_Directory, str6);
+                    this.Pro_Website_ID = Model_Class.Pro_Website_ID;
+                    this.Pro_Record_PID = this.ProzessID;
+                    this.Pro_Record_Beginn = DateTime.Now;
+                    this.Pro_Stream_Extension = str7;
 
-                    Pro_Record_GUID = Record_GUID;
-                    Pro_User_GUID = Model_Class.Pro_Model_GUID;
-                    Pro_User_Name = Model_Class.Pro_Model_Name;
-                    Pro_Recordname = Path.Combine(Model_Class.Pro_Model_Directory, fullFileName);
-                    Pro_Website_ID = Model_Class.Pro_Website_ID;
-                    Pro_Record_PID = ProzessID;
-                    Pro_Record_Beginn = DateTime.Now;
-                    Pro_Stream_Extension = streamExt;
-
-                    Stream_Run?.Invoke(this);
+                    this.Stream_RunEvent?.Invoke(this);
                 }
             }
             catch (Exception ex)
@@ -147,12 +163,32 @@ namespace XstreaMonNET8
             }
         }
 
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue && disposing)
+            {
+                Pro_Record_GUID = Guid.Empty;
+                Pro_User_GUID = Guid.Empty;
+                Pro_Record_PID = 0;
+                Pro_Decoder_item = null;
+            }
+            disposedValue = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+            Parameter.FlushMemory();
+        }
+
         internal string File_Name_Generate(Class_Model Model_Class)
         {
-            string plantilla = IniFile.Read(Parameter.INI_Common, "Record", "Name", "{WK}-{Year}-{Month}-{Day}-{Hour}-{Minute}");
-            DateTime ahora = DateTime.Now;
-
-            string wk = Model_Class.Pro_Website_ID switch
+            string template = IniFile.Read(Parameter.INI_Common, "Record", "Name", "{WK}-{Year}-{Month}-{Day}-{Hour}-{Minute}");
+            DateTime now = DateTime.Now;
+            string newValue = Model_Class.Pro_Website_ID switch
             {
                 0 => "CU",
                 1 => "CS",
@@ -170,68 +206,51 @@ namespace XstreaMonNET8
                 _ => ""
             };
 
-            string year = ahora.Year.ToString();
-            string month = ahora.Month.ToString();
-            string mo = ahora.Month < 10 ? $"0{ahora.Month}" : ahora.Month.ToString();
-            string day = ahora.Day.ToString();
-            string dy = ahora.Day < 10 ? $"0{ahora.Day}" : ahora.Day.ToString();
-            string hour = ahora.Hour.ToString();
-            string ho = ahora.Hour < 10 ? $"0{ahora.Hour}" : ahora.Hour.ToString();
-            string minute = ahora.Minute.ToString();
-            string mi = ahora.Minute < 10 ? $"0{ahora.Minute}" : ahora.Minute.ToString();
-            string second = ahora.Second.ToString();
-            string se = ahora.Second < 10 ? $"0{ahora.Second}" : ahora.Second.ToString();
-            string name = string.IsNullOrEmpty(Model_Class.Pro_Model_Description) ? Model_Class.Pro_Model_Name : Model_Class.Pro_Model_Description;
+            string description = string.IsNullOrWhiteSpace(Model_Class.Pro_Model_Description)
+                ? Model_Class.Pro_Model_Name
+                : Model_Class.Pro_Model_Description;
 
-            return plantilla
-                .Replace("{WK}", wk)
-                .Replace("{Year}", year)
-                .Replace("{Month}", month)
-                .Replace("{MO}", mo)
-                .Replace("{Day}", day)
-                .Replace("{DY}", dy)
-                .Replace("{Hour}", hour)
-                .Replace("{HO}", ho)
-                .Replace("{Minute}", minute)
-                .Replace("{MI}", mi)
-                .Replace("{Seconds}", second)
-                .Replace("{SE}", se)
-                .Replace("{Name}", name);
+            return template
+                .Replace("{WK}", newValue)
+                .Replace("{Year}", now.Year.ToString())
+                .Replace("{Month}", now.Month.ToString())
+                .Replace("{MO}", now.Month.ToString("D2"))
+                .Replace("{Day}", now.Day.ToString())
+                .Replace("{DY}", now.Day.ToString("D2"))
+                .Replace("{Hour}", now.Hour.ToString())
+                .Replace("{HO}", now.Hour.ToString("D2"))
+                .Replace("{Minute}", now.Minute.ToString())
+                .Replace("{MI}", now.Minute.ToString("D2"))
+                .Replace("{Seconds}", now.Second.ToString())
+                .Replace("{SE}", now.Second.ToString("D2"))
+                .Replace("{Name}", description);
         }
 
         internal async Task<int> Stream_Record_Start(Class_Model Model_Class, string File_Name, bool Convert)
         {
             await Task.CompletedTask;
-
             try
             {
                 string filePath = Path.Combine(Model_Class.Pro_Model_Directory, File_Name);
                 if (!Directory.Exists(Model_Class.Pro_Model_Directory))
                     Directory.CreateDirectory(Model_Class.Pro_Model_Directory);
 
-                int num = 0;
-
-                this.Pro_Decoder_item = Decoder.Decoder_Find(Value_Back.get_CInteger(Model_Class.Pro_Decoder));
-
-                if (!string.IsNullOrEmpty(Model_Class.Pro_Model_M3U8))
+                int pid = 0;
+                Pro_Decoder_item = Decoder.Decoder_Find(ValueBack.Get_CInteger(Model_Class.Pro_Decoder));
+                if (!string.IsNullOrWhiteSpace(Model_Class.Pro_Model_M3U8))
                 {
-                    int decoderId = ValueBack.Get_CInteger(Model_Class.Pro_Decoder);
-
-                    if (decoderId == 0)
-                    {
-                        num = Class_Stream_Record.TS_Record(Model_Class, File_Name, Convert);
-                    }
-                    else if (decoderId == 1 || decoderId == 2)
-                    {
-                        num = this.FF_Record(Model_Class, filePath, this.Pro_Decoder_item);
-                    }
+                    int decoder = ValueBack.Get_CInteger(Model_Class.Pro_Decoder);
+                    if (decoder == 0)
+                        pid = TS_Record(Model_Class, File_Name, Convert);
+                    else if (decoder == 1 || decoder == 2)
+                        pid = FF_Record(Model_Class, filePath, Pro_Decoder_item);
                 }
 
-                return num;
+                return pid;
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, "Class_Stream_Record.Stream_Record_Start" + Model_Class.Pro_Model_Name);
+                Parameter.Error_Message(ex, $"Class_Stream_Record.Stream_Record_Start - {Model_Class.Pro_Model_Name}");
                 return 0;
             }
         }
@@ -240,52 +259,32 @@ namespace XstreaMonNET8
         {
             try
             {
-                int pid = 0;
+                if (string.IsNullOrWhiteSpace(Model_Class.Pro_Model_M3U8))
+                    return 0;
 
-                if (!string.IsNullOrEmpty(Model_Class.Pro_Model_M3U8))
+                var psi = new ProcessStartInfo
                 {
-                    string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CRStreamRec.exe");
-                    ProcessStartInfo startInfo = new()
-                    {
-                        FileName = $"\"{exePath}\""
-                    };
+                    FileName = $"\"{AppDomain.CurrentDomain.BaseDirectory}CRStreamRec.exe\"",
+                    WindowStyle = IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False") == "True" ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
+                    CreateNoWindow = IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False") != "True"
+                };
 
-                    string args = "";
-                    string debugValue = IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False");
+                var site = Sites.Website_Find(Model_Class.Pro_Website_ID);
+                var args = $" |Debug:{(psi.WindowStyle == ProcessWindowStyle.Normal ? "True" : "False")}" +
+                           $" |Site:\"{site.Pro_Name}\"" +
+                           $" |Name:\"{Model_Class.Pro_Model_Name}\"" +
+                           $" |File:\"{File_name}\"" +
+                           $" |Data:\"{Model_Class.Pro_Model_Directory}\"" +
+                           $" |Covert:{ConvertToMp4}" +
+                           $" |Res:{Model_Class.Pro_Videoqualität}" +
+                           $" |M3U8:{Model_Class.Pro_Model_M3U8}" +
+                           $" |TS:{Model_Class.Pro_Model_TS_Path}" +
+                           $" |Audio:{Model_Class.Pro_Model_Audio_Path}" +
+                           $" |AU:{Model_Class.Pro_Model_AU_Path}" +
+                           $" |Squence:\"{site.Pro_Sequence}\"";
 
-                    if (debugValue.Equals("True", StringComparison.OrdinalIgnoreCase))
-                    {
-                        args += " |Debug:True";
-                        startInfo.WindowStyle = ProcessWindowStyle.Normal;
-                        startInfo.CreateNoWindow = false;
-                    }
-                    else
-                    {
-                        args += " |Debug:False";
-                        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        startInfo.CreateNoWindow = true;
-                    }
-
-                    var site = Sites.Website_Find(Model_Class.Pro_Website_ID);
-
-                    args += $" |Site:\"{site.Pro_Name}\"";
-                    args += $" |Name:\"{Model_Class.Pro_Model_Name}\"";
-                    args += $" |File:\"{File_name}\"";
-                    args += $" |Data:\"{Model_Class.Pro_Model_Directory}\"";
-                    args += $" |Covert:{ConvertToMp4}";
-                    args += $" |Res:{Model_Class.Pro_Videoqualität}";
-                    args += $" |M3U8:{Model_Class.Pro_Model_M3U8}";
-                    args += $" |TS:{Model_Class.Pro_Model_TS_Path}";
-                    args += $" |Audio:{Model_Class.Pro_Model_Audio_Path}";
-                    args += $" |AU:{Model_Class.Pro_Model_AU_Path}";
-                    args += $" |Squence:\"{site.Pro_Sequence}\"";
-
-                    startInfo.Arguments = args;
-
-                    pid = Process.Start(startInfo)!.Id;
-                }
-
-                return pid;
+                psi.Arguments = args;
+                return Process.Start(psi)?.Id ?? 0;
             }
             catch (Exception ex)
             {
@@ -298,43 +297,27 @@ namespace XstreaMonNET8
         {
             try
             {
-                int num2 = 0;
-                this.Pro_Decoder_item = Decoder_Item;
+                Pro_Decoder_item = Decoder_Item;
+                if (string.IsNullOrWhiteSpace(Model_Class.Pro_Model_M3U8))
+                    return 0;
 
-                if (!string.IsNullOrEmpty(Model_Class.Pro_Model_M3U8))
+                string args = IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False") == "True"
+                    ? " -loglevel verbose -stats"
+                    : " -loglevel warning -stats";
+
+                string input = string.IsNullOrWhiteSpace(Model_Class.Pro_Model_FFMPEG_Path)
+                    ? Model_Class.Pro_Model_M3U8.Trim()
+                    : Model_Class.Pro_Model_FFMPEG_Path;
+
+                var psi = new ProcessStartInfo
                 {
-                    string str1 = " -loglevel warning -stats";
+                    FileName = $"\"{AppDomain.CurrentDomain.BaseDirectory}RecordStream.exe\"",
+                    Arguments = $"{args} -i \"{input}\" {Decoder_Item.Decoder_Parameter}\"{File_name}\"",
+                    WindowStyle = args.Contains("verbose") ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
+                    CreateNoWindow = !args.Contains("verbose")
+                };
 
-                    string debugFlag = IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False");
-                    if (debugFlag.Equals("True", StringComparison.OrdinalIgnoreCase))
-                        str1 = " -loglevel verbose -stats";
-
-                    string str2 = Model_Class.Pro_Model_M3U8.Trim();
-                    if (!string.IsNullOrEmpty(Model_Class.Pro_Model_FFMPEG_Path))
-                        str2 = Model_Class.Pro_Model_FFMPEG_Path;
-
-                    string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RecordStream.exe");
-                    ProcessStartInfo startInfo = new ProcessStartInfo
-                    {
-                        FileName = $"\"{exePath}\"",
-                        Arguments = $"{str1} -i \"{str2}\"{Decoder_Item.Decoder_Parameter}\"{File_name.Trim()}\""
-                    };
-
-                    if (debugFlag.Equals("True", StringComparison.OrdinalIgnoreCase))
-                    {
-                        startInfo.WindowStyle = ProcessWindowStyle.Normal;
-                        startInfo.CreateNoWindow = false;
-                    }
-                    else
-                    {
-                        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                        startInfo.CreateNoWindow = true;
-                    }
-
-                    num2 = Process.Start(startInfo)!.Id;
-                }
-
-                return num2;
+                return Process.Start(psi)?.Id ?? 0;
             }
             catch (Exception ex)
             {
@@ -345,12 +328,14 @@ namespace XstreaMonNET8
 
         internal bool Stream_Record_Stop()
         {
-            if (Parameter.Task_Quit(this.ProzessID).Result || !Parameter.Task_Runs(this.ProzessID))
+            if (Parameter.Task_Quit(ProzessID).Result || !Parameter.Task_Runs(ProzessID))
             {
                 if (!Parameter.Recording_Stop)
-                    this.Record_Nachbereitung();
+                    Record_Nachbereitung();
+
                 return true;
             }
+
             return false;
         }
 
@@ -359,23 +344,16 @@ namespace XstreaMonNET8
             await Task.CompletedTask;
             try
             {
-                if (this.Pro_Recordname == null)
-                    return;
+                if (Pro_Recordname == null) return;
 
-                bool? decoderCanConvert = this.Pro_Decoder_item?.Decoder_CanConvert;
+                bool? canConvert = Pro_Decoder_item?.Decoder_CanConvert;
+                bool extDiffers = !string.IsNullOrWhiteSpace(Pro_Stream_Extension) &&
+                                  new FileInfo(Pro_Recordname).Extension != Pro_Stream_Extension;
 
-                bool? debeConvertir = decoderCanConvert.HasValue && decoderCanConvert.Value &&
-                                      !string.IsNullOrEmpty(this.Pro_Stream_Extension);
-
-                if (debeConvertir == true &&
-                    string.Compare(Path.GetExtension(this.Pro_Recordname), this.Pro_Stream_Extension, StringComparison.OrdinalIgnoreCase) != 0)
-                {
-                    this.Record_Nachbereitung_Convert();
-                }
+                if (canConvert == true && extDiffers)
+                    Record_Nachbereitung_Convert();
                 else
-                {
-                    this.Record_Nachbereitung_DBSave();
-                }
+                    Record_Nachbereitung_DBSave();
             }
             catch (Exception ex)
             {
@@ -387,9 +365,9 @@ namespace XstreaMonNET8
         {
             try
             {
-                var videoConvert = new Video_Convert(this.Pro_Recordname, this.Pro_Stream_Extension);
-                videoConvert.Video_Convert_Ready += this.Record_Nachbereitung_DBSave;
-                this.Pro_Recordname = videoConvert.Pri_Ziel_File;
+                var converter = new Video_Convert(Pro_Recordname, Pro_Stream_Extension);
+                converter.Video_Convert_Ready += Record_Nachbereitung_DBSave;
+                Pro_Recordname = converter.Pri_Ziel_File;
             }
             catch (Exception ex)
             {
@@ -403,67 +381,46 @@ namespace XstreaMonNET8
             {
                 try
                 {
-                    if (File.Exists(this.Pro_Recordname))
+                    if (File.Exists(Pro_Recordname) &&
+                        new FileInfo(Pro_Recordname).Length < ValueBack.Get_CInteger(IniFile.Read(Parameter.INI_Common, "Record", "MinSize", "0")) * 1048576)
                     {
-                        string minSizeStr = IniFile.Read(Parameter.INI_Common, "Record", "MinSize", "0");
-                        if (int.TryParse(minSizeStr, out int minSizeMB))
-                        {
-                            long minSizeBytes = minSizeMB * 1048576L;
-                            if (new FileInfo(this.Pro_Recordname).Length < minSizeBytes)
-                            {
-                                File.Delete(this.Pro_Recordname);
-                            }
-                        }
+                        File.Delete(Pro_Recordname);
+                        return;
                     }
 
-                    using (OleDbConnection connection = new OleDbConnection(Database_Connect.Aktiv_Datenbank()))
-                    using (OleDbDataAdapter adapter = new OleDbDataAdapter($"Select * From DT_Record where Record_GUID = '{this.Record_GUID}'", connection.ConnectionString))
-                    using (OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter))
-                    using (DataSet dataSet = new DataSet())
+                    using var conn = new OleDbConnection(Database_Connect.Aktiv_Datenbank());
+                    using var adapter = new OleDbDataAdapter($"Select * From DT_Record where Record_GUID = '{Record_GUID}'", conn);
+                    using var builder = new OleDbCommandBuilder(adapter);
+                    using var ds = new DataSet();
+
+                    conn.Open();
+                    adapter.Fill(ds, "DT_Records");
+                    conn.Close();
+
+                    var table = ds.Tables["DT_Records"];
+                    if (table.Rows.Count == 1 && File.Exists(Pro_Recordname))
                     {
-                        connection.Open();
-                        if (connection.State == ConnectionState.Open)
+                        var row = table.Rows[0];
+                        using var mediaInfo = new Class_MediaInfo(Pro_Recordname, Pro_User_Name, Pro_Website_ID, Pro_Record_Beginn);
+                        row["Record_Favorit"] = Pro_Favorite;
+                        row["Record_Länge_Minuten"] = mediaInfo.Pro_Record_Länge;
+                        row["Record_Ende"] = mediaInfo.Pro_Record_Ende;
+                        row["Record_Resolution"] = mediaInfo.Pro_Record_Resolution;
+                        row["Record_FrameRate"] = mediaInfo.Pro_Record_FrameRate;
+                        row["Record_Name"] = Path.GetFileName(Pro_Recordname);
+                        adapter.Update(table);
+
+                        if (!Modul_Ordner.DateiInBenutzung(Pro_Recordname))
                         {
-                            adapter.Fill(dataSet, "DT_Records");
-                            connection.Close();
-
-                            var recordsTable = dataSet.Tables["DT_Records"];
-                            if (recordsTable!.Rows.Count == 1)
-                            {
-                                if (File.Exists(this.Pro_Recordname))
-                                {
-                                    using (var mediaInfo = new Class_MediaInfo(this.Pro_Recordname, this.Pro_User_Name, this.Pro_Website_ID, this.Pro_Record_Beginn))
-                                    {
-                                        var row = recordsTable.Rows[0];
-                                        row["Record_Favorit"] = this.Pro_Favorite;
-                                        row["Record_Länge_Minuten"] = mediaInfo.Pro_Record_Länge;
-                                        row["Record_Ende"] = mediaInfo.Pro_Record_Ende;
-                                        row["Record_Resolution"] = mediaInfo.Pro_Record_Resolution;
-                                        row["Record_FrameRate"] = mediaInfo.Pro_Record_FrameRate;
-                                        row["Record_Name"] = Path.GetFileName(this.Pro_Recordname);
-                                    }
-
-                                    adapter.Update(recordsTable);
-
-                                    if (!Modul_Ordner.DateiInBenutzung(this.Pro_Recordname))
-                                    {
-                                        this.Preview_Create();
-
-                                        string copySetting = IniFile.Read(Parameter.INI_Common, "Favorite", "Copy", "False");
-                                        if (bool.TryParse(copySetting, out bool copyEnabled) && copyEnabled && this.Pro_Favorite)
-                                        {
-                                            this.Favoriten_Copy();
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    // Si el archivo no existe pero la fila existe, se elimina la fila
-                                    recordsTable.Rows[0].Delete();
-                                    adapter.Update(recordsTable);
-                                }
-                            }
+                            Preview_Create();
+                            if (ValueBack.Get_CBoolean(IniFile.Read(Parameter.INI_Common, "Favorite", "Copy", "False")) && Pro_Favorite)
+                                Favoriten_Copy();
                         }
+                    }
+                    else if (table.Rows.Count == 1 && !File.Exists(Pro_Recordname))
+                    {
+                        table.Rows[0].Delete();
+                        adapter.Update(table);
                     }
                 }
                 catch (Exception ex)
@@ -479,12 +436,7 @@ namespace XstreaMonNET8
             {
                 try
                 {
-                    Class_Stream_Record.Preview_Files_Create(
-                        this.Pro_Recordname,
-                        this.Pro_User_Name,
-                        this.Pro_Website_ID,
-                        this.Pro_Record_Beginn
-                    );
+                    Preview_Files_Create(Pro_Recordname, Pro_User_Name, Pro_Website_ID, Pro_Record_Beginn);
                 }
                 catch (Exception ex)
                 {
@@ -499,15 +451,13 @@ namespace XstreaMonNET8
             {
                 try
                 {
-                    string destinoDirectorio = Modul_Ordner.Favoriten_Pfad();
-                    if (!Directory.Exists(destinoDirectorio))
-                        Directory.CreateDirectory(destinoDirectorio);
+                    string destFolder = Modul_Ordner.Favoriten_Pfad();
+                    if (!Directory.Exists(destFolder))
+                        Directory.CreateDirectory(destFolder);
 
-                    string nombreArchivo = new FileInfo(this.Pro_Recordname).Name;
-                    string rutaDestino = Path.Combine(destinoDirectorio, nombreArchivo);
-
-                    File.Copy(this.Pro_Recordname, rutaDestino, overwrite: true);
-                    File.Copy(this.Pro_Recordname + ".vdb", rutaDestino + ".vdb", overwrite: true);
+                    string fileName = Path.GetFileName(Pro_Recordname);
+                    File.Copy(Pro_Recordname, Path.Combine(destFolder, fileName));
+                    File.Copy(Pro_Recordname + ".vdb", Path.Combine(destFolder, fileName + ".vdb"));
                 }
                 catch (Exception ex)
                 {
@@ -521,58 +471,44 @@ namespace XstreaMonNET8
             await Task.CompletedTask;
             try
             {
-                using DataSet dataSet = new() { DataSetName = "RecordFile" };
-                DataTable table = new()
-                {
-                    TableName = "DT_RecordFile"
-                };
+                if (!File.Exists(Record_File))
+                    return;
 
-                table.Columns.Add("Channel_GUID");
-                table.Columns.Add("Channel_Name");
-                table.Columns.Add("Record_Name");
-                table.Columns.Add(nameof(Record_Beginn));
-                table.Columns.Add("Record_Ende");
-                table.Columns.Add("Record_Länge_Minuten");
-                table.Columns.Add("Record_Resolution");
-                table.Columns.Add("Record_FrameRate");
-                table.Columns.Add("Record_Site");
-                table.Columns.Add("Record_M3U8");
-                table.Columns.Add("Record_Maschine");
-                table.Columns.Add("Video_Preview", typeof(byte[]));
-                table.Columns.Add("Video_Timeline", typeof(byte[]));
-                table.Columns.Add("Video_Tiles", typeof(byte[]));
+                using var ds = new DataSet("RecordFile");
+                var dt = new DataTable("DT_RecordFile");
 
-                if (File.Exists(Record_File))
-                {
-                    try
-                    {
-                        DataRow row = table.NewRow();
-                        using Class_MediaInfo classMediaInfo = new(Record_File, Record_user_Name, Record_Website_ID, Record_Beginn);
+                dt.Columns.Add("Channel_GUID");
+                dt.Columns.Add("Channel_Name");
+                dt.Columns.Add("Record_Name");
+                dt.Columns.Add(nameof(Record_Beginn));
+                dt.Columns.Add("Record_Ende");
+                dt.Columns.Add("Record_Länge_Minuten");
+                dt.Columns.Add("Record_Resolution");
+                dt.Columns.Add("Record_FrameRate");
+                dt.Columns.Add("Record_Site");
+                dt.Columns.Add("Record_M3U8");
+                dt.Columns.Add("Record_Maschine");
+                dt.Columns.Add("Video_Preview", typeof(byte[]));
+                dt.Columns.Add("Video_Timeline", typeof(byte[]));
+                dt.Columns.Add("Video_Tiles", typeof(byte[]));
 
-                        row["Channel_Name"] = Record_user_Name;
-                        row[nameof(Record_Beginn)] = Record_Beginn;
-                        row["Record_Name"] = Path.GetFileName(Record_File);
-                        row["Record_Site"] = Record_Website_ID;
-                        row["Record_Ende"] = classMediaInfo.Pro_Record_Ende;
-                        row["Record_Länge_Minuten"] = classMediaInfo.Pro_Record_Länge;
-                        row["Record_Resolution"] = classMediaInfo.Pro_Record_Resolution;
-                        row["Record_FrameRate"] = classMediaInfo.Pro_Record_FrameRate;
-                        row["Video_Timeline"] = classMediaInfo.Pro_TimeLine_Byte;
-                        row["Video_Tiles"] = classMediaInfo.Pro_Tiles_Byte;
-                        row["Video_Preview"] = classMediaInfo.Pro_Preview_Byte;
+                using var mediaInfo = new Class_MediaInfo(Record_File, Record_user_Name, Record_Website_ID, Record_Beginn);
+                var row = dt.NewRow();
+                row["Channel_Name"] = Record_user_Name;
+                row["Record_Beginn"] = Record_Beginn;
+                row["Record_Name"] = Path.GetFileName(Record_File);
+                row["Record_Site"] = Record_Website_ID;
+                row["Record_Ende"] = mediaInfo.Pro_Record_Ende;
+                row["Record_Länge_Minuten"] = mediaInfo.Pro_Record_Länge;
+                row["Record_Resolution"] = mediaInfo.Pro_Record_Resolution;
+                row["Record_FrameRate"] = mediaInfo.Pro_Record_FrameRate;
+                row["Video_Timeline"] = mediaInfo.Pro_TimeLine_Byte;
+                row["Video_Tiles"] = mediaInfo.Pro_Tiles_Byte;
+                row["Video_Preview"] = mediaInfo.Pro_Preview_Byte;
 
-                        table.Rows.Add(row);
-                        dataSet.Tables.Add(table);
-                        dataSet.WriteXml(Record_File + ".vdb", XmlWriteMode.WriteSchema);
-                    }
-                    catch (Exception ex)
-                    {
-                        Parameter.Error_Message(ex, "Class_Stream_Record.Video_File_Info - " + Record_File);
-                    }
-                }
-
-                table.Dispose();
-                dataSet.Dispose();
+                dt.Rows.Add(row);
+                ds.Tables.Add(dt);
+                ds.WriteXml(Record_File + ".vdb", XmlWriteMode.WriteSchema);
             }
             catch (Exception ex)
             {
@@ -580,11 +516,7 @@ namespace XstreaMonNET8
             }
         }
 
-        // Eventos
-        internal event Stream_RunEventHandler Stream_Run;
-        internal event Stream_StopEventHandler Stream_Stop;
-
-        internal delegate void Stream_RunEventHandler(Class_Stream_Record record);
-        internal delegate void Stream_StopEventHandler(Class_Stream_Record record);
+        internal delegate void Stream_RunEventHandler(Class_Stream_Record Record_Class);
+        internal delegate void Stream_StopEventHandler(Class_Stream_Record Record_Class);
     }
 }

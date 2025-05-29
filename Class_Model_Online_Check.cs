@@ -57,7 +57,7 @@ namespace XstreaMonNET8
 
         internal DateTime BGW_Last_Check { get; set; }
 
-        internal bool get_Pro_Model_Online(bool Check = false)
+        internal bool Get_Pro_Model_Online(bool Check = false)
         {
             return !(Check || BGW_Last_Check == DateTime.MinValue)
                 ? Pri_Model_Online
@@ -155,10 +155,10 @@ namespace XstreaMonNET8
                 if (!Pri_CheckTimer.Enabled)
                     Pri_CheckTimer.Start();
 
-                if ((BGW_Check > 0) != get_Pro_Model_Online())
+                if ((BGW_Check > 0) != Get_Pro_Model_Online())
                 {
                     Pri_Model_Online = BGW_Check > 0;
-                    Online_Changed?.Invoke(get_Pro_Model_Online());
+                    Online_Changed?.Invoke(Get_Pro_Model_Online());
                 }
 
                 if (BGW_Check != BGW_Last_Online_Status)
