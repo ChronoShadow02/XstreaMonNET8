@@ -2,7 +2,7 @@
 {
     public class Class_Model_List
     {
-        private static List<Class_Model> _model_List = new List<Class_Model>();
+        private static List<Class_Model> _model_List = [];
 
         internal static int Pro_Count
         {

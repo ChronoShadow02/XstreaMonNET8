@@ -179,7 +179,7 @@ namespace XstreaMonNET8
                 Parameter.Error_Message(ex, "Flirt4Free.Image");
             }
 
-            return null;
+            return null!;
         }
 
         internal static async Task<Channel_Info> Profil(string Model_Name)
