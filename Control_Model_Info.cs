@@ -1,50 +1,34 @@
-﻿using System.Timers;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Timers;
+using System.Windows.Forms;
 
 namespace XstreaMonNET8
 {
-    public class Control_Model_Info : UserControl
+    public partial class Control_Model_Info : UserControl
     {
-        private Label lblInfo;
-        private PictureBox picPreview;
-        private Guid Model_GUID;
         private System.Timers.Timer VisibleTimer;
         private System.Timers.Timer UnVisible_Timer;
+        private Guid Model_GUID;
 
         public event Action Evt_Timer_Elappsed;
 
         public Control_Model_Info()
         {
+            InitializeComponent();
+
+            // timers de visibilidad
             VisibleTimer = new System.Timers.Timer(1500);
             UnVisible_Timer = new System.Timers.Timer(30000);
 
             VisibleTimer.Elapsed += VisibleTimer_Elapsed;
             UnVisible_Timer.Elapsed += Unvisible_Timer_Elapsed;
 
-            VisibleChanged += Control_Model_Info_VisibleChanged;
-            Load += Control_Model_Info_Load;
-
-            InitializeComponent();
-        }
-
-        private void InitializeComponent()
-        {
-            lblInfo = new Label
-            {
-                Dock = DockStyle.Fill,
-                AutoSize = false,
-                TextAlign = ContentAlignment.TopLeft
-            };
-
-            picPreview = new PictureBox
-            {
-                Dock = DockStyle.Left,
-                Size = new Size(230, 138),
-                SizeMode = PictureBoxSizeMode.Zoom
-            };
-
-            Controls.Add(lblInfo);
-            Controls.Add(picPreview);
-            Size = new Size(452, 138);
+            this.VisibleChanged += Control_Model_Info_VisibleChanged;
+            this.Load += Control_Model_Info_Load;
         }
 
         internal Guid Pro_Model_GUID
@@ -70,10 +54,10 @@ namespace XstreaMonNET8
             {
                 try
                 {
-                    if (value != null)
+                    if (!string.IsNullOrEmpty(value))
                     {
                         lblInfo.Text = value;
-                        Width = string.IsNullOrEmpty(value) ? 230 : 400;
+                        Width = 400;
                     }
                     else
                     {
@@ -90,78 +74,64 @@ namespace XstreaMonNET8
 
         internal Class_Model Pro_Model
         {
-            get => null;
             set
             {
                 try
                 {
-                    if (value != null)
-                    {
-                        string thumbPath = Path.Combine(value.Pro_Model_Directory, "Thumbnail.jpg");
-
-                        if (File.Exists(thumbPath) && new FileInfo(thumbPath).Length > 0)
-                        {
-                            try
-                            {
-                                Pro_Model_Preview = new Bitmap(thumbPath);
-                            }
-                            catch
-                            {
-                                Pro_Model_Preview = null;
-                            }
-                        }
-                        else
-                        {
-                            Pro_Model_Preview = null;
-                        }
-
-                        Pro_Model_GUID = ValueBack.Get_CUnique(value.Pro_Model_GUID);
-                        string info = "";
-
-                        if (!string.IsNullOrEmpty(value.Pro_Model_Country))
-                            info += TXT.TXT_Description("Land") + ": " + value.Pro_Model_Country + "\r\n";
-                        if (!string.IsNullOrEmpty(value.Pro_Model_Language))
-                            info += TXT.TXT_Description("Sprachen") + ": " + value.Pro_Model_Language + "\r\n";
-                        if (value.Pro_Model_Token > 0)
-                            info += TXT.TXT_Description("Token") + ": " + value.Pro_Model_Token + "\r\n";
-                        info += value.Pro_Model_Info + "\r\n";
-
-                        int count = 0;
-                        double size = 0;
-                        foreach (var file in new DirectoryInfo(value.Pro_Model_Directory).GetFiles())
-                        {
-                            try
-                            {
-                                if (file.Extension.Equals(".mp4", StringComparison.OrdinalIgnoreCase) ||
-                                    file.Extension.Equals(".ts", StringComparison.OrdinalIgnoreCase) ||
-                                    file.Extension.Equals(".mov", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    count++;
-                                    size += file.Length;
-                                }
-                            }
-                            catch { }
-                        }
-
-                        if (count > 0)
-                        {
-                            info += TXT.TXT_Description("Aufnahmen gespeichert") + " " + count + "\r\n";
-                            info += TXT.TXT_Description("Größe aller Aufnahmen") + " " + ValueBack.Get_Numeric2Bytes(size) + "\r\n";
-                        }
-
-                        if (value.Pro_Last_Online > DateTime.MinValue)
-                        {
-                            info += TXT.TXT_Description("zuletzt online") + ": " +
-                                    ValueBack.Get_CDatum(value.Pro_Last_Online) + "\r\n";
-                        }
-
-                        Pro_Model_Info = info;
-                    }
-                    else
+                    if (value == null)
                     {
                         Visible = false;
                         VisibleTimer.Stop();
+                        return;
                     }
+
+                    // carga miniatura si existe
+                    string thumbPath = Path.Combine(value.Pro_Model_Directory, "Thumbnail.jpg");
+                    if (File.Exists(thumbPath) && new FileInfo(thumbPath).Length > 0)
+                    {
+                        try { Pro_Model_Preview = new Bitmap(thumbPath); }
+                        catch { Pro_Model_Preview = null; }
+                    }
+                    else Pro_Model_Preview = null;
+
+                    Pro_Model_GUID = ValueBack.Get_CUnique(value.Pro_Model_GUID);
+
+                    // construye el texto informativo
+                    var info = "";
+                    if (!string.IsNullOrEmpty(value.Pro_Model_Country))
+                        info += TXT.TXT_Description("Land") + ": " + value.Pro_Model_Country + "\r\n";
+                    if (!string.IsNullOrEmpty(value.Pro_Model_Language))
+                        info += TXT.TXT_Description("Sprachen") + ": " + value.Pro_Model_Language + "\r\n";
+                    if (value.Pro_Model_Token > 0)
+                        info += TXT.TXT_Description("Token") + ": " + value.Pro_Model_Token + "\r\n";
+                    info += value.Pro_Model_Info + "\r\n";
+
+                    int count = 0;
+                    long size = 0;
+                    foreach (var f in new DirectoryInfo(value.Pro_Model_Directory).GetFiles())
+                    {
+                        try
+                        {
+                            if (f.Extension.Equals(".mp4", StringComparison.OrdinalIgnoreCase) ||
+                                f.Extension.Equals(".ts", StringComparison.OrdinalIgnoreCase) ||
+                                f.Extension.Equals(".mov", StringComparison.OrdinalIgnoreCase))
+                            {
+                                count++;
+                                size += f.Length;
+                            }
+                        }
+                        catch { }
+                    }
+                    if (count > 0)
+                    {
+                        info += TXT.TXT_Description("Aufnahmen gespeichert") + " " + count + "\r\n";
+                        info += TXT.TXT_Description("Größe aller Aufnahmen") + " " + ValueBack.Get_Numeric2Bytes(size) + "\r\n";
+                    }
+                    if (value.Pro_Last_Online > DateTime.MinValue)
+                        info += TXT.TXT_Description("zuletzt online") + ": " +
+                                ValueBack.Get_CDatum(value.Pro_Last_Online) + "\r\n";
+
+                    Pro_Model_Info = info;
                 }
                 catch (Exception ex)
                 {
@@ -172,12 +142,12 @@ namespace XstreaMonNET8
 
         internal object Control_Visible
         {
-            get => Visible;
             set
             {
                 try
                 {
-                    if (Convert.ToBoolean(value))
+                    bool show = Convert.ToBoolean(value);
+                    if (show)
                     {
                         VisibleTimer.Start();
                         UnVisible_Timer.Start();
@@ -198,10 +168,10 @@ namespace XstreaMonNET8
 
         private void Control_Model_Info_VisibleChanged(object sender, EventArgs e)
         {
-            if (Visible && Pro_Model_Preview == null && string.IsNullOrWhiteSpace(Pro_Model_Info))
+            if (Visible && picPreview.Image == null && string.IsNullOrWhiteSpace(lblInfo.Text))
             {
-                Visible = false;
                 VisibleTimer.Stop();
+                Visible = false;
             }
         }
 
@@ -215,12 +185,14 @@ namespace XstreaMonNET8
                     {
                         VisibleTimer.Stop();
                         Visible = true;
+                        Evt_Timer_Elappsed?.Invoke();
                     }));
                 }
                 else
                 {
                     VisibleTimer.Stop();
                     Visible = true;
+                    Evt_Timer_Elappsed?.Invoke();
                 }
             }
             catch (Exception ex)
@@ -249,15 +221,15 @@ namespace XstreaMonNET8
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, "Control_Model_Info.UnVisible_Timer_Elapsed");
+                Parameter.Error_Message(ex, "Control_Model_Info.Unvisible_Timer_Elapsed");
             }
         }
 
         private void Control_Model_Info_Load(object sender, EventArgs e)
         {
-            VisibleTimer.Interval = ValueBack.Get_CInteger(IniFile.Read(Parameter.INI_Common, "Optionen", "Tooltip", "3")) * 1000 + 10;
+            // lee tiempo de tooltip en segundos +10ms
+            int secs = ValueBack.Get_CInteger(IniFile.Read(Parameter.INI_Common, "Optionen", "Tooltip", "3"));
+            VisibleTimer.Interval = secs * 1000 + 10;
         }
-
-        public delegate void Evt_Timer_ElappsedEventHandler();
     }
 }

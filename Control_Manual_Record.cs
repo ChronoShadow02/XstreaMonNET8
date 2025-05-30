@@ -1,21 +1,21 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Timers;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace XstreaMonNET8
 {
-    public class Control_Manual_Record : UserControl
+    public partial class Control_Manual_Record : UserControl
     {
-        private IContainer components;
         private Class_Manual_Record Pri_Man_Record;
         private string Record_Time_String;
         private string ToolTipText;
         private System.Timers.Timer Record_Time;
-        private ToolTip ToolTip1;
-
-        internal Button BTN_Record_Stop;
-        internal ContextMenuStrip ContextMenu;
-        internal ToolStripMenuItem CMI_Record_Stop;
-        internal ToolStripMenuItem CMI_Go_Site;
 
         internal Class_Stream_Record Pro_Record_Stream { get; set; }
         internal string Pro_Channel_Name { get; set; }
@@ -34,7 +34,6 @@ namespace XstreaMonNET8
                 : Man_Record.Pro_Channel_Stream.Pro_Record_Beginn;
             Pro_Record_Stream = Man_Record.Pro_Channel_Stream;
             Pri_Man_Record = Man_Record;
-
             Record_Time_String = $"{(int)(DateTime.Now - Pro_Record_Start).TotalMinutes} Minuten";
 
             Record_Time = new System.Timers.Timer(10000);
@@ -42,46 +41,14 @@ namespace XstreaMonNET8
             Record_Time.Start();
         }
 
-        private void InitializeComponent()
-        {
-            components = new Container();
-            BTN_Record_Stop = new Button();
-            ContextMenu = new ContextMenuStrip(components);
-            CMI_Record_Stop = new ToolStripMenuItem();
-            CMI_Go_Site = new ToolStripMenuItem();
-            ToolTip1 = new ToolTip(components);
-
-            BTN_Record_Stop.Dock = DockStyle.Left;
-            BTN_Record_Stop.Size = new Size(24, 36);
-            BTN_Record_Stop.Image = Resources.control_stop_icon;
-            BTN_Record_Stop.Click += BTN_Record_Stop_Click;
-
-            CMI_Record_Stop.Text = "Aufnahme beenden";
-            CMI_Record_Stop.Click += CMI_Record_Stop_Click;
-
-            CMI_Go_Site.Text = "Webseite anzeigen";
-            CMI_Go_Site.Click += CMI_Go_Site_Click;
-
-            ContextMenu.Items.Add(CMI_Record_Stop);
-            ContextMenu.Items.Add(CMI_Go_Site);
-            ContextMenuStrip = ContextMenu;
-
-            Controls.Add(BTN_Record_Stop);
-            Size = new Size(166, 36);
-
-            Load += Control_Manual_Record_Load;
-            Paint += Control_Manual_Record_Paint;
-            MouseDoubleClick += Control_Manual_Record_MouseDoubleClick;
-        }
-
         private void Set_ToolTipText()
         {
             try
             {
-                if (Pri_Man_Record.Pro_Channel_Stream.Pro_Recordname != null &&
-                    File.Exists(Pri_Man_Record.Pro_Channel_Stream.Pro_Recordname))
+                var path = Pri_Man_Record.Pro_Channel_Stream.Pro_Recordname;
+                if (!string.IsNullOrEmpty(path) && File.Exists(path))
                 {
-                    long fileSize = new FileInfo(Pri_Man_Record.Pro_Channel_Stream.Pro_Recordname).Length;
+                    long fileSize = new FileInfo(path).Length;
                     ToolTipText = $"{Pro_Channel_Name}\r\n" +
                                   $"Start: {Pro_Record_Start.ToLocalTime()}\r\n" +
                                   $"{Record_Time_String}\r\n" +
@@ -91,7 +58,6 @@ namespace XstreaMonNET8
                 {
                     ToolTipText = "";
                 }
-
                 ToolTip1.SetToolTip(this, ToolTipText);
             }
             catch (Exception ex)
@@ -104,9 +70,21 @@ namespace XstreaMonNET8
         {
             try
             {
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(50, Color.Red)), new Rectangle(2, 2, Width - 4, Height - 4));
-                e.Graphics.DrawString(Pro_Channel_Name, new Font(Font, FontStyle.Bold), new SolidBrush(ForeColor), new PointF(26, 2));
-                e.Graphics.DrawString(Record_Time_String, Font, new SolidBrush(ForeColor), new PointF(26, 16));
+                e.Graphics.FillRectangle(
+                    new SolidBrush(Color.FromArgb(50, Color.Red)),
+                    new Rectangle(2, 2, Width - 4, Height - 4));
+
+                e.Graphics.DrawString(
+                    Pro_Channel_Name,
+                    new Font(Font, FontStyle.Bold),
+                    new SolidBrush(ForeColor),
+                    new PointF(26, 2));
+
+                e.Graphics.DrawString(
+                    Record_Time_String,
+                    Font,
+                    new SolidBrush(ForeColor),
+                    new PointF(26, 16));
             }
             catch (Exception ex)
             {
@@ -121,7 +99,8 @@ namespace XstreaMonNET8
                 Record_Time.Stop();
                 Record_Time_String = $"{(int)(DateTime.Now - Pro_Record_Start).TotalMinutes} Min";
 
-                if (Pro_Record_Stream == null || !Parameter.Task_Runs(Pro_Record_Stream.Pro_Record_PID))
+                if (Pro_Record_Stream == null ||
+                    !Parameter.Task_Runs(Pro_Record_Stream.Pro_Record_PID))
                 {
                     Record_Stop();
                 }
@@ -152,11 +131,14 @@ namespace XstreaMonNET8
             }
         }
 
-        private void CMI_Go_Site_Click(object sender, EventArgs e) => Control_Manual_Record_MouseDoubleClick(sender, null);
+        private void CMI_Go_Site_Click(object sender, EventArgs e)
+            => Control_Manual_Record_MouseDoubleClick(sender, null);
 
-        private void CMI_Record_Stop_Click(object sender, EventArgs e) => Record_Stop();
+        private void CMI_Record_Stop_Click(object sender, EventArgs e)
+            => Record_Stop();
 
-        private void BTN_Record_Stop_Click(object sender, EventArgs e) => Record_Stop();
+        private void BTN_Record_Stop_Click(object sender, EventArgs e)
+            => Record_Stop();
 
         private void Record_Stop()
         {
@@ -168,7 +150,9 @@ namespace XstreaMonNET8
 
                 if (record?.Pro_Channel_Stream != null)
                 {
-                    Class_Record_Manual.Stop_Record(record.Pro_Channel_Name, record.Pro_Channel_Stream.Pro_Website_ID);
+                    Class_Record_Manual.Stop_Record(
+                        record.Pro_Channel_Name,
+                        record.Pro_Channel_Stream.Pro_Website_ID);
 
                     Evt_Record_Close?.Invoke(this);
                 }
@@ -184,14 +168,6 @@ namespace XstreaMonNET8
             CMI_Go_Site.Text = TXT.TXT_Description("Webseite öffnen");
             CMI_Record_Stop.Text = TXT.TXT_Description("Aufnahme beenden");
             Set_ToolTipText();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing && components != null)
-                components.Dispose();
-
-            base.Dispose(disposing);
         }
     }
 }
