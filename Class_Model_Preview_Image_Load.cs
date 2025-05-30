@@ -15,7 +15,7 @@
 
                     if (Model_Class.Timer_Online_Change.BGW_Result == 1)
                     {
-                        original = await Sites.ImageFromWeb(Model_Class);//TODO agregar metodo para obtener imagen de la web
+                        original = await Sites.ImageFromWeb(Model_Class);
                         if (original == null)
                         {
                             string str = Model_Class.Pro_Model_Directory + "\\Thumbnail.jpg";
