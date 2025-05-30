@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.WinForms;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -76,6 +77,7 @@ namespace XstreaMonNET8
         private Class_Model _Current_Model_Class;
         private Timer _Site_Check;
         private Timer _Token_Timer;
+        private ToolStrip _RadCommandBar1;
         public CamBrowser()
         {
             Load += new EventHandler(this.CamBrowser_Load);
@@ -303,6 +305,14 @@ namespace XstreaMonNET8
             this.Name = nameof(CamBrowser);
             this.Text = nameof(CamBrowser);
             this.WindowState = FormWindowState.Maximized;
+        }
+
+        [field: AccessedThroughProperty("RadCommandBar1")]
+        internal virtual ToolStrip RadCommandBar1
+        {
+            get => this._RadCommandBar1;
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            set => this._RadCommandBar1 = value;
         }
 
         internal virtual ToolStripButton CBB_Back
@@ -1846,7 +1856,7 @@ namespace XstreaMonNET8
                         {
                             Pro_Class_Model = model,
                             Dock = DockStyle.Top,
-                            Visible = model.Pro_Model_Online
+                            Visible = model.Get_Pro_Model_Online()
                         };
                         conUserOnline.MouseMove += Online_User_MouseMove;
                         conUserOnline.MouseLeave += Online_User_Mouse_Leave;
