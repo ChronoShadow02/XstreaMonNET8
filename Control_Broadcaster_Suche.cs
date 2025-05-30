@@ -1,13 +1,14 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace XstreaMonNET8
 {
-    public class Control_Broadcaster_Suche : UserControl
+    public partial class Control_Broadcaster_Suche : UserControl
     {
-        private ContextMenuStrip menuContextual;
-        private ToolStripMenuItem itemAceptar;
-        private ToolStripMenuItem itemWeb;
-
+        // campos “de lógica”
         private int Pri_Website_ID;
         private Image Pri_Website_Logo;
         private readonly string Pri_Beschreibung;
@@ -17,8 +18,15 @@ namespace XstreaMonNET8
         private readonly bool Pri_Online;
         private readonly Channel_Info Pri_Channel_Info;
 
+        /// <summary>Se dispara al “Aceptar” (doble-click o menú).</summary>
+        public delegate void Such_Item_AcceptEventHandler(Channel_Info infoSeleccionado);
+        public event Such_Item_AcceptEventHandler Such_Item_Accept;
+
         public Control_Broadcaster_Suche(Channel_Info broadcastInfo)
         {
+            InitializeComponent();
+
+            // inicializo campos de datos
             Pri_Channel_Info = broadcastInfo;
             Pri_Beschreibung = broadcastInfo.Pro_Profil_Beschreibung;
             Pri_Profil_Image = broadcastInfo.Pro_Profil_Image;
@@ -27,30 +35,17 @@ namespace XstreaMonNET8
             Pri_Online = ValueBack.Get_CBoolean(broadcastInfo.Pro_Online);
             Pro_Website_ID = broadcastInfo.Pro_Website_ID;
 
+            // look & feel
             Size = new Size(584, 48);
             BackColor = SystemColors.Control;
             ForeColor = SystemColors.ControlText;
 
+            // eventos de UI
             Paint += Control_Broadcaster_Suche_Paint;
             DoubleClick += MIT_Uebernehmen_Click;
-
-            InitializeContextMenu();
-            ContextMenuStrip = menuContextual;
         }
 
-        private void InitializeContextMenu()
-        {
-            menuContextual = new ContextMenuStrip();
-
-            itemAceptar = new ToolStripMenuItem(TXT.TXT_Description("Übernehmen"));
-            itemWeb = new ToolStripMenuItem(TXT.TXT_Description("Webseite öffnen"));
-
-            itemAceptar.Click += MIT_Uebernehmen_Click;
-            itemWeb.Click += MIT_Webseite_Click;
-
-            menuContextual.Items.AddRange(new ToolStripItem[] { itemAceptar, itemWeb });
-        }
-
+        /// <summary>ID de sitio; al cambiar carga el logo.</summary>
         public int Pro_Website_ID
         {
             get => Pri_Website_ID;
@@ -59,9 +54,7 @@ namespace XstreaMonNET8
                 Pri_Website_ID = value;
                 var website = Sites.Website_Find(value);
                 if (website != null)
-                {
                     Pri_Website_Logo = new Bitmap(website.Pro_Image, 32, 32);
-                }
             }
         }
 
@@ -70,8 +63,7 @@ namespace XstreaMonNET8
             using Pen pen = new Pen(Color.DarkGray);
             e.Graphics.DrawLine(pen, 1, 1, Width - 1, 1);
 
-            int x = 4;
-            int y = 4;
+            int x = 4, y = 4;
 
             if (Pri_Website_Logo != null)
             {
@@ -87,7 +79,9 @@ namespace XstreaMonNET8
 
             if (!string.IsNullOrEmpty(Pri_Profil_Online))
             {
-                e.Graphics.DrawString($"{TXT.TXT_Description("Letzte Sendung")}: {Pri_Profil_Online}", Font, Brushes.Black, x, y);
+                e.Graphics.DrawString(
+                  $"{TXT.TXT_Description("Letzte Sendung")}: {Pri_Profil_Online}",
+                  Font, Brushes.Black, x, y);
             }
 
             if (Pri_Profil_Image != null)
@@ -95,7 +89,7 @@ namespace XstreaMonNET8
                 e.Graphics.DrawImage(Pri_Profil_Image, Width - 44, 4, 40, 40);
             }
 
-            Brush statusBrush = Pri_Online ? Brushes.Green : Brushes.Gray;
+            using Brush statusBrush = Pri_Online ? Brushes.Green : Brushes.Gray;
             e.Graphics.FillEllipse(statusBrush, Width - 16, 6, 10, 10);
         }
 
@@ -109,9 +103,7 @@ namespace XstreaMonNET8
             Sites.WebSiteOpen(Pro_Website_ID, Pri_Broadcaster_Name);
         }
 
-        public delegate void Such_Item_AcceptEventHandler(Channel_Info infoSeleccionado);
-        public event Such_Item_AcceptEventHandler Such_Item_Accept;
-
+        [DebuggerNonUserCode]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -121,7 +113,5 @@ namespace XstreaMonNET8
             }
             base.Dispose(disposing);
         }
-
-        private IContainer components = null;
     }
 }
