@@ -1,14 +1,23 @@
 ﻿// Archivo: Dialog_ModellView.Designer.cs
 namespace XstreaMonNET8
 {
-    partial class Dialog_ModellView : Form
+    partial class Dialog_ModellView
     {
-        /// <summary>
-        /// Variable del diseñador necesaria.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        // Declaración de controles (sin cambiar nombres)
+        private System.Windows.Forms.ContextMenuStrip CME_Ansicht;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Datum;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Tiles;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Sort;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_Datum;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_Name;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_ASC;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_DESC;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Image;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Videos;
+
         private System.Windows.Forms.SplitContainer RadSplitContainer1;
         private System.Windows.Forms.Panel SPA_Info;
         private System.Windows.Forms.Panel SPA_Gallerie;
@@ -34,19 +43,17 @@ namespace XstreaMonNET8
         private System.Windows.Forms.Label LAB_TimeRun;
         private System.Windows.Forms.Panel PAN_Container;
 
-        private System.Windows.Forms.ContextMenuStrip CME_Ansicht;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Datum;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Tiles;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Sort;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_Datum;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_Name;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_ASC;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Sort_DESC;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Image;
-        private System.Windows.Forms.ToolStripMenuItem CMI_Videos;
-
+        /// <summary>
+        /// Limpia los recursos que se estén usando.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         #region Código generado por el Diseñador de Windows Forms
 
@@ -57,8 +64,11 @@ namespace XstreaMonNET8
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dialog_ModellView));
 
-            // ContextMenuStrip y ToolStripMenuItems
+            // ============================
+            // CME_Ansicht (ContextMenuStrip)
+            // ============================
             this.CME_Ansicht = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.CMI_Datum = new System.Windows.Forms.ToolStripMenuItem();
             this.CMI_Tiles = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,41 +82,7 @@ namespace XstreaMonNET8
             this.CMI_Image = new System.Windows.Forms.ToolStripMenuItem();
             this.CMI_Videos = new System.Windows.Forms.ToolStripMenuItem();
 
-            // SplitContainer principal (reemplaza RadSplitContainer1)
-            this.RadSplitContainer1 = new System.Windows.Forms.SplitContainer();
-
-            // Panel izquierdo (equivalente a SPA_Info)
-            this.SPA_Info = new System.Windows.Forms.Panel();
-
-            // Panel derecho (equivalente a SPA_Gallerie)
-            this.SPA_Gallerie = new System.Windows.Forms.Panel();
-
-            // Paneles internos del lado izquierdo
-            this.RadPanel2 = new System.Windows.Forms.Panel();
-            this.RadPanel3 = new System.Windows.Forms.Panel();
-            this.RadPanel1 = new System.Windows.Forms.Panel();
-
-            // Controles dentro de RadPanel3
-            this.LAB_Verzeichnis = new System.Windows.Forms.Label();
-            this.BTN_Explorer = new System.Windows.Forms.Button();
-            this.BTN_Einstellungen = new System.Windows.Forms.Button();
-
-            // Controles de etiquetas e imagen en RadPanel2
-            this.LAB_Dateien = new System.Windows.Forms.Label();
-            this.LAB_Größe = new System.Windows.Forms.Label();
-            this.RadPictureBox1 = new System.Windows.Forms.PictureBox();
-            this.LAB_Geschlecht = new System.Windows.Forms.Label();
-            this.LAB_Country = new System.Windows.Forms.Label();
-            this.LAB_Languages = new System.Windows.Forms.Label();
-            this.LAB_Info = new System.Windows.Forms.Label();
-
-            // Paneles internos del lado derecho
-            this.PAN_Work = new System.Windows.Forms.Panel();
-            this.PGB_Fortschritt = new System.Windows.Forms.ProgressBar();
-            this.LAB_TimeRun = new System.Windows.Forms.Label();
-            this.PAN_Container = new System.Windows.Forms.Panel();
-
-            // Asignar propiedades de ContextMenuStrip
+            // Agregar ítems al ContextMenuStrip
             this.CME_Ansicht.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.CMI_Datum,
                 this.CMI_Tiles,
@@ -130,11 +106,11 @@ namespace XstreaMonNET8
             this.CMI_Tiles.Size = new System.Drawing.Size(180, 22);
             this.CMI_Tiles.Text = "Kachelansicht";
 
-            // Separador
+            // toolStripSeparator1
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
 
-            // CMI_Sort (elemento principal)
+            // CMI_Sort
             this.CMI_Sort.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.CMI_Sort_Datum,
                 this.CMI_Sort_Name,
@@ -158,7 +134,7 @@ namespace XstreaMonNET8
             this.CMI_Sort_Name.Size = new System.Drawing.Size(180, 22);
             this.CMI_Sort_Name.Text = "Dateiname";
 
-            // Separador dentro de CMI_Sort
+            // toolStripSeparator2
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
 
@@ -186,43 +162,55 @@ namespace XstreaMonNET8
             this.CMI_Videos.Size = new System.Drawing.Size(180, 22);
             this.CMI_Videos.Text = "Videos";
 
-            // Configuración de RadSplitContainer1 (SplitContainer estándar)
+            // ============================
+            // RadSplitContainer1 (SplitContainer)
+            // ============================
+            this.RadSplitContainer1 = new System.Windows.Forms.SplitContainer();
             this.RadSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RadSplitContainer1.Location = new System.Drawing.Point(0, 0);
             this.RadSplitContainer1.Name = "RadSplitContainer1";
-            // Orientación vertical (Panel1 = izquierda, Panel2 = derecha)
             this.RadSplitContainer1.Orientation = System.Windows.Forms.Orientation.Vertical;
-            // Tamaño total del formulario
-            this.RadSplitContainer1.Size = new System.Drawing.Size(1186, 755);
-            // Ancho del panel izquierdo = 250
-            this.RadSplitContainer1.SplitterDistance = 250;
+            // Panel1 = SPA_Info, Panel2 = SPA_Gallerie
+            this.RadSplitContainer1.SplitterDistance = 250; // ancho del panel izquierdo
             this.RadSplitContainer1.SplitterWidth = 1;
+            this.RadSplitContainer1.Size = new System.Drawing.Size(1186, 755);
             this.RadSplitContainer1.TabIndex = 0;
+            this.RadSplitContainer1.TabStop = false;
 
-            // Panel1 del SplitContainer → SPA_Info
+            // ============================
+            // SPA_Info (Panel izquierdo)
+            // ============================
+            this.SPA_Info = new System.Windows.Forms.Panel();
             this.SPA_Info.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SPA_Info.Location = new System.Drawing.Point(0, 0);
             this.SPA_Info.Name = "SPA_Info";
             this.SPA_Info.Size = new System.Drawing.Size(250, 755);
             this.SPA_Info.TabIndex = 0;
 
-            // Panel2 del SplitContainer → SPA_Gallerie
+            // ============================
+            // SPA_Gallerie (Panel derecho)
+            // ============================
+            this.SPA_Gallerie = new System.Windows.Forms.Panel();
             this.SPA_Gallerie.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SPA_Gallerie.Location = new System.Drawing.Point(0, 0);
             this.SPA_Gallerie.Name = "SPA_Gallerie";
             this.SPA_Gallerie.Size = new System.Drawing.Size(935, 755);
             this.SPA_Gallerie.TabIndex = 1;
 
-            // ===== Construcción del panel izquierdo (SPA_Info) =====
-
-            // RadPanel2: contenedor superior dentro de SPA_Info
+            // ============================
+            // RadPanel2 (dentro de SPA_Info)
+            // ============================
+            this.RadPanel2 = new System.Windows.Forms.Panel();
             this.RadPanel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.RadPanel2.Location = new System.Drawing.Point(0, 0);
             this.RadPanel2.Name = "RadPanel2";
             this.RadPanel2.Size = new System.Drawing.Size(250, 287);
             this.RadPanel2.TabIndex = 0;
 
-            // RadPanel3: fila superior dentro de RadPanel2 para carpeta y botones
+            // ============================
+            // RadPanel3 (fila superior dentro de RadPanel2)
+            // ============================
+            this.RadPanel3 = new System.Windows.Forms.Panel();
             this.RadPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.RadPanel3.Location = new System.Drawing.Point(0, 0);
             this.RadPanel3.Name = "RadPanel3";
@@ -230,6 +218,7 @@ namespace XstreaMonNET8
             this.RadPanel3.TabIndex = 0;
 
             // LAB_Verzeichnis
+            this.LAB_Verzeichnis = new System.Windows.Forms.Label();
             this.LAB_Verzeichnis.AutoSize = false;
             this.LAB_Verzeichnis.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LAB_Verzeichnis.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
@@ -240,20 +229,24 @@ namespace XstreaMonNET8
             this.LAB_Verzeichnis.Text = "";
 
             // BTN_Explorer
+            this.BTN_Explorer = new System.Windows.Forms.Button();
             this.BTN_Explorer.Dock = System.Windows.Forms.DockStyle.Right;
             this.BTN_Explorer.Location = new System.Drawing.Point(194, 0);
             this.BTN_Explorer.Name = "BTN_Explorer";
             this.BTN_Explorer.Size = new System.Drawing.Size(28, 30);
             this.BTN_Explorer.TabIndex = 1;
-            this.BTN_Explorer.Text = "…";
+            this.BTN_Explorer.Image = (System.Drawing.Image)resources.GetObject("Folder16"); // Ajustar al recurso de ícono
+            this.BTN_Explorer.UseVisualStyleBackColor = true;
 
             // BTN_Einstellungen
+            this.BTN_Einstellungen = new System.Windows.Forms.Button();
             this.BTN_Einstellungen.Dock = System.Windows.Forms.DockStyle.Right;
             this.BTN_Einstellungen.Location = new System.Drawing.Point(222, 0);
             this.BTN_Einstellungen.Name = "BTN_Einstellungen";
             this.BTN_Einstellungen.Size = new System.Drawing.Size(28, 30);
             this.BTN_Einstellungen.TabIndex = 2;
-            this.BTN_Einstellungen.Text = "⚙";
+            this.BTN_Einstellungen.Image = (System.Drawing.Image)resources.GetObject("Options16"); // Ajustar al recurso de ícono
+            this.BTN_Einstellungen.UseVisualStyleBackColor = true;
 
             // Agregar controles a RadPanel3
             this.RadPanel3.Controls.Add(this.LAB_Verzeichnis);
@@ -261,6 +254,7 @@ namespace XstreaMonNET8
             this.RadPanel3.Controls.Add(this.BTN_Einstellungen);
 
             // LAB_Dateien
+            this.LAB_Dateien = new System.Windows.Forms.Label();
             this.LAB_Dateien.AutoSize = false;
             this.LAB_Dateien.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Dateien.Location = new System.Drawing.Point(0, 30);
@@ -270,6 +264,7 @@ namespace XstreaMonNET8
             this.LAB_Dateien.Text = "";
 
             // LAB_Größe
+            this.LAB_Größe = new System.Windows.Forms.Label();
             this.LAB_Größe.AutoSize = false;
             this.LAB_Größe.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Größe.Location = new System.Drawing.Point(0, 50);
@@ -278,7 +273,8 @@ namespace XstreaMonNET8
             this.LAB_Größe.TabIndex = 2;
             this.LAB_Größe.Text = "";
 
-            // RadPictureBox1 (convertido a PictureBox estándar)
+            // RadPictureBox1
+            this.RadPictureBox1 = new System.Windows.Forms.PictureBox();
             this.RadPictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.RadPictureBox1.Location = new System.Drawing.Point(0, 70);
             this.RadPictureBox1.Name = "RadPictureBox1";
@@ -288,6 +284,7 @@ namespace XstreaMonNET8
             this.RadPictureBox1.TabStop = false;
 
             // LAB_Geschlecht
+            this.LAB_Geschlecht = new System.Windows.Forms.Label();
             this.LAB_Geschlecht.AutoSize = false;
             this.LAB_Geschlecht.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Geschlecht.Location = new System.Drawing.Point(0, 230);
@@ -297,6 +294,7 @@ namespace XstreaMonNET8
             this.LAB_Geschlecht.Text = "";
 
             // LAB_Country
+            this.LAB_Country = new System.Windows.Forms.Label();
             this.LAB_Country.AutoSize = false;
             this.LAB_Country.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Country.Location = new System.Drawing.Point(0, 250);
@@ -306,6 +304,7 @@ namespace XstreaMonNET8
             this.LAB_Country.Text = "";
 
             // LAB_Languages
+            this.LAB_Languages = new System.Windows.Forms.Label();
             this.LAB_Languages.AutoSize = false;
             this.LAB_Languages.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Languages.Location = new System.Drawing.Point(0, 270);
@@ -315,6 +314,7 @@ namespace XstreaMonNET8
             this.LAB_Languages.Text = "";
 
             // LAB_Info
+            this.LAB_Info = new System.Windows.Forms.Label();
             this.LAB_Info.AutoSize = false;
             this.LAB_Info.Dock = System.Windows.Forms.DockStyle.Top;
             this.LAB_Info.Location = new System.Drawing.Point(0, 290);
@@ -333,7 +333,10 @@ namespace XstreaMonNET8
             this.RadPanel2.Controls.Add(this.LAB_Dateien);
             this.RadPanel2.Controls.Add(this.RadPanel3);
 
-            // RadPanel1 (contenedor de historial, área con AutoScroll)
+            // ============================
+            // RadPanel1 (dentro de SPA_Info)
+            // ============================
+            this.RadPanel1 = new System.Windows.Forms.Panel();
             this.RadPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RadPanel1.Location = new System.Drawing.Point(0, 287);
             this.RadPanel1.Name = "RadPanel1";
@@ -345,9 +348,10 @@ namespace XstreaMonNET8
             this.SPA_Info.Controls.Add(this.RadPanel1);
             this.SPA_Info.Controls.Add(this.RadPanel2);
 
-            // ===== Construcción del panel derecho (SPA_Gallerie) =====
-
-            // PAN_Work: barra de progreso superior
+            // ============================
+            // PAN_Work (dentro de SPA_Gallerie)
+            // ============================
+            this.PAN_Work = new System.Windows.Forms.Panel();
             this.PAN_Work.Dock = System.Windows.Forms.DockStyle.Top;
             this.PAN_Work.Location = new System.Drawing.Point(0, 0);
             this.PAN_Work.Name = "PAN_Work";
@@ -356,6 +360,7 @@ namespace XstreaMonNET8
             this.PAN_Work.Visible = false;
 
             // PGB_Fortschritt
+            this.PGB_Fortschritt = new System.Windows.Forms.ProgressBar();
             this.PGB_Fortschritt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PGB_Fortschritt.Location = new System.Drawing.Point(0, 0);
             this.PGB_Fortschritt.Name = "PGB_Fortschritt";
@@ -363,39 +368,46 @@ namespace XstreaMonNET8
             this.PGB_Fortschritt.TabIndex = 0;
 
             // LAB_TimeRun
+            this.LAB_TimeRun = new System.Windows.Forms.Label();
             this.LAB_TimeRun.AutoSize = false;
             this.LAB_TimeRun.Dock = System.Windows.Forms.DockStyle.Right;
             this.LAB_TimeRun.Location = new System.Drawing.Point(822, 0);
             this.LAB_TimeRun.Name = "LAB_TimeRun";
             this.LAB_TimeRun.Size = new System.Drawing.Size(113, 30);
             this.LAB_TimeRun.TabIndex = 1;
-            this.LAB_TimeRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LAB_TimeRun.Text = "";
+            this.LAB_TimeRun.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 
             // Agregar PGB_Fortschritt y LAB_TimeRun a PAN_Work
             this.PAN_Work.Controls.Add(this.PGB_Fortschritt);
             this.PAN_Work.Controls.Add(this.LAB_TimeRun);
 
-            // PAN_Container: contenedor principal de vistas de imágenes/videos
+            // ============================
+            // PAN_Container (dentro de SPA_Gallerie)
+            // ============================
+            this.PAN_Container = new System.Windows.Forms.Panel();
             this.PAN_Container.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PAN_Container.Location = new System.Drawing.Point(0, 30);
             this.PAN_Container.Name = "PAN_Container";
             this.PAN_Container.AutoScroll = true;
             this.PAN_Container.Size = new System.Drawing.Size(935, 725);
             this.PAN_Container.TabIndex = 1;
-
-            // Asignar ContextMenuStrip a PAN_Container
+            // Asignar ContextMenuStrip
             this.PAN_Container.ContextMenuStrip = this.CME_Ansicht;
 
             // Agregar PAN_Work y PAN_Container a SPA_Gallerie
             this.SPA_Gallerie.Controls.Add(this.PAN_Container);
             this.SPA_Gallerie.Controls.Add(this.PAN_Work);
 
-            // ===== Agregar paneles al SplitContainer =====
+            // ============================
+            // Agregar Paneles al SplitContainer
+            // ============================
             this.RadSplitContainer1.Panel1.Controls.Add(this.SPA_Info);
             this.RadSplitContainer1.Panel2.Controls.Add(this.SPA_Gallerie);
 
-            // ===== Configuración final del formulario =====
+            // ============================
+            // Configuración final del Formulario
+            // ============================
             this.ClientSize = new System.Drawing.Size(1186, 755);
             this.Controls.Add(this.RadSplitContainer1);
             this.Name = "Dialog_ModellView";

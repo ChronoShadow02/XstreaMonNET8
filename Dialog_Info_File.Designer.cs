@@ -206,7 +206,7 @@ namespace XstreaMonNET8
             // Nombre fijo en lugar de nameof(...)
             this.Name = "Dialog_Info_File";
             // Dejar el Text vacío para que se asigne en el Load
-            this.Text = "";
+            this.Text = "Dialog_Info_File";
 
             this.Icon = ((Icon)(componentResourceManager.GetObject("$this.Icon")));
             this.MaximizeBox = false;

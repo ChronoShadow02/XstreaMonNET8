@@ -156,7 +156,7 @@
             this.TBT_Favorite.Name = "TBT_Favorite";
             this.TBT_Favorite.Size = new System.Drawing.Size(56, 34);
             this.TBT_Favorite.TabIndex = 0;
-            this.TBT_Favorite.Text = "";
+            this.TBT_Favorite.Image = (Image)Resources.FavoriteDeaktiv32;
             this.TBT_Favorite.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.TTP_Control.SetToolTip(this.TBT_Favorite, "Favorite");
 
@@ -171,7 +171,7 @@
             this.BTN_Play.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.BTN_Play.Size = new System.Drawing.Size(56, 34);
             this.BTN_Play.TabIndex = 1;
-            this.BTN_Play.Text = "";
+            this.BTN_Play.Image = (Image)Resources.Play32;
             this.TTP_Control.SetToolTip(this.BTN_Play, "Video öffnen");
 
             // 
@@ -185,7 +185,7 @@
             this.BTN_Galerie.Padding = new System.Windows.Forms.Padding(0, 0, 4, 0);
             this.BTN_Galerie.Size = new System.Drawing.Size(56, 34);
             this.BTN_Galerie.TabIndex = 2;
-            this.BTN_Galerie.Text = "";
+            this.BTN_Galerie.Image = (Image)Resources.Galerie32;
             this.TTP_Control.SetToolTip(this.BTN_Galerie, "Galerie öffnen");
 
             // 

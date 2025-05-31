@@ -8,7 +8,7 @@ namespace XstreaMonNET8
     public partial class Control_Video_Preview : UserControl
     {
         // Campos privados (sin cambiar nombres)
-        private bool Vorschau_Visible;
+        public bool Vorschau_Visible;
         private List<Video_File> Pri_Video_list;
         internal string Model_Name;
         internal Guid Model_GUID;

@@ -61,7 +61,7 @@ namespace XstreaMonNET8
                     }
                     else
                     {
-                        lblInfo.Text = "";
+                        lblInfo.Text = string.Empty;
                         Width = 230;
                     }
                 }

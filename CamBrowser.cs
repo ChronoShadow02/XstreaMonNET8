@@ -167,7 +167,7 @@ namespace XstreaMonNET8
             this.LAB_Info.Size = new Size(39, 40);
             this.LAB_Info.Visible = false;
             this.LAB_Info.Image = (Image)componentResourceManager.GetObject("info");
-            this.LAB_Info.Text = "";
+            this.LAB_Info.Text = string.Empty;
             this.LAB_Info.DoubleClick += LAB_Info_DoubleClick;
             // host label in ToolStrip
             var hostInfo = new ToolStripControlHost(this.LAB_Info) { Name = "LAB_Info_Host" };
