@@ -21,7 +21,7 @@
         private System.Windows.Forms.Panel PAN_Info;
         private System.Windows.Forms.Button BTN_Delete;
         private System.Windows.Forms.Label LAB_Video_Propertys;
-        private System.Windows.Forms.Button BTN_Galerie;
+        public System.Windows.Forms.Button BTN_Galerie;
         private System.Windows.Forms.Button BTN_Play;
         private System.Windows.Forms.CheckBox TBT_Favorite;
         private System.Windows.Forms.ToolTip TTP_Control;
