@@ -3,7 +3,8 @@
     /// <summary>
     /// TODO: hacer
     /// </summary>
-    public class Control_Video_Preview : UserControl
+    public partial class Control_Video_Preview : UserControl
     {
+        
     }
 }
