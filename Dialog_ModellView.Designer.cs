@@ -1,5 +1,5 @@
 ﻿// Archivo: Dialog_ModellView.Designer.cs
-namespace XstreaMon
+namespace XstreaMonNET8
 {
     partial class Dialog_ModellView : Form
     {

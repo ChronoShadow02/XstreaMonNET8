@@ -3,7 +3,7 @@ using System.Data.OleDb;
 using System.Diagnostics;
 using XstreaMonNET8;
 
-namespace XstreaMon
+namespace XstreaMonNET8
 {
     public partial class Dialog_ModellView : Form
     {
