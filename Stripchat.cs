@@ -13,7 +13,7 @@ namespace XstreaMonNET8
                 if (string.IsNullOrEmpty(json))
                     return null;
 
-                return Read_Model_Stream(Find_M3u8_Path(json), modelStream, json);
+                return await Read_Model_StreamAsync(Find_M3u8_Path(json), modelStream, json);
             }
             catch (Exception ex)
             {
@@ -36,7 +36,7 @@ namespace XstreaMonNET8
             }
         }
 
-        private static StreamAdresses Read_Model_Stream(string streamUrl, StreamAdresses modelStream, string txt)
+        private static async Task<StreamAdresses> Read_Model_StreamAsync(string streamUrl, StreamAdresses modelStream, string txt)
         {
             try
             {

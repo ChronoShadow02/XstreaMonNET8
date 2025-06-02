@@ -4,177 +4,202 @@
     {
         private System.ComponentModel.IContainer components = null;
 
-        // Controles principales
-        internal System.Windows.Forms.DataGridView GRV_Model_Kanal;
-        internal System.Windows.Forms.Panel RadPanel1;
-        internal System.Windows.Forms.SplitContainer RadSplitContainer1;
-        internal System.Windows.Forms.Panel PAN_Navigation;
-        internal System.Windows.Forms.Panel PAN_Streams;
-        internal System.Windows.Forms.FlowLayoutPanel PAN_Show;
-        internal System.Windows.Forms.FlowLayoutPanel PAN_Record;
-        internal System.Windows.Forms.FlowLayoutPanel PAN_Favoriten;
-
-        // Menús contextuales
-        internal System.Windows.Forms.ContextMenuStrip CME_Model_Kanal;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Promo_Add;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Aufnahme;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Stream_Refresh;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Anzeigen;
-        internal System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem2;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Favorite;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Info;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Online_Check;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Deaktivieren;
-        internal System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem5;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Gesehen;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Delete;
-        internal System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem1;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Webseite;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Galerie;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Optionen;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Folder_Open;
-        internal System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem6;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Ansicht;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Grouping;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_LastOnline;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Provider;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Geschlecht;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Filter;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Online;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Offline;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Record;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_New_Records;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_AutoRecord;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Female;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Male;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Couple;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Trans;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Unknow;
-        internal System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem3;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Alle_Anzeigen;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Alle_Ausblenden;
-
-        // Menú contextual para preview
-        internal System.Windows.Forms.ContextMenuStrip CME_Preview;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Favoriten;
-        internal System.Windows.Forms.ToolStripMenuItem CMI_Records;
-
-        // Barra de menú superior
-        internal System.Windows.Forms.MenuStrip CBB_Model_Kanal;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_Hinzufügen;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_Löschen;
-        internal System.Windows.Forms.ToolStripTextBox CBT_Suche;
-        internal System.Windows.Forms.ToolStripMenuItem CBT_ShowAll;
-        internal System.Windows.Forms.ToolStripMenuItem CBD_Liste_Sender;
-        internal System.Windows.Forms.ToolStripMenuItem DDI_Alle_Anzeigen;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_Aufnahmen_Heute;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_Favoriten;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_Einstellungen;
-        internal System.Windows.Forms.ToolStripMenuItem CBB_CamsRecorder;
-
-        // Otros controles
-        internal System.Windows.Forms.ProgressBar PGB_Disk;
-        internal System.Windows.Forms.Label LAB_Drive;
-        internal System.Windows.Forms.Label LAB_Warnung;
-        internal System.Windows.Forms.Label RadLabel1;
-        internal System.Windows.Forms.ToolTip ToolTip1;
-        internal System.Windows.Forms.NotifyIcon Cam_Benachrichtigung;
-        internal System.Windows.Forms.ContextMenuStrip CMS_Benachrichtigung;
-        internal System.Windows.Forms.ToolStripMenuItem TMI_Benachrichtung_Anzeigen;
-
-        // Si tienes un UserControl llamado Control_Model_Info, decláralo aquí:
-        // internal Control_Model_Info Control_Model_Info1;
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
 
-            // DataGridView
+            // Main Controls
             this.GRV_Model_Kanal = new System.Windows.Forms.DataGridView();
-            this.GRV_Model_Kanal.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GRV_Model_Kanal.ReadOnly = true;
-            this.GRV_Model_Kanal.Name = "GRV_Model_Kanal";
-            this.GRV_Model_Kanal.TabIndex = 3;
-
-            // Panel para el grid
             this.RadPanel1 = new System.Windows.Forms.Panel();
+            this.RadSplitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.PAN_Navigation = new System.Windows.Forms.Panel();
+            this.PAN_Streams = new System.Windows.Forms.Panel();
+            this.PAN_Show = new System.Windows.Forms.FlowLayoutPanel();
+            this.PAN_Record = new System.Windows.Forms.FlowLayoutPanel();
+            this.PAN_Favoriten = new System.Windows.Forms.FlowLayoutPanel();
+
+            // Context Menus
+            this.CME_Model_Kanal = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.CMI_Promo_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Aufnahme = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Stream_Refresh = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Anzeigen = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.CMI_Favorite = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Info = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Online_Check = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Deaktivieren = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem5 = new System.Windows.Forms.ToolStripSeparator();
+            this.CMI_Gesehen = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Delete = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.CMI_Webseite = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Galerie = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Optionen = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Folder_Open = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem6 = new System.Windows.Forms.ToolStripSeparator();
+            this.CMI_Ansicht = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Grouping = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_LastOnline = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Provider = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Geschlecht = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Filter = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMH_Status = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Online = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Offline = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Record = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_New_Records = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_AutoRecord = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMH_Gender = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Female = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Male = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Couple = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Trans = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Unknow = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.CMI_Alle_Anzeigen = new System.Windows.Forms.ToolStripMenuItem();
+            this.CMI_Alle_Ausblenden = new System.Windows.Forms.ToolStripMenuItem();
+
+            // Toolbar Controls
+            this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.CBB_Commands = new System.Windows.Forms.ToolStrip();
+            this.CBB_Hinzufügen = new System.Windows.Forms.ToolStripButton();
+            this.CBB_Löschen = new System.Windows.Forms.ToolStripButton();
+            this.CommandBarSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.CBT_Suche = new System.Windows.Forms.ToolStripTextBox();
+            this.CommandBarSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.CBT_ShowAll = new System.Windows.Forms.ToolStripButton();
+            this.CBD_Liste_Sender = new System.Windows.Forms.ToolStripDropDownButton();
+            this.DDI_Alle_Anzeigen = new System.Windows.Forms.ToolStripMenuItem();
+            this.RadMenuSeparatorItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.CBB_Aufnahmen_Heute = new System.Windows.Forms.ToolStripButton();
+            this.CBB_Favoriten = new System.Windows.Forms.ToolStripButton();
+            this.CommandBarSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.CBB_Einstellungen = new System.Windows.Forms.ToolStripButton();
+            this.CommandBarSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.CBB_CamsRecorder = new System.Windows.Forms.ToolStripButton();
+
+            // Status Controls
+            this.PGB_Disk = new System.Windows.Forms.ProgressBar();
+            this.LAB_Drive = new System.Windows.Forms.Label();
+            this.LAB_Warnung = new System.Windows.Forms.Label();
+            this.CBB_Model_Kanal = new System.Windows.Forms.StatusStrip();
+            this.RadLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+
+            // Notification Controls
+            this.Cam_Benachrichtigung = new System.Windows.Forms.NotifyIcon(this.components);
+            this.CMS_Benachrichtigung = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.TMI_Benachrichtung_Anzeigen = new System.Windows.Forms.ToolStripMenuItem();
+
+            // Other Controls
+            this.Control_Model_Info1 = new Control_Model_Info();
+            this.Drive_Info_Refresh_Timer = new System.Windows.Forms.Timer(this.components);
+
+            // Setup DataGridView
+            ((System.ComponentModel.ISupportInitialize)(this.GRV_Model_Kanal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RadSplitContainer1)).BeginInit();
+            this.RadSplitContainer1.Panel1.SuspendLayout();
+            this.RadSplitContainer1.Panel2.SuspendLayout();
+            this.RadSplitContainer1.SuspendLayout();
+            this.CME_Model_Kanal.SuspendLayout();
+            this.CBB_Commands.SuspendLayout();
+            this.CBB_Model_Kanal.SuspendLayout();
+            this.CMS_Benachrichtigung.SuspendLayout();
+            this.SuspendLayout();
+
+            // GRV_Model_Kanal
+            this.GRV_Model_Kanal.AllowUserToAddRows = false;
+            this.GRV_Model_Kanal.AllowUserToDeleteRows = false;
+            this.GRV_Model_Kanal.AllowUserToResizeRows = false;
+            this.GRV_Model_Kanal.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.GRV_Model_Kanal.ContextMenuStrip = this.CME_Model_Kanal;
+            this.GRV_Model_Kanal.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GRV_Model_Kanal.Location = new System.Drawing.Point(0, 0);
+            this.GRV_Model_Kanal.MultiSelect = false;
+            this.GRV_Model_Kanal.Name = "GRV_Model_Kanal";
+            this.GRV_Model_Kanal.ReadOnly = true;
+            this.GRV_Model_Kanal.RowHeadersVisible = false;
+            this.GRV_Model_Kanal.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.GRV_Model_Kanal.Size = new System.Drawing.Size(204, 678);
+            this.GRV_Model_Kanal.TabIndex = 0;
+
+            // RadPanel1
             this.RadPanel1.Controls.Add(this.GRV_Model_Kanal);
             this.RadPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RadPanel1.Location = new System.Drawing.Point(0, 0);
             this.RadPanel1.Name = "RadPanel1";
-            this.RadPanel1.TabIndex = 1;
+            this.RadPanel1.Size = new System.Drawing.Size(204, 678);
+            this.RadPanel1.TabIndex = 0;
 
-            // SplitContainer principal
-            this.RadSplitContainer1 = new System.Windows.Forms.SplitContainer();
+            // RadSplitContainer1
             this.RadSplitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RadSplitContainer1.Location = new System.Drawing.Point(0, 30);
             this.RadSplitContainer1.Name = "RadSplitContainer1";
-            // Panel izquierdo
-            this.PAN_Navigation = new System.Windows.Forms.Panel();
+
+            // Panel1 (Navigation)
+            this.RadSplitContainer1.Panel1.Controls.Add(this.PAN_Navigation);
+            this.RadSplitContainer1.Panel1MinSize = 100;
+
+            // Panel2 (Streams)
+            this.RadSplitContainer1.Panel2.Controls.Add(this.PAN_Streams);
+            this.RadSplitContainer1.Size = new System.Drawing.Size(1086, 678);
+            this.RadSplitContainer1.SplitterDistance = 204;
+            this.RadSplitContainer1.TabIndex = 0;
+
+            // PAN_Navigation
             this.PAN_Navigation.Controls.Add(this.RadPanel1);
             this.PAN_Navigation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PAN_Navigation.Location = new System.Drawing.Point(0, 0);
             this.PAN_Navigation.Name = "PAN_Navigation";
+            this.PAN_Navigation.Size = new System.Drawing.Size(204, 678);
             this.PAN_Navigation.TabIndex = 0;
-            this.RadSplitContainer1.Panel1.Controls.Add(this.PAN_Navigation);
-            // Panel derecho
-            this.PAN_Streams = new System.Windows.Forms.Panel();
+
+            // PAN_Streams
             this.PAN_Streams.AutoScroll = true;
-            this.PAN_Streams.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PAN_Streams.Name = "PAN_Streams";
-            this.PAN_Streams.TabIndex = 1;
-            // FlowLayouts
-            this.PAN_Show = new System.Windows.Forms.FlowLayoutPanel();
-            this.PAN_Show.Dock = System.Windows.Forms.DockStyle.Top;
-            this.PAN_Show.Name = "PAN_Show";
-            this.PAN_Record = new System.Windows.Forms.FlowLayoutPanel();
-            this.PAN_Record.Dock = System.Windows.Forms.DockStyle.Top;
-            this.PAN_Record.Name = "PAN_Record";
-            this.PAN_Favoriten = new System.Windows.Forms.FlowLayoutPanel();
-            this.PAN_Favoriten.Dock = System.Windows.Forms.DockStyle.Top;
-            this.PAN_Favoriten.Name = "PAN_Favoriten";
-            this.PAN_Streams.Controls.Add(this.PAN_Favoriten);
-            this.PAN_Streams.Controls.Add(this.PAN_Record);
             this.PAN_Streams.Controls.Add(this.PAN_Show);
-            this.RadSplitContainer1.Panel2.Controls.Add(this.PAN_Streams);
+            this.PAN_Streams.Controls.Add(this.PAN_Record);
+            this.PAN_Streams.Controls.Add(this.PAN_Favoriten);
+            this.PAN_Streams.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PAN_Streams.Location = new System.Drawing.Point(0, 0);
+            this.PAN_Streams.Name = "PAN_Streams";
+            this.PAN_Streams.Size = new System.Drawing.Size(878, 678);
+            this.PAN_Streams.TabIndex = 0;
 
-            // ContextMenuStrip para el grid
-            this.CME_Model_Kanal = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.CMI_Promo_Add = new System.Windows.Forms.ToolStripMenuItem("in die Modelliste aufnehmen");
-            this.CMI_Aufnahme = new System.Windows.Forms.ToolStripMenuItem("Automatische Aufnahme");
-            this.CMI_Stream_Refresh = new System.Windows.Forms.ToolStripMenuItem("Streamadressen aktualisieren");
-            this.CMI_Anzeigen = new System.Windows.Forms.ToolStripMenuItem("anzeigen");
-            this.RadMenuSeparatorItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.CMI_Favorite = new System.Windows.Forms.ToolStripMenuItem("Favorit");
-            this.CMI_Info = new System.Windows.Forms.ToolStripMenuItem("Info bearbeiten");
-            this.CMI_Online_Check = new System.Windows.Forms.ToolStripMenuItem("Online-Prüfung");
-            this.CMI_Deaktivieren = new System.Windows.Forms.ToolStripMenuItem("Deaktivieren");
-            this.RadMenuSeparatorItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.CMI_Gesehen = new System.Windows.Forms.ToolStripMenuItem("Gesehen");
-            this.CMI_Delete = new System.Windows.Forms.ToolStripMenuItem("Löschen");
-            this.RadMenuSeparatorItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.CMI_Webseite = new System.Windows.Forms.ToolStripMenuItem("Webseite");
-            this.CMI_Galerie = new System.Windows.Forms.ToolStripMenuItem("Galerie");
-            this.CMI_Optionen = new System.Windows.Forms.ToolStripMenuItem("Optionen");
-            this.CMI_Folder_Open = new System.Windows.Forms.ToolStripMenuItem("Ordner öffnen");
-            this.RadMenuSeparatorItem6 = new System.Windows.Forms.ToolStripSeparator();
-            this.CMI_Ansicht = new System.Windows.Forms.ToolStripMenuItem("Ansicht");
-            this.CMI_Grouping = new System.Windows.Forms.ToolStripMenuItem("Gruppierung");
-            this.CMI_LastOnline = new System.Windows.Forms.ToolStripMenuItem("Zuletzt online");
-            this.CMI_Provider = new System.Windows.Forms.ToolStripMenuItem("Provider");
-            this.CMI_Geschlecht = new System.Windows.Forms.ToolStripMenuItem("Geschlecht");
-            this.CMI_Filter = new System.Windows.Forms.ToolStripMenuItem("Filter");
-            this.CMI_Online = new System.Windows.Forms.ToolStripMenuItem("Online");
-            this.CMI_Offline = new System.Windows.Forms.ToolStripMenuItem("Offline");
-            this.CMI_Record = new System.Windows.Forms.ToolStripMenuItem("Record");
-            this.CMI_New_Records = new System.Windows.Forms.ToolStripMenuItem("Neue Aufnahmen");
-            this.CMI_AutoRecord = new System.Windows.Forms.ToolStripMenuItem("AutoRecord");
-            this.CMI_Female = new System.Windows.Forms.ToolStripMenuItem("Female");
-            this.CMI_Male = new System.Windows.Forms.ToolStripMenuItem("Male");
-            this.CMI_Couple = new System.Windows.Forms.ToolStripMenuItem("Couple");
-            this.CMI_Trans = new System.Windows.Forms.ToolStripMenuItem("Trans");
-            this.CMI_Unknow = new System.Windows.Forms.ToolStripMenuItem("Unbekannt");
-            this.RadMenuSeparatorItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.CMI_Alle_Anzeigen = new System.Windows.Forms.ToolStripMenuItem("Alle anzeigen");
-            this.CMI_Alle_Ausblenden = new System.Windows.Forms.ToolStripMenuItem("Alle ausblenden");
+            // PAN_Show
+            this.PAN_Show.AutoSize = true;
+            this.PAN_Show.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PAN_Show.Location = new System.Drawing.Point(0, 0);
+            this.PAN_Show.Name = "PAN_Show";
+            this.PAN_Show.Size = new System.Drawing.Size(878, 0);
+            this.PAN_Show.TabIndex = 0;
 
+            // PAN_Record
+            this.PAN_Record.AutoSize = true;
+            this.PAN_Record.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PAN_Record.Location = new System.Drawing.Point(0, 0);
+            this.PAN_Record.Name = "PAN_Record";
+            this.PAN_Record.Size = new System.Drawing.Size(878, 0);
+            this.PAN_Record.TabIndex = 1;
+
+            // PAN_Favoriten
+            this.PAN_Favoriten.AutoSize = true;
+            this.PAN_Favoriten.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PAN_Favoriten.Location = new System.Drawing.Point(0, 0);
+            this.PAN_Favoriten.Name = "PAN_Favoriten";
+            this.PAN_Favoriten.Size = new System.Drawing.Size(878, 0);
+            this.PAN_Favoriten.TabIndex = 2;
+
+            // CME_Model_Kanal
             this.CME_Model_Kanal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.CMI_Promo_Add,
                 this.CMI_Aufnahme,
@@ -195,93 +220,181 @@
                 this.CMI_Folder_Open,
                 this.RadMenuSeparatorItem6,
                 this.CMI_Ansicht,
-                this.CMI_Grouping,
-                this.CMI_LastOnline,
-                this.CMI_Provider,
-                this.CMI_Geschlecht,
-                this.CMI_Filter,
-                this.CMI_Online,
-                this.CMI_Offline,
-                this.CMI_Record,
-                this.CMI_New_Records,
-                this.CMI_AutoRecord,
-                this.CMI_Female,
-                this.CMI_Male,
-                this.CMI_Couple,
-                this.CMI_Trans,
-                this.CMI_Unknow,
                 this.RadMenuSeparatorItem3,
                 this.CMI_Alle_Anzeigen,
-                this.CMI_Alle_Ausblenden
-            });
-            this.GRV_Model_Kanal.ContextMenuStrip = this.CME_Model_Kanal;
+                this.CMI_Alle_Ausblenden});
+            this.CME_Model_Kanal.Name = "CME_Model_Kanal";
+            this.CME_Model_Kanal.Size = new System.Drawing.Size(221, 408);
 
-            // ContextMenuStrip para Preview
-            this.CME_Preview = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.CMI_Favoriten = new System.Windows.Forms.ToolStripMenuItem("Favoriten");
-            this.CMI_Records = new System.Windows.Forms.ToolStripMenuItem("Records");
-            this.CME_Preview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.CMI_Favoriten,
-                this.CMI_Records
-            });
+            // Menu Items (partial setup)
+            this.CMI_Promo_Add.Name = "CMI_Promo_Add";
+            this.CMI_Promo_Add.Size = new System.Drawing.Size(220, 22);
+            this.CMI_Promo_Add.Text = "in die Modelliste aufnehmen";
 
-            // ToolTip
-            this.ToolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.CMI_Aufnahme.Name = "CMI_Aufnahme";
+            this.CMI_Aufnahme.Size = new System.Drawing.Size(220, 22);
+            this.CMI_Aufnahme.Text = "Automatische Aufnahme";
 
-            // ProgressBar
-            this.PGB_Disk = new System.Windows.Forms.ProgressBar();
-            this.PGB_Disk.Name = "PGB_Disk";
+            // ... (setup other menu items similarly)
 
-            // Labels
-            this.LAB_Drive = new System.Windows.Forms.Label();
-            this.LAB_Drive.Name = "LAB_Drive";
-            this.LAB_Warnung = new System.Windows.Forms.Label();
-            this.LAB_Warnung.Name = "LAB_Warnung";
-            this.RadLabel1 = new System.Windows.Forms.Label();
-            this.RadLabel1.Name = "RadLabel1";
-
-            // MenuStrip (barra superior)
-            this.CBB_Model_Kanal = new System.Windows.Forms.MenuStrip();
-            this.CBB_Hinzufügen = new System.Windows.Forms.ToolStripMenuItem("Hinzufügen");
-            this.CBB_Löschen = new System.Windows.Forms.ToolStripMenuItem("Löschen");
-            this.CBT_Suche = new System.Windows.Forms.ToolStripTextBox();
-            this.CBT_ShowAll = new System.Windows.Forms.ToolStripMenuItem("Alle anzeigen");
-            this.CBD_Liste_Sender = new System.Windows.Forms.ToolStripMenuItem("Senderliste");
-            this.DDI_Alle_Anzeigen = new System.Windows.Forms.ToolStripMenuItem("Alle anzeigen");
-            this.CBB_Aufnahmen_Heute = new System.Windows.Forms.ToolStripMenuItem("Aufnahmen heute");
-            this.CBB_Favoriten = new System.Windows.Forms.ToolStripMenuItem("Favoriten");
-            this.CBB_Einstellungen = new System.Windows.Forms.ToolStripMenuItem("Einstellungen");
-            this.CBB_CamsRecorder = new System.Windows.Forms.ToolStripMenuItem("CamsRecorder");
-            this.CBB_Model_Kanal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            // Toolbar (CBB_Commands)
+            this.CBB_Commands.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.CBB_Hinzufügen,
                 this.CBB_Löschen,
+                this.CommandBarSeparator1,
                 this.CBT_Suche,
+                this.CommandBarSeparator3,
                 this.CBT_ShowAll,
                 this.CBD_Liste_Sender,
-                this.DDI_Alle_Anzeigen,
                 this.CBB_Aufnahmen_Heute,
                 this.CBB_Favoriten,
+                this.CommandBarSeparator2,
                 this.CBB_Einstellungen,
-                this.CBB_CamsRecorder
-            });
+                this.CommandBarSeparator4,
+                this.CBB_CamsRecorder});
+            this.CBB_Commands.Location = new System.Drawing.Point(0, 0);
+            this.CBB_Commands.Name = "CBB_Commands";
+            this.CBB_Commands.Size = new System.Drawing.Size(1086, 25);
+            this.CBB_Commands.TabIndex = 0;
 
-            // NotifyIcon
-            this.Cam_Benachrichtigung = new System.Windows.Forms.NotifyIcon(this.components);
+            // Toolbar buttons
+            this.CBB_Hinzufügen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.CBB_Hinzufügen.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Hinzufügen.Image")));
+            this.CBB_Hinzufügen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CBB_Hinzufügen.Name = "CBB_Hinzufügen";
+            this.CBB_Hinzufügen.Size = new System.Drawing.Size(23, 22);
+            this.CBB_Hinzufügen.Text = "Hinzufügen";
+            this.CBB_Hinzufügen.ToolTipText = "Kanal hinzufügen";
 
-            // ContextMenuStrip para NotifyIcon
-            this.CMS_Benachrichtigung = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.TMI_Benachrichtung_Anzeigen = new System.Windows.Forms.ToolStripMenuItem("Anzeigen");
-            this.CMS_Benachrichtigung.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                this.TMI_Benachrichtung_Anzeigen
-            });
+            // ... (setup other toolbar items similarly)
 
-            // Form
-            this.ClientSize = new System.Drawing.Size(1086, 708);
+            // Status bar
+            this.CBB_Model_Kanal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+                this.RadLabel1});
+            this.CBB_Model_Kanal.Location = new System.Drawing.Point(0, 708);
+            this.CBB_Model_Kanal.Name = "CBB_Model_Kanal";
+            this.CBB_Model_Kanal.Size = new System.Drawing.Size(1086, 22);
+            this.CBB_Model_Kanal.TabIndex = 1;
+
+            // Notification icon
+            this.Cam_Benachrichtigung.Icon = ((System.Drawing.Icon)(resources.GetObject("Cam_Benachrichtigung.Icon")));
+            this.Cam_Benachrichtigung.Text = "XstreaMon";
+            this.Cam_Benachrichtigung.Visible = true;
+            this.Cam_Benachrichtigung.ContextMenuStrip = this.CMS_Benachrichtigung;
+
+            // Main Form
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(1086, 730);
             this.Controls.Add(this.RadSplitContainer1);
+            this.Controls.Add(this.CBB_Commands);
             this.Controls.Add(this.CBB_Model_Kanal);
-            this.MainMenuStrip = this.CBB_Model_Kanal;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form_Main";
-            this.Text = "Form_Main";
+            this.Text = "XstreaMon";
+
+            // Finalize setup
+            this.RadSplitContainer1.Panel1.ResumeLayout(false);
+            this.RadSplitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.RadSplitContainer1)).EndInit();
+            this.RadSplitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.GRV_Model_Kanal)).EndInit();
+            this.CME_Model_Kanal.ResumeLayout(false);
+            this.CBB_Commands.ResumeLayout(false);
+            this.CBB_Commands.PerformLayout();
+            this.CBB_Model_Kanal.ResumeLayout(false);
+            this.CBB_Model_Kanal.PerformLayout();
+            this.CMS_Benachrichtigung.ResumeLayout(false);
+            this.ResumeLayout(false);
+            this.PerformLayout();
         }
+
+        // Declare all controls
+        private System.Windows.Forms.DataGridView GRV_Model_Kanal;
+        private System.Windows.Forms.Panel RadPanel1;
+        private System.Windows.Forms.SplitContainer RadSplitContainer1;
+        private System.Windows.Forms.Panel PAN_Navigation;
+        private System.Windows.Forms.Panel PAN_Streams;
+        private System.Windows.Forms.FlowLayoutPanel PAN_Show;
+        private System.Windows.Forms.FlowLayoutPanel PAN_Record;
+        private System.Windows.Forms.FlowLayoutPanel PAN_Favoriten;
+        private System.Windows.Forms.ContextMenuStrip CME_Model_Kanal;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Promo_Add;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Aufnahme;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Stream_Refresh;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Anzeigen;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem2;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Favorite;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Info;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Online_Check;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Deaktivieren;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem5;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Gesehen;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Delete;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem1;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Webseite;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Galerie;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Optionen;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Folder_Open;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem6;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Ansicht;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Grouping;
+        private System.Windows.Forms.ToolStripMenuItem CMI_LastOnline;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Provider;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Geschlecht;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Filter;
+        private System.Windows.Forms.ToolStripMenuItem CMH_Status;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Online;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Offline;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Record;
+        private System.Windows.Forms.ToolStripMenuItem CMI_New_Records;
+        private System.Windows.Forms.ToolStripMenuItem CMI_AutoRecord;
+        private System.Windows.Forms.ToolStripMenuItem CMH_Gender;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Female;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Male;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Couple;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Trans;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Unknow;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem3;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Alle_Anzeigen;
+        private System.Windows.Forms.ToolStripMenuItem CMI_Alle_Ausblenden;
+        private System.Windows.Forms.ToolTip ToolTip1;
+        private System.Windows.Forms.ToolStrip CBB_Commands;
+        private System.Windows.Forms.ToolStripButton CBB_Hinzufügen;
+        private System.Windows.Forms.ToolStripButton CBB_Löschen;
+        private System.Windows.Forms.ToolStripSeparator CommandBarSeparator1;
+        private System.Windows.Forms.ToolStripTextBox CBT_Suche;
+        private System.Windows.Forms.ToolStripSeparator CommandBarSeparator3;
+        private System.Windows.Forms.ToolStripButton CBT_ShowAll;
+        private System.Windows.Forms.ToolStripDropDownButton CBD_Liste_Sender;
+        private System.Windows.Forms.ToolStripMenuItem DDI_Alle_Anzeigen;
+        private System.Windows.Forms.ToolStripSeparator RadMenuSeparatorItem4;
+        private System.Windows.Forms.ToolStripButton CBB_Aufnahmen_Heute;
+        private System.Windows.Forms.ToolStripButton CBB_Favoriten;
+        private System.Windows.Forms.ToolStripSeparator CommandBarSeparator2;
+        private System.Windows.Forms.ToolStripButton CBB_Einstellungen;
+        private System.Windows.Forms.ToolStripSeparator CommandBarSeparator4;
+        private System.Windows.Forms.ToolStripButton CBB_CamsRecorder;
+        private System.Windows.Forms.ProgressBar PGB_Disk;
+        private System.Windows.Forms.Label LAB_Drive;
+        private System.Windows.Forms.Label LAB_Warnung;
+        private System.Windows.Forms.StatusStrip CBB_Model_Kanal;
+        private System.Windows.Forms.ToolStripStatusLabel RadLabel1;
+        private System.Windows.Forms.NotifyIcon Cam_Benachrichtigung;
+        private System.Windows.Forms.ContextMenuStrip CMS_Benachrichtigung;
+        private System.Windows.Forms.ToolStripMenuItem TMI_Benachrichtung_Anzeigen;
+        private Control_Model_Info Control_Model_Info1;
+        private System.Windows.Forms.Timer Drive_Info_Refresh_Timer;
+
+        // Class variables
+        private bool Pri_Show_All;
+        private bool Pri_Show_Visible;
+        private bool Pri_Data_Load;
+        private System.Drawing.Font Pri_Font_Favorite_Deaktiv;
+        private System.Drawing.Font Pri_Font_Favorite_Aktiv;
+        private System.Drawing.Font Pri_Font_Aktiv;
+        private System.Drawing.Font Pri_Font_Deaktiv;
+        private System.Guid Show_Model_Info_GUID;
+        public static Class_Driveinfo Drive_Info;
     }
 }

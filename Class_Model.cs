@@ -1383,7 +1383,7 @@ namespace XstreaMonNET8
 
                 this.Timer_Online_Change = null;
 
-                using (OleDbConnection oleDbConnection = new OleDbConnection())
+                using (OleDbConnection oleDbConnection = new())
                 {
                     oleDbConnection.ConnectionString = Database_Connect.Aktiv_Datenbank();
                     oleDbConnection.Open();
@@ -1394,22 +1394,22 @@ namespace XstreaMonNET8
                     {
                         using (OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * FROM DT_Record where User_GUID = '" + this.Pro_Model_GUID.ToString() + "' AND Record_Ende is Null", oleDbConnection.ConnectionString))
                         using (new OleDbCommandBuilder(adapter))
-                        using (DataSet dataSet = new DataSet())
+                        using (DataSet dataSet = new())
                         {
                             adapter.Fill(dataSet, "DT_Record");
-                            foreach (DataRow row in dataSet.Tables["DT_Record"].Rows)
+                            foreach (DataRow row in dataSet.Tables["DT_Record"]!.Rows)
                                 row.Delete();
-                            adapter.Update(dataSet.Tables["DT_Record"]);
+                            adapter.Update(dataSet.Tables["DT_Record"]!);
                         }
 
                         using (OleDbDataAdapter adapter = new OleDbDataAdapter("SELECT * FROM DT_User where User_GUID = '" + this.Pro_Model_GUID.ToString() + "'", oleDbConnection.ConnectionString))
                         using (new OleDbCommandBuilder(adapter))
-                        using (DataSet dataSet = new DataSet())
+                        using (DataSet dataSet = new())
                         {
                             adapter.Fill(dataSet, "DT_User");
-                            foreach (DataRow row in dataSet.Tables["DT_User"].Rows)
+                            foreach (DataRow row in dataSet.Tables["DT_User"]!.Rows)
                                 row.Delete();
-                            adapter.Update(dataSet.Tables["DT_User"]);
+                            adapter.Update(dataSet.Tables["DT_User"]!);
                         }
                     }
 
