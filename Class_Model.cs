@@ -292,7 +292,7 @@ namespace XstreaMonNET8
 
                     this.Stream_Record_Start();
 
-                    Class_Model.Model_Record_ChangeEventHandler recordChangeEvent = this.Model_Record_ChangeEvent;
+                    Class_Model.Model_Record_ChangeEventHandler recordChangeEvent = this.Model_Record_Change;
                     if (recordChangeEvent == null)
                         return;
 
@@ -305,7 +305,7 @@ namespace XstreaMonNET8
 
                     this.Stream_Record_Stop();
 
-                    Class_Model.Model_Record_ChangeEventHandler recordChangeEvent = this.Model_Record_ChangeEvent;
+                    Class_Model.Model_Record_ChangeEventHandler recordChangeEvent = this.Model_Record_Change;
                     if (recordChangeEvent == null)
                         return;
 
@@ -365,7 +365,7 @@ namespace XstreaMonNET8
             {
                 this.Priv_Model_Token = value;
 
-                Class_Model.Model_Token_ChangeEventHandler tokenChangeEvent = this.Model_Token_ChangeEvent;
+                Class_Model.Model_Token_ChangeEventHandler tokenChangeEvent = this.Model_Token_Change;
                 if (tokenChangeEvent != null)
                     tokenChangeEvent(this.Priv_Model_Token);
 
@@ -1019,7 +1019,7 @@ namespace XstreaMonNET8
                 Parameter.Error_Message(ex, "Class_Model.Model_Online_Change");
             }
 
-            this.Model_Online_ChangeEvent?.Invoke(this);
+            this.Model_Online_Change?.Invoke(this);
         }
 
         private void Online_Change_Timer_Online_Status_Change()
@@ -1163,7 +1163,7 @@ namespace XstreaMonNET8
 
                 if (this.Pro_Benachrichtigung && string.Equals(IniFile.Read(Parameter.INI_Common, "Notification", "Enabled", "True"), "True", StringComparison.OrdinalIgnoreCase))
                 {
-                    var notificationEvent = this.Model_Show_NotificationEvent;
+                    var notificationEvent = this.Model_Show_Notification;
                     if (notificationEvent != null)
                     {
                         string titulo = TXT.TXT_Description("Online") + " " + this.Pro_Model_Name;
@@ -1294,7 +1294,7 @@ namespace XstreaMonNET8
 
                         if (Pro_Benachrichtigung &&string.Equals(IniFile.Read(Parameter.INI_Common, "Notification", "Enabled", "True"), "True", StringComparison.OrdinalIgnoreCase))
                         {
-                            this.Model_Show_NotificationEvent?.Invoke(
+                            this.Model_Show_Notification?.Invoke(//Model_Show_NotificationEvent
                                 $"{TXT.TXT_Description("Aufnahme")} {this.Pro_Model_Name}",
                                 $"{TXT.TXT_Description("Aufnahme für")} {this.Pro_Model_Name} {TXT.TXT_Description("ist gestartet")}",
                                 this.Thumbnail_Ico()

@@ -154,7 +154,7 @@ namespace XstreaMonNET8
                     this.Pro_Record_Beginn = DateTime.Now;
                     this.Pro_Stream_Extension = str7;
 
-                    this.Stream_RunEvent?.Invoke(this);
+                    this.Stream_Run?.Invoke(this);//Stream_RunEvent
                 }
             }
             catch (Exception ex)
