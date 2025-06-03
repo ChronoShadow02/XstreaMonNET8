@@ -14,7 +14,7 @@
                 await Task.CompletedTask;
                 string str1 = "";
 
-                string result1 = VParse.GetPOST($"https://webchat.cam4.com/requestAccess?roomname={Model_Stream.Pro_Model_Name.ToLower()}&chat_history_limit=0", null).Result;
+                string result1 = VParse.GetPOST($"https://webchat.cam4.com/requestAccess?roomname={Model_Stream.Pro_Model_Name.ToLower()}&chat_history_limit=0", null).Result!;
                 if (result1.Length > 0)
                 {
                     string str2 = result1.Replace("\"", "");
@@ -31,7 +31,7 @@
 
                 if (string.IsNullOrEmpty(str1) || !Parameter.URL_Response(str1).Result)
                 {
-                    string result2 = VParse.GetPOST($"https://www.cam4.com/rest/v1.0/profile/{Model_Stream.Pro_Model_Name}/streamInfo?forceHlsUrl=true", null).Result;
+                    string result2 = VParse.GetPOST($"https://www.cam4.com/rest/v1.0/profile/{Model_Stream.Pro_Model_Name}/streamInfo?forceHlsUrl=true", null).Result!;
                     if (result2.Length > 0)
                     {
                         string str4 = result2.Replace("\"", "");
@@ -71,7 +71,7 @@
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Cam4.Stream_Adresses");
-                return null;
+                return null!;
             }
         }
 
@@ -127,7 +127,7 @@
             {
                 await Task.CompletedTask;
                 var model = await Class_Model_List.Class_Model_Find(0, Model_Name);
-                if (await Parameter.URL_Response(model?.Pro_Model_M3U8))
+                if (await Parameter.URL_Response(model?.Pro_Model_M3U8!))
                     return 1;
 
                 string result = VParse.HTML_Load($"https://www.cam4.de.com/rest/v1.0/profile/{Model_Name}/streamInfo", true).Result;
@@ -150,7 +150,7 @@
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, $"Parameter.C4_ImageFromWeb(Model_Name) = {Model_Name}");
-                return null;
+                return null!;
             }
         }
 

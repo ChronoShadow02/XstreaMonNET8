@@ -41,8 +41,8 @@ namespace XstreaMonNET8
             ForeColor = SystemColors.ControlText;
 
             // eventos de UI
-            Paint += Control_Broadcaster_Suche_Paint;
-            DoubleClick += MIT_Uebernehmen_Click;
+            Paint += Control_Broadcaster_Suche_Paint!;
+            DoubleClick += MIT_Uebernehmen_Click!;
         }
 
         /// <summary>ID de sitio; al cambiar carga el logo.</summary>

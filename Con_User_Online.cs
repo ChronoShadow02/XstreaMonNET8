@@ -17,9 +17,9 @@ namespace XstreaMonNET8
         public Con_User_Online()
         {
             InitializeComponent();
-            this.Paint += Con_User_Online_Paint;
-            this.DoubleClick += Con_DoubleClick;
-            this.Load += Con_User_Online_Load;
+            this.Paint += Con_User_Online_Paint!;
+            this.DoubleClick += Con_DoubleClick!;
+            this.Load += Con_User_Online_Load!;
             this.Pri_Is_Current = false;
         }
 
@@ -115,7 +115,7 @@ namespace XstreaMonNET8
                 g.DrawImage(Resources.RecordWait16, 2, 5);
             else if (_Pri_Model_Class.Get_Pro_Model_Online())
                 g.DrawImage(
-                  _Pri_Model_Class.Timer_Online_Change.BGW_Result == 1
+                  _Pri_Model_Class.Timer_Online_Change!.BGW_Result == 1
                     ? Resources.Model_Online16
                     : Resources.Model_Online_Key16,
                   2, 5);
