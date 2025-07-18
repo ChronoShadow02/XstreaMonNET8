@@ -239,14 +239,35 @@ namespace XstreaMonNET8
         {
             try
             {
-                byte[] buffer = httpClient.GetByteArrayAsync($"https://jpeg.live.mmcdn.com/stream?room={Model_Name.ToLower()}").Result;
-                using var ms = new MemoryStream(buffer);
-                Image img = Image.FromStream(ms);
-                return img.Size == new Size(360, 202) ? null : img;
+                Bitmap bitmap = null!;
+                string url = $"https://jpeg.live.mmcdn.com/stream?room={Model_Name.ToLower()}";
+
+                using (var response = httpClient.GetAsync(url).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        byte[] buffer = response.Content.ReadAsByteArrayAsync().Result;
+                        if (buffer.Length > 0)
+                        {
+                            using (MemoryStream memoryStream = new MemoryStream(buffer))
+                            {
+                                bitmap = (Bitmap)Image.FromStream(memoryStream);
+                            }
+                        }
+
+                        if (bitmap != null && bitmap.Size == new Size(360, 202))
+                        {
+                            bitmap.Dispose();
+                            bitmap = null!;
+                        }
+                    }
+                }
+
+                return bitmap;
             }
-            catch
+            catch (Exception)
             {
-                return null;
+                return null!;
             }
         }
 

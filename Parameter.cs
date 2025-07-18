@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace XstreaMonNET8
@@ -17,8 +15,13 @@ namespace XstreaMonNET8
         internal static int Pro_Convert_Count = 0;
         private static int _Record_Max_Lenght = -1;
 
+        private static readonly HttpClient httpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(5)
+        };
+
         [DllImport("kernel32.dll", CharSet = CharSet.Ansi, SetLastError = true)]
-        private static extern int SetProcessWorkingSetSize(IntPtr process, int minSize, int maxSize);
+        private static extern int SetProcessWorkingSetSize(IntPtr process, int minimumWorkingSetSize, int maximumWorkingSetSize);
 
         public static async void FlushMemory()
         {
@@ -33,9 +36,14 @@ namespace XstreaMonNET8
 
         internal static Bitmap LoadBitmap(string path)
         {
-            using FileStream input = new(path, FileMode.Open, FileAccess.Read);
-            using BinaryReader reader = new(input);
-            return new Bitmap(new MemoryStream(reader.ReadBytes((int)input.Length)));
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader reader = new BinaryReader(fs))
+                {
+                    byte[] data = reader.ReadBytes((int)fs.Length);
+                    return new Bitmap(new MemoryStream(data));
+                }
+            }
         }
 
         internal static int Record_Max_Lenght()
@@ -54,41 +62,53 @@ namespace XstreaMonNET8
 
         internal static void Error_Message(Exception ex, string sender)
         {
-            if (!Debug_Modus) return;
-
-            try
+            if (Debug_Modus)
             {
-                using StreamWriter writer = File.AppendText(Path.Combine(CommonPath, "log.txt"));
-                writer.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
-                writer.WriteLine($"Sender: {sender}");
-                if (ex != null)
+                try
                 {
-                    writer.WriteLine($"Exception: {ex.Message}");
-                    writer.WriteLine($"Source: {ex.Source}");
-                    writer.WriteLine($"TargetSite: {ex.TargetSite}");
-                    writer.WriteLine("-------------------------------");
+                    string logPath = Path.Combine(CommonPath, "log.txt");
+                    using (StreamWriter writer = File.AppendText(logPath))
+                    {
+                        writer.WriteLine($"{DateTime.Now:HH:mm:ss dd/MM/yyyy}");
+                        writer.WriteLine($"Sender: {sender}");
+                        if (ex != null)
+                        {
+                            writer.WriteLine($"Exception: {ex.Message}");
+                            writer.WriteLine($"Source: {ex.Source}");
+                            writer.WriteLine($"TargetSite: {ex.TargetSite}");
+                            writer.WriteLine("-------------------------------");
+                        }
+                    }
+                }
+                catch
+                {
+                    // Ignore logging errors
                 }
             }
-            catch { /* Logging silently fails */ }
         }
 
         internal static void Wait(int interval)
         {
-            Stopwatch sw = Stopwatch.StartNew();
+            Stopwatch sw = new();
+            sw.Start();
             while (sw.ElapsedMilliseconds < interval)
+            {
                 Application.DoEvents();
+            }
             sw.Stop();
         }
 
-        internal static bool Task_Runs(int processId)
+        internal static bool Task_Runs(int Prozess_ID)
         {
-            if (processId < 1)
+            if (Prozess_ID < 1)
                 return false;
 
             try
             {
-                using Process proc = Process.GetProcessById(processId);
-                return proc.ProcessName.StartsWith("CRStreamRec") || proc.ProcessName.StartsWith("RecordStream");
+                Process proc = Process.GetProcessById(Prozess_ID);
+                bool result = proc.ProcessName.StartsWith("CRStreamRec") || proc.ProcessName.StartsWith("RecordStream");
+                proc.Dispose();
+                return result;
             }
             catch
             {
@@ -96,92 +116,85 @@ namespace XstreaMonNET8
             }
         }
 
-        internal static async Task<bool> Task_Quit(int processId)
+        internal static async Task<bool> Task_Quit(int Prozess_ID)
         {
             await Task.CompletedTask;
 
-            if (ValueBack.Get_CInteger(processId) <= 0)
+            if (ValueBack.Get_CInteger(Prozess_ID) <= 0)
                 return false;
 
-            if (!Task_Runs(processId))
+            if (!Task_Runs(Prozess_ID))
                 return true;
 
-            foreach (Process proc in Process.GetProcesses())
+            Process[] processes = Process.GetProcesses();
+            foreach (Process proc in processes)
             {
-                if (proc.Id == processId && (proc.ProcessName.StartsWith("CRStreamRec") || proc.ProcessName.StartsWith("RecordStream")))
+                if (proc.Id == Prozess_ID &&
+                   (proc.ProcessName.StartsWith("CRStreamRec") || proc.ProcessName.StartsWith("RecordStream")))
                 {
                     try
                     {
                         if (proc.ProcessName.StartsWith("CRStreamRec"))
                         {
-                            proc.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                            for (int i = 0; i < 10 && Task_Runs(processId); i++)
+                            int tries = 0;
+                            while (Task_Runs(Prozess_ID))
                             {
-                                proc.Kill();
-                                Wait(500);
+                                if (tries < 10)
+                                {
+                                    proc.Kill();
+                                    Wait(500);
+                                    tries++;
+                                }
+                                else
+                                {
+                                    proc.Kill();
+                                    break;
+                                }
                             }
+                            return true;
                         }
                         else if (proc.ProcessName.StartsWith("RecordStream"))
                         {
-                            for (int i = 0; i < 60 && Task_Runs(processId); i++)
+                            int tries = 0;
+                            while (Task_Runs(Prozess_ID))
                             {
-                                Interaction.AppActivate(processId);
-                                SendKeys.Send("q");
-                                Wait(1000);
+                                if (tries < 60)
+                                {
+                                    // No Interaction.AppActivate, so fallback to Kill
+                                    proc.Kill();
+                                    Wait(1000);
+                                    tries++;
+                                }
+                                else
+                                {
+                                    proc.Kill();
+                                    break;
+                                }
                             }
-
-                            if (Task_Runs(processId))
-                            {
-                                Interaction.AppActivate(processId);
-                                SendKeys.Send("^c");
-                                SendKeys.Send("^c");
-                                proc.WaitForExit(10000);
-                            }
+                            return true;
                         }
-                        return true;
                     }
                     catch (Exception ex)
                     {
                         Error_Message(ex, "Parameter.Task_Quit");
-                        if (Task_Runs(processId))
-                        {
-                            try
-                            {
-                                proc.WaitForExit(60000);
-                            }
-                            catch (Exception ex2)
-                            {
-                                Error_Message(ex2, "Parameter.Task_Quit");
-                            }
-                        }
+                        proc.WaitForExit(10000);
                     }
-                    break;
                 }
             }
-
-            return !Task_Runs(processId);
+            return !Task_Runs(Prozess_ID);
         }
 
-        internal static Task<bool> URL_Response(string siteUrl)
+        internal static async Task<bool> URL_Response(string Site_URL)
         {
-            return Task.Run(() => URL_Response_Thread(siteUrl));
-        }
-
-        internal static bool URL_Response_Thread(string siteUrl)
-        {
-            if (string.IsNullOrWhiteSpace(siteUrl))
+            if (string.IsNullOrWhiteSpace(Site_URL))
                 return false;
 
-            string requestUrl = siteUrl.Replace("\\/", "/");
+            Site_URL = Site_URL.Replace("\\/", "/");
+
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
-                request.Timeout = 2000;
-                request.ReadWriteTimeout = 1000;
-                request.Method = "GET";
-
-                using var response = request.GetResponse();
-                return true;
+                HttpResponseMessage response = await httpClient.GetAsync(Site_URL).ConfigureAwait(false);
+                return response.IsSuccessStatusCode;
             }
             catch
             {
@@ -189,9 +202,9 @@ namespace XstreaMonNET8
             }
         }
 
-        public static void Design_Change(int designId)
+        public static void Design_Change(int Design_ID)
         {
-            switch (designId)
+            switch (Design_ID)
             {
                 case 0:
                 case 1:
@@ -204,6 +217,5 @@ namespace XstreaMonNET8
                     break;
             }
         }
-
     }
 }
