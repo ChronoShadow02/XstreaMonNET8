@@ -15,7 +15,7 @@ namespace XstreaMonNET8
                 if (BongaCams_Last_Many_Request != DateTime.MinValue &&
                     BongaCams_Last_Many_Request.AddSeconds(30) > DateTime.Now)
                 {
-                    return null;
+                    return null!;
                 }
 
                 string result = VParse.Chrome_Load("https://en.bongacams.com/" + modelStream.Pro_Model_Name, true).Result!;
@@ -26,7 +26,7 @@ namespace XstreaMonNET8
             {
                 Parameter.Error_Message(ex, $"Bongacams.StreamAdresses(Model_Name) = {modelStream.Pro_Model_Name}");
                 BongaCams_Last_Many_Request = DateTime.Now;
-                return null;
+                return null!;
             }
         }
 
@@ -42,7 +42,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, $"Bongacams.StreamAdresses (Model_Name) = {modelStream.Pro_Model_Name}");
-                return null;
+                return null!;
             }
         }
 
@@ -88,7 +88,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, $"Bongacams.Read_Model_Stream (Model_Name) = {modelStream.Pro_Model_Name}");
-                return null;
+                return null!;
             }
         }
 
@@ -175,7 +175,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Bongacams.Find_Chunk_File");
-                return null;
+                return null!;
             }
         }
 

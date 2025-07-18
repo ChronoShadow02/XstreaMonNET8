@@ -1130,7 +1130,7 @@ namespace XstreaMonNET8
                             {
                                 flag = false;
                                 // Assuming DDL_Webseite.SelectedValue is an int
-                                Platform_ID = (int)dialogFirstStart.DDL_Webseite.SelectedValue;
+                                Platform_ID = (int)dialogFirstStart.DDL_Webseite.SelectedValue!;
                             }
                         }
                         else
@@ -1268,6 +1268,9 @@ namespace XstreaMonNET8
                 Visible = true;
             }
         }
+
+        // Reemplaza cada llamada a oleDbConnection.Open(); por await oleDbConnection.OpenAsync(); 
+        // y asegúrate de que el método que contiene la llamada sea async y se espere correctamente.
 
         internal async void Model_load(DataTable DT_User_Data)
         {
@@ -3025,7 +3028,7 @@ namespace XstreaMonNET8
                 using (OleDbConnection oleDbConnection = new OleDbConnection())
                 {
                     oleDbConnection.ConnectionString = Database_Connect.Aktiv_Datenbank();
-                    oleDbConnection.Open();
+                    await oleDbConnection.OpenAsync();
                     if (oleDbConnection.State == ConnectionState.Open)
                     {
                         using (OleDbDataAdapter adapter = new OleDbDataAdapter("Select Top 200 * from DT_Record where Record_Beginn > " + ValueBack.Get_SQL_Date(DateTime.Now.AddDays(-1.0)) + " ORDER BY Record_Beginn DESC ", oleDbConnection.ConnectionString))
@@ -3033,7 +3036,7 @@ namespace XstreaMonNET8
                             using (DataSet dataSet = new DataSet())
                             {
                                 adapter.Fill(dataSet, "DT_Record");
-                                oleDbConnection.Close();
+                                await oleDbConnection.OpenAsync();
                                 using (DataView dataView = new DataView(dataSet.Tables["DT_Record"], null, "Record_Beginn DESC", DataViewRowState.CurrentRows))
                                 {
                                     foreach (DataRowView dataRowView in dataView)
@@ -3101,7 +3104,7 @@ namespace XstreaMonNET8
                 using (OleDbConnection oleDbConnection = new OleDbConnection())
                 {
                     oleDbConnection.ConnectionString = Database_Connect.Aktiv_Datenbank();
-                    oleDbConnection.Open();
+                    await oleDbConnection.OpenAsync();
                     if (oleDbConnection.State == ConnectionState.Open)
                     {
                         using (OleDbDataAdapter adapter = new OleDbDataAdapter("Select * from DT_Record where Record_Favorit = True", oleDbConnection.ConnectionString))
@@ -3109,7 +3112,7 @@ namespace XstreaMonNET8
                             using (DataSet dataSet = new DataSet())
                             {
                                 adapter.Fill(dataSet, "DT_Record");
-                                oleDbConnection.Close();
+                                await oleDbConnection.OpenAsync();
                                 using (DataView dataView = new DataView(dataSet.Tables["DT_Record"], null, "Record_Beginn DESC", DataViewRowState.CurrentRows))
                                 {
                                     foreach (DataRowView dataRowView in dataView)
