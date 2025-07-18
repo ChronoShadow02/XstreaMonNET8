@@ -111,7 +111,7 @@ namespace XstreaMonNET8
                 switch (Model_Stream.Pro_Model_Website)
                 {
                     case 0:
-                        streamAdresses = Chaturbate.StreamAdresses(Model_Stream).Result;
+                        streamAdresses = Chaturbate.Stream_Adresses(Model_Stream).Result;
                         break;
                     case 1:
                         streamAdresses = Camsoda.StreamAdresses(Model_Stream).Result;
@@ -166,7 +166,7 @@ namespace XstreaMonNET8
                 switch (Model_Stream.Pro_Model_Website)
                 {
                     case 0:
-                        streamAdresses = Chaturbate.StreamAdresses(Model_Stream).Result;
+                        streamAdresses = Chaturbate.Stream_Adresses(Model_Stream).Result;
                         break;
                     case 1:
                         streamAdresses = Camsoda.StreamAdresses(Model_Stream).Result;

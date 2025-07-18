@@ -674,7 +674,7 @@ namespace XstreaMonNET8
                 this.RadProgressBar1.Maximum = Sites.Website_List.Count;
                 this.RadProgressBar1.Visible = true;
                 this.RadProgressBar1.Value = 0;
-                Application.DoEvents(); // Process UI events
+                Application.DoEvents();
 
                 try
                 {
@@ -835,8 +835,10 @@ namespace XstreaMonNET8
                     {
                         foreach (Channel_Info profil in this.Profil_List)
                         {
-                            Control_Broadcaster_Suche broadcasterSuche = new Control_Broadcaster_Suche(profil);
-                            broadcasterSuche.Dock = DockStyle.Top;
+                            Control_Broadcaster_Suche broadcasterSuche = new(profil)
+                            {
+                                Dock = DockStyle.Top
+                            };
                             broadcasterSuche.Such_Item_Accept += new Control_Broadcaster_Suche.Such_Item_AcceptEventHandler(this.Suche_Accept);
                             panel.Controls.Add(broadcasterSuche);
                         }
