@@ -1,49 +1,80 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace XstreaMonNET8
 {
-    partial class Control_Broadcaster_Suche
+    public partial class Control_Broadcaster_Suche : UserControl
     {
-        private IContainer components;
-        internal ContextMenuStrip menuContextual;
-        internal ToolStripMenuItem itemAceptar;
-        internal ToolStripMenuItem itemWeb;
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private IContainer components = null;
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        [DebuggerNonUserCode]
+        protected override void Dispose(bool disposing)
+        {
+            try
+            {
+                if (disposing && (components != null))
+                {
+                    components.Dispose();
+                }
+            }
+            finally
+            {
+                base.Dispose(disposing);
+            }
+        }
+
+        #region Component Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
         [DebuggerStepThrough]
         private void InitializeComponent()
         {
-            this.components = new Container();
-            this.menuContextual = new ContextMenuStrip(this.components);
-            this.itemAceptar = new ToolStripMenuItem();
-            this.itemWeb = new ToolStripMenuItem();
-
+            this.components = new System.ComponentModel.Container();
+            this.MIT_Uebernehmen = new System.Windows.Forms.ToolStripMenuItem();
+            this.MIT_Webseite = new System.Windows.Forms.ToolStripMenuItem();
+            this.SuspendLayout();
             // 
-            // itemAceptar
+            // MIT_Uebernehmen
             // 
-            this.itemAceptar.Name = "itemAceptar";
-            this.itemAceptar.Text = TXT.TXT_Description("Übernehmen");
-            this.itemAceptar.Click += new EventHandler(this.MIT_Uebernehmen_Click);
+            this.MIT_Uebernehmen.Name = "MIT_Uebernehmen";
+            this.MIT_Uebernehmen.Size = new System.Drawing.Size(180, 22);
+            this.MIT_Uebernehmen.Text = "übernehmen";
+            this.MIT_Uebernehmen.Click += new System.EventHandler(this.MIT_Uebernehmen_Click);
             // 
-            // itemWeb
+            // MIT_Webseite
             // 
-            this.itemWeb.Name = "itemWeb";
-            this.itemWeb.Text = TXT.TXT_Description("Webseite öffnen");
-            this.itemWeb.Click += new EventHandler(this.MIT_Webseite_Click);
-            // 
-            // menuContextual
-            // 
-            this.menuContextual.Items.AddRange(new ToolStripItem[] {
-                this.itemAceptar,
-                this.itemWeb
-            });
-            this.menuContextual.Name = "menuContextual";
+            this.MIT_Webseite.Name = "MIT_Webseite";
+            this.MIT_Webseite.Size = new System.Drawing.Size(180, 22);
+            this.MIT_Webseite.Text = "Webseite öffnen";
+            this.MIT_Webseite.Click += new System.EventHandler(this.MIT_Webseite_Click);
             // 
             // Control_Broadcaster_Suche
             // 
-            this.ContextMenuStrip = this.menuContextual;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.Name = "Control_Broadcaster_Suche";
+            this.Size = new System.Drawing.Size(584, 48);
+            this.ResumeLayout(false);
+
         }
+
+        #endregion
+
+        internal System.Windows.Forms.ToolStripMenuItem MIT_Uebernehmen;
+        internal System.Windows.Forms.ToolStripMenuItem MIT_Webseite;
     }
 }

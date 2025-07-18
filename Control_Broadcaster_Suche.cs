@@ -1,14 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
-
+﻿#nullable disable
 namespace XstreaMonNET8
 {
     public partial class Control_Broadcaster_Suche : UserControl
     {
-        // campos “de lógica”
         private int Pri_Website_ID;
         private Image Pri_Website_Logo;
         private readonly string Pri_Beschreibung;
@@ -18,100 +12,80 @@ namespace XstreaMonNET8
         private readonly bool Pri_Online;
         private readonly Channel_Info Pri_Channel_Info;
 
-        /// <summary>Se dispara al “Aceptar” (doble-click o menú).</summary>
-        public delegate void Such_Item_AcceptEventHandler(Channel_Info infoSeleccionado);
-        public event Such_Item_AcceptEventHandler Such_Item_Accept;
-
-        public Control_Broadcaster_Suche(Channel_Info broadcastInfo)
+        public Control_Broadcaster_Suche(Channel_Info Broadcast_Info)
         {
-            InitializeComponent();
+            this.Paint += new PaintEventHandler(this.Control_Broadcaster_Suche_Paint);
+            this.DoubleClick += new EventHandler(this.MIT_Uebernehmen_Click);
+            this.Pri_Website_ID = 0;
+            this.InitializeComponent();
+            this.Pri_Channel_Info = Broadcast_Info;
+            this.Pro_Website_ID = Broadcast_Info.Pro_Website_ID;
+            this.Pri_Beschreibung = Broadcast_Info.Pro_Profil_Beschreibung;
+            this.Pri_Profil_Image = Broadcast_Info.Pro_Profil_Image;
+            this.Pri_Profil_Online = Broadcast_Info.Pro_Last_Online;
+            this.Pri_Broadcaster_Name = Broadcast_Info.Pro_Name;
+            this.Pri_Online = ValueBack.Get_CBoolean((object)Broadcast_Info.Pro_Online);
+            this.MIT_Uebernehmen.Text = TXT.TXT_Description("Übernehmen");
+            this.MIT_Webseite.Text = TXT.TXT_Description("Webseite öffnen");
 
-            // inicializo campos de datos
-            Pri_Channel_Info = broadcastInfo;
-            Pri_Beschreibung = broadcastInfo.Pro_Profil_Beschreibung;
-            Pri_Profil_Image = broadcastInfo.Pro_Profil_Image;
-            Pri_Profil_Online = broadcastInfo.Pro_Last_Online;
-            Pri_Broadcaster_Name = broadcastInfo.Pro_Name;
-            Pri_Online = ValueBack.Get_CBoolean(broadcastInfo.Pro_Online);
-            Pro_Website_ID = broadcastInfo.Pro_Website_ID;
-
-            // look & feel
-            Size = new Size(584, 48);
-            BackColor = SystemColors.Control;
-            ForeColor = SystemColors.ControlText;
-
-            // eventos de UI
-            Paint += Control_Broadcaster_Suche_Paint!;
-            DoubleClick += MIT_Uebernehmen_Click!;
+            this.ContextMenuStrip = new ContextMenuStrip();
+            this.ContextMenuStrip.Items.Add(this.MIT_Uebernehmen);
+            this.ContextMenuStrip.Items.Add(this.MIT_Webseite);
         }
 
-        /// <summary>ID de sitio; al cambiar carga el logo.</summary>
-        public int Pro_Website_ID
+        internal int Pro_Website_ID
         {
-            get => Pri_Website_ID;
+            get => this.Pri_Website_ID;
             set
             {
-                Pri_Website_ID = value;
-                var website = Sites.Website_Find(value);
-                if (website != null)
-                    Pri_Website_Logo = new Bitmap(website.Pro_Image, 32, 32);
+                this.Pri_Website_ID = value;
+                Class_Website classWebsite = Sites.Website_Find(this.Pri_Website_ID);
+                if (classWebsite == null)
+                    return;
+                this.Pri_Website_Logo = (Image)new Bitmap(classWebsite.Pro_Image, 32, 32);
             }
         }
 
         private void Control_Broadcaster_Suche_Paint(object sender, PaintEventArgs e)
         {
-            using Pen pen = new Pen(Color.DarkGray);
-            e.Graphics.DrawLine(pen, 1, 1, Width - 1, 1);
-
-            int x = 4, y = 4;
-
-            if (Pri_Website_Logo != null)
+            e.Graphics.DrawLine(new Pen((Brush)new SolidBrush(Color.DarkGray)), 1, 1, checked(this.Width - 1), 1);
+            int x = 4;
+            int y = 4;
+            if (this.Pri_Website_Logo != null)
             {
-                e.Graphics.DrawImage(Pri_Website_Logo, x, y, 24, 24);
-                x += 28;
+                e.Graphics.DrawImage(this.Pri_Website_Logo, x, y, 24, 24);
+                checked { x += 28; }
             }
-
-            if (!string.IsNullOrEmpty(Pri_Beschreibung))
+            if (this.Pri_Beschreibung != null && this.Pri_Beschreibung.ToString() != "")
             {
-                e.Graphics.DrawString(Pri_Beschreibung, Font, Brushes.Black, x, y);
-                y += 16;
+                e.Graphics.DrawString(this.Pri_Beschreibung, this.Font, (Brush)new SolidBrush(Color.Black), (float)x, (float)y);
+                checked { y += 16; }
             }
-
-            if (!string.IsNullOrEmpty(Pri_Profil_Online))
-            {
-                e.Graphics.DrawString(
-                  $"{TXT.TXT_Description("Letzte Sendung")}: {Pri_Profil_Online}",
-                  Font, Brushes.Black, x, y);
-            }
-
-            if (Pri_Profil_Image != null)
-            {
-                e.Graphics.DrawImage(Pri_Profil_Image, Width - 44, 4, 40, 40);
-            }
-
-            using Brush statusBrush = Pri_Online ? Brushes.Green : Brushes.Gray;
-            e.Graphics.FillEllipse(statusBrush, Width - 16, 6, 10, 10);
+            if (this.Pri_Profil_Online != null)
+                e.Graphics.DrawString(TXT.TXT_Description("Letzte Sendung") + ": " + this.Pri_Profil_Online, this.Font, (Brush)new SolidBrush(Color.Black), (float)x, (float)y);
+            if (this.Pri_Profil_Image != null)
+                e.Graphics.DrawImage(this.Pri_Profil_Image, checked(this.Width - 44), 4, 40, 40);
+            if (this.Pri_Online)
+                e.Graphics.FillEllipse((Brush)new SolidBrush(Color.Green), checked(this.Width - 16), 6, 10, 10);
+            else
+                e.Graphics.FillEllipse((Brush)new SolidBrush(Color.Gray), checked(this.Width - 16), 6, 10, 10);
         }
 
         private void MIT_Uebernehmen_Click(object sender, EventArgs e)
         {
-            Such_Item_Accept?.Invoke(Pri_Channel_Info);
+            Such_Item_AcceptEventHandler suchItemAcceptEvent = this.Such_Item_Accept;
+            if (suchItemAcceptEvent == null)
+                return;
+            suchItemAcceptEvent(this.Pri_Channel_Info);
         }
 
         private void MIT_Webseite_Click(object sender, EventArgs e)
         {
-            Sites.WebSiteOpen(Pro_Website_ID, Pri_Broadcaster_Name);
+            Sites.WebSiteOpen(this.Pro_Website_ID, this.Pri_Broadcaster_Name);
         }
 
-        [DebuggerNonUserCode]
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                components?.Dispose();
-                menuContextual?.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        internal event Control_Broadcaster_Suche.Such_Item_AcceptEventHandler Such_Item_Accept;
+
+        internal delegate void Such_Item_AcceptEventHandler(Channel_Info Info_Select);
     }
 }
