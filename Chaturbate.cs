@@ -19,7 +19,7 @@ namespace XstreaMonNET8
                 await Task.CompletedTask;
                 if (Last_Many_Request != DateTime.MinValue && DateTime.Compare(Last_Many_Request.AddSeconds(30.0), DateTime.Now) > 0 || await Online(Model_Stream.Pro_Model_Name) != 1)
                 {
-                    return null;
+                    return null!;
                 }
 
                 string result = await VParse.GetPOSTPHP("https://m.chaturbate.com/api/chatvideocontext/" + Model_Stream.Pro_Model_Name.ToLower());
@@ -27,12 +27,12 @@ namespace XstreaMonNET8
                 if (string.Compare(result, "429", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     Last_Many_Request = DateTime.Now;
-                    return null;
+                    return null!;
                 }
 
                 if (result == null)
                 {
-                    return null;
+                    return null!;
                 }
 
                 string m3U8Path = Find_M3U8_Path(result);
@@ -45,9 +45,9 @@ namespace XstreaMonNET8
                 if (ex is WebException webEx && ((HttpWebResponse)webEx.Response)?.StatusCode == (HttpStatusCode)429)
                 {
                     Last_Many_Request = DateTime.Now;
-                    return null;
+                    return null!;
                 }
-                return null;
+                return null!;
             }
         }
 
@@ -62,7 +62,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, "Chaturbate.M3u8_URL(Model_Name) =" + Model_Stream.Pro_Model_Name.ToString().ToLower());
-                return null;
+                return null!;
             }
         }
 
@@ -75,11 +75,11 @@ namespace XstreaMonNET8
                 if (string.Compare(TXT, "429", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     Last_Many_Request = DateTime.Now;
-                    return null;
+                    return null!;
                 }
                 else
                 {
-                    string[] strArray = TXT?.Split('#');
+                    string[] strArray = TXT?.Split('#')!;
 
                     if (strArray != null)
                     {
@@ -288,14 +288,14 @@ namespace XstreaMonNET8
 
         internal static Image Image_FromWeb(string Model_Name)
         {
-            Bitmap bitmap = null;
+            Bitmap bitmap = null!;
             try
             {
-                using (WebClient webClient = new WebClient())
+                using (HttpClient httpClient = new HttpClient())
                 {
                     try
                     {
-                        byte[] buffer = webClient.DownloadData("https://jpeg.live.mmcdn.com/stream?room=" + Model_Name.ToLower());
+                        byte[] buffer = httpClient.GetByteArrayAsync("https://jpeg.live.mmcdn.com/stream?room=" + Model_Name.ToLower()).Result;
                         if (buffer.Length > 0)
                         {
                             using (MemoryStream memoryStream = new MemoryStream(buffer))
@@ -303,12 +303,10 @@ namespace XstreaMonNET8
                                 bitmap = (Bitmap)Image.FromStream(memoryStream);
                             }
                         }
-                        if (bitmap != null)
+                        if (bitmap != null && bitmap.Size == new Size(360, 202))
                         {
-                            if (bitmap.Size == new Size(360, 202))
-                            {
-                                bitmap = null;
-                            }
+                            bitmap.Dispose();
+                            bitmap = null!;
                         }
                     }
                     catch (Exception)
