@@ -2,7 +2,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Diagnostics;
-using System.Net;
 
 namespace XstreaMonNET8
 {

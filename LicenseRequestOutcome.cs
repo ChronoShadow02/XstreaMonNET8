@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace XstreaMonNET8
+﻿namespace XstreaMonNET8
 {
     public class LicenseRequestOutcome
     {

@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Http;
-
-namespace XstreaMonNET8
+﻿namespace XstreaMonNET8
 {
     internal sealed class Camster
     {

@@ -187,7 +187,7 @@ namespace XstreaMonNET8
                 {
                     if (paths.Count > 1)
                     {
-                        using (var sw = new StreamWriter(Path.Combine(Parameter.CommonPath, "Playlist.m3u"),append: true))
+                        using (var sw = new StreamWriter(Path.Combine(Parameter.CommonPath, "Playlist.m3u"), append: true))
                         {
                             foreach (string p in paths)
                             {

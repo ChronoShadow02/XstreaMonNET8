@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace XstreaMonNET8
+﻿namespace XstreaMonNET8
 {
     public class Class_Record_Manual
     {

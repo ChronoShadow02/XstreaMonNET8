@@ -1,6 +1,4 @@
 ﻿#nullable disable
-using XstreaMonNET8.WebPWrapper;
-
 namespace XstreaMonNET8.WebPWrapper
 {
     internal struct WebPDecoderConfig

@@ -1292,7 +1292,7 @@ namespace XstreaMonNET8
                     {
                         this.Pro_Aufnahme_Stop_Off = false;
 
-                        if (Pro_Benachrichtigung &&string.Equals(IniFile.Read(Parameter.INI_Common, "Notification", "Enabled", "True"), "True", StringComparison.OrdinalIgnoreCase))
+                        if (Pro_Benachrichtigung && string.Equals(IniFile.Read(Parameter.INI_Common, "Notification", "Enabled", "True"), "True", StringComparison.OrdinalIgnoreCase))
                         {
                             this.Model_Show_Notification?.Invoke(//Model_Show_NotificationEvent
                                 $"{TXT.TXT_Description("Aufnahme")} {this.Pro_Model_Name}",

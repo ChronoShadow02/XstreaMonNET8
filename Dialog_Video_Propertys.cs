@@ -165,7 +165,7 @@ namespace XstreaMonNET8
                     this.LAB_Framerate.Text = frameRateValue.ToString() + " " + TXT.TXT_Description("Bilder/Sekunde");
 
                     this.LAB_Resolution.Text = row["Record_Resolution"].ToString();
-                    
+
                     int lengthMinutes = ValueBack.Get_CInteger(row["Record_Länge_Minuten"]);
                     this.Pri_File_Lenght = lengthMinutes * 60;
                     this.LAB_Länge.Text = lengthMinutes.ToString() + " " + TXT.TXT_Description("Minuten");

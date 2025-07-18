@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace XstreaMonNET8
+﻿namespace XstreaMonNET8
 {
     internal static class Bongacams
     {

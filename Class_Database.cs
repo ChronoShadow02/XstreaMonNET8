@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace XstreaMonNET8
+﻿namespace XstreaMonNET8
 {
     public class Class_Database
     {
