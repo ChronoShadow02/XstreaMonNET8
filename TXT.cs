@@ -4,7 +4,7 @@ namespace XstreaMonNET8
 {
     public class TXT
     {
-        private static readonly List<TXT_Item> TXT_List = new();
+        private static readonly List<TXT_Item> TXT_List = [];
 
         internal TXT(string languageFile)
         {

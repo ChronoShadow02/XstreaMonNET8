@@ -1,19 +1,32 @@
-﻿using System.Net;
+﻿using System;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace XstreaMonNET8
 {
     internal static class Stripchat
     {
+        private static readonly HttpClient httpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(15)
+        };
+
         internal static async Task<StreamAdresses> Stream_Adresses(StreamAdresses modelStream)
         {
             try
             {
                 await Task.CompletedTask;
-                string json = VParse.Replace_Space(await VParse.HTML_Load("https://stripchat.com/api/front/v2/models/username/" + modelStream.Pro_Model_Name + "/cam"));
+                string json = VParse.Replace_Space(
+                    await VParse.HTML_Load($"https://stripchat.com/api/front/v2/models/username/{modelStream.Pro_Model_Name}/cam").ConfigureAwait(false));
+
                 if (string.IsNullOrEmpty(json))
                     return null;
 
-                return await Read_Model_StreamAsync(Find_M3u8_Path(json), modelStream, json);
+                return await Read_Model_StreamAsync(Find_M3u8_Path(json), modelStream, json).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -27,7 +40,7 @@ namespace XstreaMonNET8
             try
             {
                 await Task.CompletedTask;
-                return await Stream_Adresses(modelStream);
+                return await Stream_Adresses(modelStream).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -43,7 +56,7 @@ namespace XstreaMonNET8
                 if (streamUrl == null)
                     return null;
 
-                string content = await VParse.HTML_Load(streamUrl, true);
+                string content = await VParse.HTML_Load(streamUrl, true).ConfigureAwait(false);
                 if (string.IsNullOrEmpty(content))
                     return null;
 
@@ -52,7 +65,7 @@ namespace XstreaMonNET8
                 modelStream.Pro_Record_Resolution = Sites.Resolution_Find(playlist, chunk);
                 modelStream.Pro_M3U8_Path = chunk?.Trim();
                 modelStream.Pro_TS_Path = null;
-                modelStream.Pro_Preview_Image = "https://img.strpst.com/thumbs/{0}/" + VParse.HTML_Value(txt, "streamName:", ",") + "_webp";
+                modelStream.Pro_Preview_Image = $"https://img.strpst.com/thumbs/{{0}}/{VParse.HTML_Value(txt, "streamName:", ",")}_webp";
 
                 return modelStream;
             }
@@ -125,7 +138,7 @@ namespace XstreaMonNET8
                     if (string.IsNullOrEmpty(chunkFile))
                     {
                         var last = m3u8File.LastOrDefault(l => l.Contains("https://"));
-                        chunkFile = last[last.IndexOf("https://")..];
+                        chunkFile = last?[last.IndexOf("https://")..];
                     }
                 }
             }
@@ -143,10 +156,10 @@ namespace XstreaMonNET8
             {
                 await Task.CompletedTask;
 
-                var model = await Class_Model_List.Class_Model_Find(0, modelName);
-                if (model != null && await Parameter.URL_Response(model.Pro_Model_M3U8)) return 1;
+                var model = await Class_Model_List.Class_Model_Find(0, modelName).ConfigureAwait(false);
+                if (model != null && await Parameter.URL_Response(model.Pro_Model_M3U8).ConfigureAwait(false)) return 1;
 
-                string result = await VParse.HTML_Load($"https://stripchat.com/api/front/v2/models/username/{modelName}/cam");
+                string result = await VParse.HTML_Load($"https://stripchat.com/api/front/v2/models/username/{modelName}/cam").ConfigureAwait(false);
                 string text = VParse.Replace_Space(result).Replace("\"", "");
 
                 if (text.Contains("isCamAvailable:true")) return 1;
@@ -177,12 +190,13 @@ namespace XstreaMonNET8
                 string tempPath = Path.Combine(Parameter.CommonPath, "Temp");
                 Directory.CreateDirectory(tempPath);
 
-                long seconds = Convert.ToInt64(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+                long seconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 string path = Path.Combine(tempPath, $"{DateTime.Now.Ticks}.webp");
 
-                using WebClient client = new();
                 string downloadUrl = string.Format(model.Pro_Model_Preview_Path, seconds);
-                client.DownloadFile(downloadUrl, path);
+                byte[] imageData = await httpClient.GetByteArrayAsync(downloadUrl).ConfigureAwait(false);
+
+                await File.WriteAllBytesAsync(path, imageData).ConfigureAwait(false);
 
                 if (File.Exists(path))
                 {
@@ -203,7 +217,8 @@ namespace XstreaMonNET8
         internal static async Task<bool> IsGalerie(string url, string html, Class_Model model)
         {
             await Task.CompletedTask;
-            return url.Contains("stripchat.com/collection") || url.Contains("/videos/") && html.Contains("video-player__video src=") && model != null;
+            return url.Contains("stripchat.com/collection") ||
+                   (url.Contains("/videos/") && html.Contains("video-player__video src=") && model != null);
         }
 
         internal static async void Galerie_Movie_Download(string url, string html, Class_Model model = null)
@@ -218,7 +233,7 @@ namespace XstreaMonNET8
                 if (url.Contains("/videos/") && html.Contains(".mp4"))
                 {
                     downloadUrl = VParse.HTML_Value(html, "video-player__video src=", "></video>").Replace("amp;", "");
-                    if (await Parameter.URL_Response(downloadUrl))
+                    if (await Parameter.URL_Response(downloadUrl).ConfigureAwait(false))
                         videoName = VParse.HTML_Value(html, "div class=media-gallery__info-title>", "</div>");
                 }
 
@@ -243,83 +258,85 @@ namespace XstreaMonNET8
             }
         }
 
-        internal static async Task<Channel_Info> Profil(string modelName)
+        internal static async Task<Channel_Info> Profil(string Model_Name)
         {
             try
             {
                 await Task.CompletedTask;
 
-                var channelInfo = new Channel_Info
+                Channel_Info channelInfo1 = new Channel_Info()
                 {
                     Pro_Exist = false,
                     Pro_Website_ID = 2,
-                    Pro_Name = modelName
+                    Pro_Name = Model_Name
                 };
 
-                using var client = new HttpClient();
-                var response = await client.GetStringAsync($"https://stripchat.com/api/front/v2/models/username/{modelName.ToLower()}/cam");
-
-                string html = VParse.HTML_Value(response, "user:{user:{id:", "");
-                if (html.Length == 0)
-                    return channelInfo;
-
-                string gender = VParse.HTML_Value(html, "broadcastGender:", ",");
-                channelInfo.Pro_Gender = gender switch
+                using var httpClient = new HttpClient
                 {
-                    "female" => 1,
-                    "male" => 2,
-                    "group" => 3,
-                    "tranny" => 4,
-                    _ => 0
+                    Timeout = TimeSpan.FromSeconds(10)
                 };
 
-                channelInfo.Pro_Exist = !string.IsNullOrEmpty(gender);
+                string url = $"https://stripchat.com/api/front/v2/models/username/{Model_Name.ToLower()}/cam";
+                string responseText = await httpClient.GetStringAsync(url).ConfigureAwait(false);
 
-                if (channelInfo.Pro_Exist)
+                string HTML_Page = VParse.HTML_Value(responseText, "user:{user:{id:", "");
+
+                if (HTML_Page.Length > 0)
                 {
-                    string birthDate = VParse.HTML_Value(html, "birthDate:", ",");
-                    if (birthDate != "null")
-                        channelInfo.Pro_Birthday = birthDate;
-
-                    string country = VParse.HTML_Value(html, "country:", ",");
-                    string region = VParse.HTML_Value(html, "region:", ",");
-                    string city = VParse.HTML_Value(html, "city:", ",");
-
-                    if (!string.IsNullOrEmpty(country) && !string.IsNullOrEmpty(region))
-                        country += ", " + region;
-
-                    if (!string.IsNullOrEmpty(city))
-                        country += ", " + city;
-
-                    channelInfo.Pro_Country = country;
-
-                    string languages = VParse.HTML_Value(html, "languages:[", "]");
-                    if (languages != "null")
-                        channelInfo.Pro_Languages = languages;
-
-                    string lastOnline = VParse.HTML_Value(html, "statusChangedAt:", "T");
-                    if (!lastOnline.StartsWith("null"))
-                        channelInfo.Pro_Last_Online = lastOnline;
-
-                    channelInfo.Pro_Profil_Beschreibung = country;
-
-                    string avatar = VParse.HTML_Value(html, "avatarUrlThumb:", ",").Trim();
-                    if (await Parameter.URL_Response(avatar))
+                    string Left1 = VParse.HTML_Value(HTML_Page, "broadcastGender:", ",");
+                    channelInfo1.Pro_Gender = Left1 switch
                     {
-                        using var webClient = new WebClient();
-                        using var stream = webClient.OpenRead(avatar);
-                        if (stream != null)
-                            channelInfo.Pro_Profil_Image = Image.FromStream(stream);
-                    }
+                        "female" => 1,
+                        "male" => 2,
+                        "group" => 3,
+                        "tranny" => 4,
+                        _ => 0
+                    };
+                    channelInfo1.Pro_Exist = Left1.Length > 0;
 
-                    channelInfo.Pro_Online = (await Stripchat.Online(channelInfo.Pro_Name)) != 0;
+                    if (channelInfo1.Pro_Exist)
+                    {
+                        string Left2 = VParse.HTML_Value(HTML_Page, "birthDate:", ",");
+                        if (Left2 != "null")
+                            channelInfo1.Pro_Birthday = Left2;
+
+                        channelInfo1.Pro_Country = VParse.HTML_Value(HTML_Page, "country:", ",");
+                        string Right1 = VParse.HTML_Value(HTML_Page, "region:", ",");
+                        if (!string.IsNullOrEmpty(channelInfo1.Pro_Country) && !string.IsNullOrEmpty(Right1))
+                            channelInfo1.Pro_Country += ", " + Right1;
+
+                        string Right2 = VParse.HTML_Value(HTML_Page, "city:", ",");
+                        if (!string.IsNullOrEmpty(channelInfo1.Pro_Country) && !string.IsNullOrEmpty(Right2))
+                            channelInfo1.Pro_Country += ", " + Right2;
+
+                        string Left3 = VParse.HTML_Value(HTML_Page, "languages:[", "]");
+                        if (Left3 != "null")
+                            channelInfo1.Pro_Languages = Left3;
+
+                        string str3 = VParse.HTML_Value(HTML_Page, "statusChangedAt:", "T");
+                        if (!str3.StartsWith("null"))
+                            channelInfo1.Pro_Last_Online = str3;
+
+                        channelInfo1.Pro_Profil_Beschreibung = channelInfo1.Pro_Country;
+
+                        string str4 = VParse.HTML_Value(HTML_Page, "avatarUrlThumb:", ",").Trim();
+                        if (await Parameter.URL_Response(str4).ConfigureAwait(false))
+                        {
+                            byte[] imageBytes = await httpClient.GetByteArrayAsync(str4).ConfigureAwait(false);
+                            using var ms = new MemoryStream(imageBytes);
+                            channelInfo1.Pro_Profil_Image = Image.FromStream(ms);
+                        }
+
+                        int onlineStatus = await Stripchat.Online(channelInfo1.Pro_Name).ConfigureAwait(false);
+                        channelInfo1.Pro_Online = onlineStatus != 0;
+                    }
                 }
 
-                return channelInfo;
+                return channelInfo1;
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, $"Stripchat.Profil(Model_Name) = {modelName}");
+                Parameter.Error_Message(ex, "Stripchat.Profil(Model_Name) = " + Model_Name);
                 return null!;
             }
         }

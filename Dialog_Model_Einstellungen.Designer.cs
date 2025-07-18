@@ -168,7 +168,7 @@
             this.RadGroupBox1.Size = new System.Drawing.Size(486, 96);
             this.RadGroupBox1.TabIndex = 0;
             this.RadGroupBox1.TabStop = false;
-            this.RadGroupBox1.Text = "Automatischer Aufnahmestop";
+            this.RadGroupBox1.Text = "Detención automática de la grabación";
             // 
             // RadLabel3
             // 
@@ -209,7 +209,7 @@
             this.RadLabel2.Name = "RadLabel2";
             this.RadLabel2.Size = new System.Drawing.Size(48, 13);
             this.RadLabel2.TabIndex = 3;
-            this.RadLabel2.Text = "Minuten";
+            this.RadLabel2.Text = "minutos";
             // 
             // RBT_Aufnahmestop_Time
             // 
@@ -219,7 +219,7 @@
             this.RBT_Aufnahmestop_Time.Size = new System.Drawing.Size(154, 17);
             this.RBT_Aufnahmestop_Time.TabIndex = 1;
             this.RBT_Aufnahmestop_Time.TabStop = true;
-            this.RBT_Aufnahmestop_Time.Text = "stoppen bei Aufnahmezeit";
+            this.RBT_Aufnahmestop_Time.Text = "parar en el momento de la grabación";
             this.RBT_Aufnahmestop_Time.UseVisualStyleBackColor = true;
             // 
             // RBT_Aufnahmestop_NoStop
@@ -230,7 +230,7 @@
             this.RBT_Aufnahmestop_NoStop.Size = new System.Drawing.Size(373, 17);
             this.RBT_Aufnahmestop_NoStop.TabIndex = 0;
             this.RBT_Aufnahmestop_NoStop.TabStop = true;
-            this.RBT_Aufnahmestop_NoStop.Text = "nicht stoppen (wird beendet wenn kein Stream mehr empfangen wird)";
+            this.RBT_Aufnahmestop_NoStop.Text = "No parar (se termina cuando no se recibe más flujo)";
             this.RBT_Aufnahmestop_NoStop.UseVisualStyleBackColor = true;
             // 
             // RadGroupBox2
@@ -247,7 +247,7 @@
             this.RadGroupBox2.Size = new System.Drawing.Size(486, 105);
             this.RadGroupBox2.TabIndex = 1;
             this.RadGroupBox2.TabStop = false;
-            this.RadGroupBox2.Text = "Videoaufnahme";
+            this.RadGroupBox2.Text = "Grabación de vídeo";
             // 
             // DDL_Speicherformat
             // 
@@ -265,7 +265,7 @@
             this.RadLabel9.Name = "RadLabel9";
             this.RadLabel9.Size = new System.Drawing.Size(83, 13);
             this.RadLabel9.TabIndex = 18;
-            this.RadLabel9.Text = "Speicherformat";
+            this.RadLabel9.Text = "Formato de almacenamiento";
             // 
             // BTN_Folder
             // 
@@ -300,7 +300,7 @@
             this.RadLabel7.Name = "RadLabel7";
             this.RadLabel7.Size = new System.Drawing.Size(39, 13);
             this.RadLabel7.TabIndex = 16;
-            this.RadLabel7.Text = "Ordner";
+            this.RadLabel7.Text = "Carpeta";
             // 
             // RadLabel1
             // 
@@ -352,7 +352,7 @@
             this.RBT_Video_Minimal.Size = new System.Drawing.Size(107, 17);
             this.RBT_Video_Minimal.TabIndex = 1;
             this.RBT_Video_Minimal.TabStop = true;
-            this.RBT_Video_Minimal.Text = "Minimal 480x270";
+            this.RBT_Video_Minimal.Text = "Mínimo 480 x 270";
             this.RBT_Video_Minimal.UseVisualStyleBackColor = true;
             // 
             // RBT_Video_Send
@@ -363,7 +363,7 @@
             this.RBT_Video_Send.Size = new System.Drawing.Size(160, 17);
             this.RBT_Video_Send.TabIndex = 0;
             this.RBT_Video_Send.TabStop = true;
-            this.RBT_Video_Send.Text = "wie gesendet (empfohlen)";
+            this.RBT_Video_Send.Text = "tal y como se envía (recomendado)";
             this.RBT_Video_Send.UseVisualStyleBackColor = true;
             // 
             // CBX_Benachrichtigung
@@ -373,7 +373,7 @@
             this.CBX_Benachrichtigung.Name = "CBX_Benachrichtigung";
             this.CBX_Benachrichtigung.Size = new System.Drawing.Size(170, 17);
             this.CBX_Benachrichtigung.TabIndex = 0;
-            this.CBX_Benachrichtigung.Text = "Benachrichtigen wenn Online";
+            this.CBX_Benachrichtigung.Text = "Notificarme cuando esté en línea";
             this.CBX_Benachrichtigung.UseVisualStyleBackColor = true;
             // 
             // PVP_Einstellungen
@@ -396,7 +396,7 @@
             this.PVP_Info.Padding = new System.Windows.Forms.Padding(3);
             this.PVP_Info.Size = new System.Drawing.Size(505, 367);
             this.PVP_Info.TabIndex = 0;
-            this.PVP_Info.Text = "Kanal Info";
+            this.PVP_Info.Text = "Información de Canal";
             this.PVP_Info.UseVisualStyleBackColor = true;
             // 
             // RadGroupBox6
@@ -424,7 +424,7 @@
             this.RadLabel8.Name = "RadLabel8";
             this.RadLabel8.Size = new System.Drawing.Size(35, 13);
             this.RadLabel8.TabIndex = 16;
-            this.RadLabel8.Text = "Name";
+            this.RadLabel8.Text = "Nombre";
             // 
             // TXB_Land
             // 
@@ -440,7 +440,7 @@
             this.RadLabel4.Name = "RadLabel4";
             this.RadLabel4.Size = new System.Drawing.Size(31, 13);
             this.RadLabel4.TabIndex = 8;
-            this.RadLabel4.Text = "Land";
+            this.RadLabel4.Text = "País";
             // 
             // TXB_Name
             // 
@@ -471,7 +471,7 @@
             this.RadLabel5.Name = "RadLabel5";
             this.RadLabel5.Size = new System.Drawing.Size(56, 13);
             this.RadLabel5.TabIndex = 10;
-            this.RadLabel5.Text = "Sprachen";
+            this.RadLabel5.Text = "Idiomas";
             // 
             // RadLabel6
             // 
@@ -480,7 +480,7 @@
             this.RadLabel6.Name = "RadLabel6";
             this.RadLabel6.Size = new System.Drawing.Size(62, 13);
             this.RadLabel6.TabIndex = 12;
-            this.RadLabel6.Text = "Geburtstag";
+            this.RadLabel6.Text = "Cumpleaños";
             // 
             // DTP_Geburtstag
             // 
@@ -501,7 +501,7 @@
             this.RadGroupBox5.Size = new System.Drawing.Size(486, 75);
             this.RadGroupBox5.TabIndex = 2;
             this.RadGroupBox5.TabStop = false;
-            this.RadGroupBox5.Text = "Optionen";
+            this.RadGroupBox5.Text = "Opciones";
             // 
             // CBX_Favoriten
             // 
@@ -510,7 +510,7 @@
             this.CBX_Favoriten.Name = "CBX_Favoriten";
             this.CBX_Favoriten.Size = new System.Drawing.Size(73, 17);
             this.CBX_Favoriten.TabIndex = 3;
-            this.CBX_Favoriten.Text = "Favoriten";
+            this.CBX_Favoriten.Text = "Favoritos";
             this.CBX_Favoriten.UseVisualStyleBackColor = true;
             // 
             // CBX_Record
@@ -520,7 +520,7 @@
             this.CBX_Record.Name = "CBX_Record";
             this.CBX_Record.Size = new System.Drawing.Size(130, 17);
             this.CBX_Record.TabIndex = 1;
-            this.CBX_Record.Text = "Automatische Aufnahme";
+            this.CBX_Record.Text = "Grabación automática";
             this.CBX_Record.UseVisualStyleBackColor = true;
             // 
             // CBX_Visible
@@ -530,7 +530,7 @@
             this.CBX_Visible.Name = "CBX_Visible";
             this.CBX_Visible.Size = new System.Drawing.Size(99, 17);
             this.CBX_Visible.TabIndex = 2;
-            this.CBX_Visible.Text = "Stream anzeigen";
+            this.CBX_Visible.Text = "Transmisión de espectáculos";
             this.CBX_Visible.UseVisualStyleBackColor = true;
             // 
             // RadGroupBox3
@@ -545,7 +545,7 @@
             this.RadGroupBox3.Size = new System.Drawing.Size(486, 86);
             this.RadGroupBox3.TabIndex = 1;
             this.RadGroupBox3.TabStop = false;
-            this.RadGroupBox3.Text = "Geschlecht";
+            this.RadGroupBox3.Text = "Género";
             // 
             // RBT_Geschlecht_Trans
             // 
@@ -571,7 +571,7 @@
             this.RBT_Geschlecht_Sonstiges.TabIndex = 4;
             this.RBT_Geschlecht_Sonstiges.TabStop = true;
             this.RBT_Geschlecht_Sonstiges.Tag = "4";
-            this.RBT_Geschlecht_Sonstiges.Text = "Sonstiges";
+            this.RBT_Geschlecht_Sonstiges.Text = "Otros";
             this.RBT_Geschlecht_Sonstiges.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.RBT_Geschlecht_Sonstiges.UseVisualStyleBackColor = true;
             // 
@@ -585,7 +585,7 @@
             this.RBT_Geschlecht_Paar.TabIndex = 2;
             this.RBT_Geschlecht_Paar.TabStop = true;
             this.RBT_Geschlecht_Paar.Tag = "2";
-            this.RBT_Geschlecht_Paar.Text = "Paar";
+            this.RBT_Geschlecht_Paar.Text = "Pareja";
             this.RBT_Geschlecht_Paar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.RBT_Geschlecht_Paar.UseVisualStyleBackColor = true;
             // 
@@ -599,7 +599,7 @@
             this.RBT_Geschlecht_Männlich.TabIndex = 1;
             this.RBT_Geschlecht_Männlich.TabStop = true;
             this.RBT_Geschlecht_Männlich.Tag = "1";
-            this.RBT_Geschlecht_Männlich.Text = "Männlich";
+            this.RBT_Geschlecht_Männlich.Text = "Masculino";
             this.RBT_Geschlecht_Männlich.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.RBT_Geschlecht_Männlich.UseVisualStyleBackColor = true;
             // 
@@ -613,7 +613,7 @@
             this.RBT_Geschlecht_Weiblich.TabIndex = 0;
             this.RBT_Geschlecht_Weiblich.TabStop = true;
             this.RBT_Geschlecht_Weiblich.Tag = "0";
-            this.RBT_Geschlecht_Weiblich.Text = "Weiblich";
+            this.RBT_Geschlecht_Weiblich.Text = "Femenino";
             this.RBT_Geschlecht_Weiblich.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.RBT_Geschlecht_Weiblich.UseVisualStyleBackColor = true;
             // 
@@ -627,7 +627,7 @@
             this.PVP_Aufnahme.Padding = new System.Windows.Forms.Padding(3);
             this.PVP_Aufnahme.Size = new System.Drawing.Size(505, 367);
             this.PVP_Aufnahme.TabIndex = 1;
-            this.PVP_Aufnahme.Text = "Aufnahme";
+            this.PVP_Aufnahme.Text = "Grabación";
             this.PVP_Aufnahme.UseVisualStyleBackColor = true;
             // 
             // RadGroupBox4
@@ -642,11 +642,11 @@
             this.RadGroupBox4.Size = new System.Drawing.Size(486, 94);
             this.RadGroupBox4.TabIndex = 2;
             this.RadGroupBox4.TabStop = false;
-            this.RadGroupBox4.Text = "Auflösung";
+            this.RadGroupBox4.Text = "Resolución";
             // 
             // LAB_Kanal_Gefunden
             // 
-            this.LAB_Kanal_Gefunden.Image = ((System.Drawing.Image)(resources.GetObject("LAB_Kanal_Gefunden.Image")));
+            this.LAB_Kanal_Gefunden.Image = Resources.accept;
             this.LAB_Kanal_Gefunden.Location = new System.Drawing.Point(497, 9);
             this.LAB_Kanal_Gefunden.Name = "LAB_Kanal_Gefunden";
             this.LAB_Kanal_Gefunden.Size = new System.Drawing.Size(24, 24);
@@ -687,8 +687,8 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Dialog_Model_Einstellungen";
-            this.Text = "Kanal Einstellungen";
+            this.Name = "Añadir nuevo canal";
+            this.Text = "Añadir nuevo canal";
             this.Load += new System.EventHandler(this.Dialog_Model_Einstellungen_Load);
             this.RadPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SPE_Recordtime)).EndInit();

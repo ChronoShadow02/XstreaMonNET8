@@ -1,123 +1,171 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace XstreaMonNET8
 {
     public static class VParse
     {
-        private static string BackString_Check(ref string checkString)
+        private static readonly HttpClient httpClient = new()
+        {
+            Timeout = TimeSpan.FromSeconds(20)
+        };
+
+        private static string BackString_Check(ref string Check_String)
         {
             try
             {
-                if (string.IsNullOrEmpty(checkString) ||
-                    (checkString.Length < 30 && checkString != "429") ||
-                    checkString.StartsWith('\u001F') ||
-                    checkString.StartsWith('\u0003'))
+                if (string.IsNullOrEmpty(Check_String) ||
+                    (Check_String.Length < 30 && Check_String != "429") ||
+                    Check_String.StartsWith('\u001F') ||
+                    Check_String.StartsWith('\u0003'))
                 {
-                    return string.Empty;
+                    return null!;
                 }
-
-                return checkString;
+                return Check_String;
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, $"VParse.BackString_Check {checkString}");
-                return string.Empty;
+                Parameter.Error_Message(ex, "VParse.BackString_Check " + Check_String);
+                return null!;
             }
         }
 
-        internal static string URL_Check(string urlString) => urlString.Replace("\\/", "/");
+        internal static string URL_Check(string URL_String) => URL_String.Replace("\\/", "/");
 
-        internal static async Task<string> HTML_Load(string urlString, bool replaceSpace)
+        internal static async Task<string> HTML_Load(string URLString, bool ReplaceSpace)
         {
-            if (string.IsNullOrWhiteSpace(urlString) || urlString == "https:")
+            if (string.IsNullOrWhiteSpace(URLString) || URLString == "https:")
                 return "";
 
-            urlString = URL_Check(urlString);
-            string checkString = "";
+            URLString = URL_Check(URLString);
+            string Check_String = "";
 
             try
             {
-                var client = new CustomHttpClient(5000);
-                using var httpClient = client.Instance;
-
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (X11; Linux x86_64)");
-                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                checkString = await httpClient.GetStringAsync(urlString);
-                if (replaceSpace && !string.IsNullOrEmpty(checkString))
+                Check_String = await httpClient.GetStringAsync(URLString).ConfigureAwait(false);
+
+                if (ReplaceSpace && !string.IsNullOrEmpty(Check_String))
+                    Check_String = Replace_Space(Check_String);
+            }
+            catch (HttpRequestException ex)
+            {
+                Parameter.Error_Message(ex, "VParse.HTML_Load (HttpRequestException): " + URLString);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "VParse.HTML_Load: " + URLString);
+            }
+
+            return BackString_Check(ref Check_String);
+        }
+
+        internal static async Task<string> HTML_Load(string URL_String)
+        {
+            if (string.IsNullOrWhiteSpace(URL_String))
+                return "";
+
+            URL_String = URL_Check(URL_String);
+            string Check_String = "";
+
+            try
+            {
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (X11; Linux x86_64)");
+                Check_String = await httpClient.GetStringAsync(URL_String).ConfigureAwait(false);
+            }
+            catch (HttpRequestException ex)
+            {
+                Parameter.Error_Message(ex, "VParse.HTML_Load (HttpRequestException): " + URL_String);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "VParse.HTML_Load: " + URL_String);
+            }
+
+            return BackString_Check(ref Check_String);
+        }
+
+        internal static async Task<string> GetPOSTPHP(string Site_URL, SecurityProtocolType SSL_Type = SecurityProtocolType.SystemDefault)
+        {
+            if (string.IsNullOrWhiteSpace(Site_URL))
+                return "";
+
+            Site_URL = URL_Check(Site_URL);
+            string Check_String = "";
+
+            try
+            {
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                Check_String = await httpClient.GetStringAsync(Site_URL).ConfigureAwait(false);
+            }
+            catch (HttpRequestException ex)
+            {
+                return EX_Webexception(ex, Site_URL);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "VParse.GetPOSTPHP: " + Site_URL);
+            }
+
+            return BackString_Check(ref Check_String);
+        }
+
+        internal static async Task<string> Chrome_Load(string URLString, bool ReplaceSpace)
+        {
+            if (string.IsNullOrWhiteSpace(URLString) || URLString == "https:")
+                return "";
+
+            URLString = URL_Check(URLString);
+            string Check_String = "";
+
+            try
+            {
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/115.0 Safari/537.36");
+                Check_String = await httpClient.GetStringAsync(URLString).ConfigureAwait(false);
+
+                if (ReplaceSpace && !string.IsNullOrEmpty(Check_String))
+                    Check_String = Replace_Space(Check_String);
+            }
+            catch (HttpRequestException ex)
+            {
+                Parameter.Error_Message(ex, "VParse.Chrome_Load (HttpRequestException): " + URLString);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "VParse.Chrome_Load: " + URLString);
+            }
+
+            return BackString_Check(ref Check_String);
+        }
+
+        internal static async Task<string> GetPOST(string url, string data, SecurityProtocolType SSL_Type = SecurityProtocolType.SystemDefault)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return "";
+
+            url = URL_Check(url);
+            string result = "";
+
+            try
+            {
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
+
+                HttpResponseMessage response;
+                if (string.IsNullOrWhiteSpace(data))
                 {
-                    checkString = Replace_Space(checkString);
+                    response = await httpClient.GetAsync(url).ConfigureAwait(false);
                 }
-            }
-            catch (HttpRequestException ex)
-            {
-                Parameter.Error_Message(ex, $"HTML_Load (HttpRequestException): {urlString}");
-            }
-            catch (Exception ex)
-            {
-                Parameter.Error_Message(ex, $"HTML_Load (General Exception): {urlString}");
-            }
-
-            return BackString_Check(ref checkString);
-        }
-
-
-        internal static async Task<string?> HTML_Load(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url) || url == "https:")
-                return null;
-
-            string? checkString = null;
-            try
-            {
-                url = URL_Check(url);
-
-                using var httpClient = new HttpClient
+                else
                 {
-                    Timeout = TimeSpan.FromSeconds(5)
-                };
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (X11; Linux x86_64)");
-                httpClient.DefaultRequestHeaders.Accept.Add(
-                    new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/html"));
+                    var content = new StringContent(data, Encoding.UTF8, "application/json");
+                    response = await httpClient.PostAsync(url, content).ConfigureAwait(false);
+                }
 
-                checkString = await httpClient.GetStringAsync(url);
-            }
-            catch (HttpRequestException ex)
-            {
-                Parameter.Error_Message(ex, $"HTML_Load (HttpRequestException): {url}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("General Error: " + ex.Message);
-            }
-
-            return BackString_Check(ref checkString!);
-        }
-
-        internal static async Task<string?> GetPOSTPHP(string siteUrl, SecurityProtocolType sslType = SecurityProtocolType.SystemDefault)
-        {
-            if (string.IsNullOrWhiteSpace(siteUrl) || siteUrl == "https:")
-                return null;
-
-            string url = URL_Check(siteUrl);
-            string? checkString = null;
-            var originalProtocol = ServicePointManager.SecurityProtocol;
-
-            try
-            {
-                ServicePointManager.SecurityProtocol = sslType;
-
-                using var httpClient = new HttpClient
-                {
-                    Timeout = TimeSpan.FromSeconds(20)
-                };
-
-                httpClient.DefaultRequestHeaders.Accept.ParseAdd("*/*");
-                httpClient.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip, deflate, br");
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (X11; Linux x86_64)");
-
-                checkString = await httpClient.GetStringAsync(url);
+                response.EnsureSuccessStatusCode();
+                result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
             catch (HttpRequestException ex)
             {
@@ -125,158 +173,79 @@ namespace XstreaMonNET8
             }
             catch (Exception ex)
             {
-                Console.WriteLine("General Error: " + ex.Message);
-            }
-            finally
-            {
-                ServicePointManager.SecurityProtocol = originalProtocol;
+                Parameter.Error_Message(ex, "VParse.GetPOST: " + url);
             }
 
-            return BackString_Check(ref checkString!);
+            return BackString_Check(ref result);
         }
 
-        internal static async Task<string?> Chrome_Load(string url, bool replaceSpace)
+        internal static string EX_Webexception(HttpRequestException ex, string url)
         {
-            if (string.IsNullOrWhiteSpace(url) || url == "https:")
-                return null;
-
-            url = URL_Check(url);
-            string? checkString = null;
-
-            try
-            {
-                using var httpClient = new HttpClient
-                {
-                    Timeout = TimeSpan.FromSeconds(20)
-                };
-
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari");
-                httpClient.DefaultRequestHeaders.Accept.ParseAdd("text/html");
-
-                checkString = await httpClient.GetStringAsync(url);
-
-                if (replaceSpace && checkString != null)
-                    checkString = Replace_Space(checkString);
-            }
-            catch (HttpRequestException ex)
-            {
-                Parameter.Error_Message(ex, $"Chrome_Load (HttpRequestException): {url}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("General Error: " + ex.Message);
-            }
-
-            return BackString_Check(ref checkString!);
+            Parameter.Error_Message(ex, "HTTP Exception: " + url);
+            return null!;
         }
 
-
-        internal static async Task<string?> GetPOST(string url, string data, SecurityProtocolType sslType = SecurityProtocolType.SystemDefault)
+        internal static string Replace_Space(string Orginal_String)
         {
-            if (string.IsNullOrWhiteSpace(url))
-                return null;
+            return Orginal_String?.Replace("\n", "").Replace(" ", "").Replace("\"", "")!;
+        }
 
-            url = URL_Check(url);
-            string? result = null;
-
-            // Establecer el protocolo SSL (aunque con HttpClient, esto no es estrictamente necesario en .NET 6+)
-            var originalProtocol = ServicePointManager.SecurityProtocol;
-            ServicePointManager.SecurityProtocol = sslType;
-
-            try
+        internal static string HTML_Value(string HTML_Page, string Start_String, string End_String, bool Bereinigen = true)
+        {
+            if (HTML_Page != null)
             {
-                using var httpClient = new HttpClient
+                if (Bereinigen)
                 {
-                    Timeout = TimeSpan.FromSeconds(20)
-                };
-
-                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0");
-
-                HttpResponseMessage response;
-
-                if (string.IsNullOrWhiteSpace(data))
-                {
-                    response = await httpClient.GetAsync(url);
-                }
-                else
-                {
-                    var content = new StringContent(data, Encoding.UTF8, "application/json");
-                    response = await httpClient.PostAsync(url, content);
+                    HTML_Page = HTML_Page.Replace("\"", "")
+                                         .Replace("\n", "")
+                                         .Replace("\r", "")
+                                         .Replace("\r\n", "")
+                                         .Replace("\t", "")
+                                         .Replace("  ", " ")
+                                         .Replace("  ", "")
+                                         .Replace("\\u00f1", "ñ")
+                                         .Replace("\\u2665", "♥")
+                                         .Replace("\\u2728", "✨")
+                                         .Replace("\\u00ed", "í")
+                                         .Replace("\\ud835", "\uD835\uDCDB")
+                                         .Replace("\\udd84", "\uD83E\uDD84")
+                                         .Replace("\\udd7a", "\uD83E\uDD7A")
+                                         .Replace("\\udd80", "\uD83E\uDD80")
+                                         .Replace("\\udd73", "\uD83E\uDD73")
+                                         .Replace("\\udd70", "\uD83E\uDD70");
                 }
 
-                response.EnsureSuccessStatusCode(); // Lanza excepción si el status code no es 2xx
-                result = await response.Content.ReadAsStringAsync();
+                if (HTML_Page.Length > 0)
+                {
+                    int startIndex = HTML_Page.IndexOf(Start_String, StringComparison.OrdinalIgnoreCase);
+                    if (startIndex >= 0)
+                    {
+                        startIndex += Start_String.Length;
+                        int endIndex = HTML_Page.Length;
+
+                        if (!string.IsNullOrEmpty(End_String))
+                        {
+                            endIndex = HTML_Page.IndexOf(End_String, startIndex, StringComparison.OrdinalIgnoreCase);
+                            if (endIndex == -1)
+                                endIndex = HTML_Page.Length;
+                        }
+
+                        if (startIndex < endIndex && endIndex <= HTML_Page.Length)
+                        {
+                            HTML_Page = HTML_Page[startIndex..endIndex];
+                        }
+                        else
+                        {
+                            HTML_Page = "";
+                        }
+                    }
+                    else
+                    {
+                        HTML_Page = "";
+                    }
+                }
             }
-            catch (HttpRequestException ex)
-            {
-                return EX_Webexception(ex, url); // Asegúrate de que EX_Webexception también soporte HttpRequestException
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("General Error: " + ex.Message);
-            }
-            finally
-            {
-                ServicePointManager.SecurityProtocol = originalProtocol;
-            }
-
-            return BackString_Check(ref result!);
-        }
-
-        internal static string? EX_Webexception(Exception ex, string url)
-        {
-            Parameter.Error_Message(ex, $"Excepción en: {url}");
-            return null;
-        }
-
-        internal static string Replace_Space(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return string.Empty;
-
-            return input
-                .Replace("\n", "")
-                .Replace(" ", "")
-                .Replace("\"", "");
-        }
-
-        internal static string HTML_Value(string html, string start, string end, bool clean = true)
-        {
-            if (string.IsNullOrEmpty(html)) return "";
-
-            if (clean)
-            {
-                html = html
-                    .Replace("\"", "")
-                    .Replace("\r\n", "")
-                    .Replace("\r", "")
-                    .Replace("\n", "")
-                    .Replace("\t", "")
-                    .Replace("  ", "")
-                    .Replace("\\u00f1", "ñ")
-                    .Replace("\\u2665", "♥")
-                    .Replace("\\u2728", "✨")
-                    .Replace("\\u00ed", "í")
-                    .Replace("\\ud835", "𝓛")
-                    .Replace("\\udd84", "🦄")
-                    .Replace("\\udd7a", "🤺")
-                    .Replace("\\udd80", "🦀")
-                    .Replace("\\udd73", "🧳")
-                    .Replace("\\udd70", "🥰");
-            }
-
-            string htmlLower = html.ToLower();
-            string startLower = start.ToLower();
-            string endLower = end.ToLower();
-
-            int startIndex = htmlLower.IndexOf(startLower);
-            if (startIndex == -1) return "";
-
-            startIndex += start.Length;
-            int endIndex = htmlLower.IndexOf(endLower, startIndex);
-            if (endIndex == -1) endIndex = html.Length;
-
-            return html.Substring(startIndex, endIndex - startIndex);
+            return HTML_Page!;
         }
     }
 }

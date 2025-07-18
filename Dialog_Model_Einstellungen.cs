@@ -121,7 +121,7 @@ namespace XstreaMonNET8
                 }
 
                 this.DDL_Webseite.SelectedItem = null;
-                this.DDL_Webseite.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                this.DDL_Webseite.AutoCompleteMode = AutoCompleteMode.None;
                 this.DDL_Webseite.AutoCompleteSource = AutoCompleteSource.ListItems;
 
                 this.DDL_Video_Encoder.Items.Clear();
@@ -293,9 +293,8 @@ namespace XstreaMonNET8
             try
             {
                 TXT.Control_Languages(this);
-                // NullText is not a direct property for native TextBox.
-                this.TXB_Sender_Name.Text = TXT.TXT_Description("Modelname oder URL");
-                this.DDL_Webseite.Text = TXT.TXT_Description("Webseite wählen");
+                this.TXB_Sender_Name.Text = TXT.TXT_Description("Nombre del modelo o URL");
+                this.DDL_Webseite.Text = TXT.TXT_Description("Seleccionar sitio web");
 
                 this.AutoSearch = Value_Back.get_CBoolean(INI_File.Read(Parameter.INI_Common, "Optionen", "Search", false.ToString()));
                 if (Sites.Website_Find(Value_Back.get_CInteger(this.DDL_Webseite.SelectedValue)) == null)
@@ -518,7 +517,7 @@ namespace XstreaMonNET8
             this.Profil_List.Clear();
             this.TXB_Land.Text = "";
             this.TXB_Sprachen.Text = "";
-            this.DTP_Geburtstag.Value = DateTime.MinValue;
+            this.DTP_Geburtstag.Value = this.DTP_Geburtstag.MinDate;
             this.LAB_Image.Image = null;
             this.LAB_Kanal_Gefunden.Visible = false;
 
@@ -547,7 +546,7 @@ namespace XstreaMonNET8
                         if (this.Model_WebSite_ID == -1)
                         {
                             this.Cursor = Cursors.Default;
-                            MessageBox.Show(TXT.TXT_Description("Die Webseite wird nicht unterstützt."));
+                            MessageBox.Show(TXT.TXT_Description("El sitio web no es compatible."));
                             return;
                         }
                         if (this.Model_WebSite_ID > -1)
@@ -567,7 +566,7 @@ namespace XstreaMonNET8
                 {
                     this.TXB_Land.Text = "";
                     this.TXB_Sprachen.Text = "";
-                    this.DTP_Geburtstag.Value = DateTime.MinValue;
+                    this.DTP_Geburtstag.Value = this.DTP_Geburtstag.MinDate;
                 }
             }
             catch (Exception ex)
