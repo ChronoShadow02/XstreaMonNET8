@@ -151,16 +151,19 @@ namespace XstreaMonNET8
             return false;
         }
 
-        internal static async Task<Image> Image_FromWeb(Class_Model Model_Class)
+        internal static async Task<Image?> Image_FromWeb(Class_Model Model_Class)
         {
             await Task.CompletedTask;
             try
             {
                 if (!string.IsNullOrEmpty(Model_Class.Pro_Model_Preview_Path))
                 {
-                    using (WebClient webClient = new WebClient())
+                    string url = Model_Class.Pro_Model_Preview_Path + "?cb=" + DateTime.UtcNow.Ticks;
+
+                    using (HttpClient httpClient = new HttpClient())
                     {
-                        using (MemoryStream memoryStream = new MemoryStream(webClient.DownloadData(Model_Class.Pro_Model_Preview_Path + "?cb=" + DateTime.UtcNow.Ticks)))
+                        byte[] data = await httpClient.GetByteArrayAsync(url);
+                        using (MemoryStream memoryStream = new MemoryStream(data))
                         {
                             return Image.FromStream(memoryStream);
                         }
@@ -186,7 +189,7 @@ namespace XstreaMonNET8
 
             try
             {
-                string result = VParse.GetPOSTPHP("https://m.camsoda.com/api/v1/chat/react/" + Model_Name.ToLower() + "?username=guest_" + new Random().Next(100000)).Result;
+                string result = await VParse.GetPOSTPHP($"https://m.camsoda.com/api/v1/chat/react/{Model_Name.ToLower()}?username=guest_{new Random().Next(100000)}");
                 if (result.Length > 0)
                 {
                     string gender = VParse.HTML_Value(result, "gender:", ",");
@@ -206,6 +209,7 @@ namespace XstreaMonNET8
                         channelInfo.Pro_Birthday = VParse.HTML_Value(result, "Birth Date:", ",");
                         channelInfo.Pro_Country = VParse.HTML_Value(result, "location:", ",");
                         channelInfo.Pro_Profil_Beschreibung = TXT.TXT_Description("Name") + ": " + VParse.HTML_Value(result, "displayName:", ",");
+
                         string languages = VParse.HTML_Value(result, "languageList:", ",location");
                         if (languages != "null")
                             channelInfo.Pro_Languages = languages;
@@ -215,14 +219,12 @@ namespace XstreaMonNET8
                             channelInfo.Pro_Last_Online = lastOnline;
 
                         string imageUrl = VParse.HTML_Value(result, "avatarUrl:", ",").Trim().Replace("\\/", "/");
-                        if (Parameter.URL_Response(imageUrl).Result)
+                        if (await Parameter.URL_Response(imageUrl))
                         {
-                            using (WebClient webClient = new WebClient())
+                            using (HttpClient httpClient = new HttpClient())
+                            using (Stream stream = await httpClient.GetStreamAsync(imageUrl))
                             {
-                                using (Stream stream = webClient.OpenRead(imageUrl))
-                                {
-                                    channelInfo.Pro_Profil_Image = Image.FromStream(stream);
-                                }
+                                channelInfo.Pro_Profil_Image = Image.FromStream(stream);
                             }
                         }
                     }

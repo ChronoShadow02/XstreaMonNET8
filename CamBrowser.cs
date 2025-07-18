@@ -23,9 +23,9 @@ namespace XstreaMonNET8
             Token_Timer = new Timer();
             Model_List_Online = new List<string>();
 
-            this.Load += CamBrowser_Load;
-            this.FormClosed += CamBrowser_Closed;
-            this.FormClosing += CamBrowser_Closing;
+            this.Load += CamBrowser_Load!;
+            this.FormClosed += CamBrowser_Closed!;
+            this.FormClosing += CamBrowser_Closing!;
         }
 
         // Propiedades
@@ -698,7 +698,16 @@ namespace XstreaMonNET8
         {
             try
             {
-                Form_Main.Chanel_Add(WV_Site.Source.ToString());
+                Form_Main mainForm = Application.OpenForms.OfType<Form_Main>().FirstOrDefault();
+
+                if (mainForm != null)
+                {
+                    mainForm.Chanel_Add(WV_Site.Source.ToString());
+                }
+                else
+                {
+                    Console.WriteLine("Error: No se encontró la instancia de Form_Main.");
+                }
                 WV_Site_Completed();
                 Online_User_Load();
             }

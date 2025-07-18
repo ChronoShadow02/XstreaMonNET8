@@ -15,7 +15,8 @@ namespace XstreaMonNET8
                 configJs = configJs.Replace("\"", "");
 
                 string chatServer = VParse.HTML_Value(configJs.ToLower(), "chat_servers:[", ",").ToLower();
-                string jsonData = await VParse.GetPOSTPHP($"https://www.myfreecams.com/php/FcwExtResp.php?host={chatServer}&type=14&opts=256&serv=1066&arg2=21&owner=0", SecurityProtocolType.Ssl3);
+                // Reemplaza SecurityProtocolType.Ssl3 por SecurityProtocolType.Tls12 en ambas llamadas a GetPOSTPHP
+                string jsonData = await VParse.GetPOSTPHP($"https://www.myfreecams.com/php/FcwExtResp.php?host={chatServer}&type=14&opts=256&serv=1066&arg2=21&owner=0", SecurityProtocolType.Tls12);
 
                 string modelInfo = VParse.HTML_Value(jsonData.ToLower(), $"[{Model_Stream.Pro_Model_Name.ToLower()}", "]");
                 if (modelInfo.Length <= 0) return null!;
@@ -40,8 +41,8 @@ namespace XstreaMonNET8
                 string streamPrefix = modelInfo.Split(',')[7] == "a" ? "a_1" : "1";
                 string streamUrl = $"https://{serverHost}.myfreecams.com/NxServer/ngrp:mfc_{streamPrefix}{int.Parse(modelId):00000000}.f4v_cmaf/playlist_sfm4s.m3u8";
 
-                string playlistRaw = await VParse.GetPOSTPHP(streamUrl, SecurityProtocolType.Ssl3);
-                string[] playlist = playlistRaw.Split('#');
+                string playlistRaw = await VParse.GetPOSTPHP(streamUrl, SecurityProtocolType.Tls12);
+                string[] playlist = playlistRaw!.Split('#');
                 if (playlist.Length < 2) return null!;
 
                 string chunk = "";
@@ -83,7 +84,7 @@ namespace XstreaMonNET8
             {
                 await Task.CompletedTask;
                 var model = await Class_Model_List.Class_Model_Find(0, Model_Name);
-                if (await Parameter.URL_Response(model?.Pro_Model_M3U8)) return 1;
+                if (await Parameter.URL_Response(model?.Pro_Model_M3U8!)) return 1;
 
                 string result = await VParse.HTML_Load($"https://profiles.myfreecams.com/{Model_Name}", true);
                 if (result.Contains("string:Online}")) return 1;
@@ -109,8 +110,10 @@ namespace XstreaMonNET8
 
                 if (Model_Class.Pro_Model_Preview_Path != null)
                 {
-                    using var client = new WebClient();
-                    using var stream = client.OpenRead(Model_Class.Pro_Model_Preview_Path);
+                    using HttpClient httpClient = new();
+                    using var response = await httpClient.GetAsync(Model_Class.Pro_Model_Preview_Path, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
+                    using var stream = await response.Content.ReadAsStreamAsync();
                     return Image.FromStream(stream);
                 }
             }
@@ -171,8 +174,11 @@ namespace XstreaMonNET8
                         string imgPath = VParse.HTML_Value(result, "<img id=profile_avatar class=img_radius_shadow src=", "onError=this").Trim();
                         if (await Parameter.URL_Response(imgPath))
                         {
-                            using var stream = new WebClient().OpenRead(imgPath);
-                            info.Pro_Profil_Image = Image.FromStream(stream);
+                            using (HttpClient httpClient = new HttpClient())
+                            using (var stream = await httpClient.GetStreamAsync(imgPath))
+                            {
+                                info.Pro_Profil_Image = Image.FromStream(stream);
+                            }
                         }
                     }
                 }

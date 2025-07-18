@@ -1317,16 +1317,15 @@ namespace XstreaMonNET8
                 string str1 = "";
                 try
                 {
-                    using (WebClient webClient = new WebClient())
-                    {
-                        webClient.Headers.Add("user-agent", "XstreaMon Promo" + Application.ProductVersion.ToString());
-                        str1 = webClient.DownloadString("https://xstreamon.com/model_promo");
-                    }
+                    using HttpClient httpClient = new();
+                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("XstreaMon Promo" + Application.ProductVersion);
+                    str1 = await httpClient.GetStringAsync("https://xstreamon.com/model_promo");
                 }
                 catch (Exception ex)
                 {
                     // Log or handle exception
                 }
+
                 string[] strArray = str1.Split('\r');
                 int index = 0;
                 while (index < strArray.Length)
@@ -1340,7 +1339,7 @@ namespace XstreaMonNET8
                             string modelName = parts[0].Trim();
                             int websiteId = int.Parse(parts[1].Trim());
 
-                            if (Class_Model_List.Class_Model_Find(websiteId, modelName).Result == null)
+                            if (await Class_Model_List.Class_Model_Find(websiteId, modelName) == null)
                             {
                                 try
                                 {
@@ -1369,7 +1368,6 @@ namespace XstreaMonNET8
                     index++;
                 }
                 GRV_Model_Kanal.FirstDisplayedScrollingRowIndex = 0;
-                // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
             }
             catch (Exception ex)
             {
@@ -3078,7 +3076,7 @@ namespace XstreaMonNET8
             }
         }
 
-        private void Dialog_Videothek_Open(List<Video_File> FI_List)
+        private static void Dialog_Videothek_Open(List<Video_File> FI_List)
         {
             new Thread(() =>
             {
@@ -3089,7 +3087,7 @@ namespace XstreaMonNET8
             }).Start();
         }
 
-        private void CBB_CamsRecorder_Click(object sender, EventArgs e)
+        private static void CBB_CamsRecorder_Click(object sender, EventArgs e)
         {
             Process.Start("https://xstreamon.com/");
         }

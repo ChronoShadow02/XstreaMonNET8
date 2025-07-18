@@ -252,7 +252,7 @@ namespace XstreaMonNET8
             }
         }
 
-        internal static async Task<Image> Image_FromWeb(Class_Model model)
+        internal static async Task<Image?> Image_FromWeb(Class_Model model)
         {
             await Task.CompletedTask;
             try
@@ -260,10 +260,12 @@ namespace XstreaMonNET8
                 if (string.IsNullOrEmpty(model.Pro_Model_Preview_Path))
                     return null;
 
-                using WebClient client = new();
-                byte[] data = await client.DownloadDataTaskAsync(model.Pro_Model_Preview_Path);
-                using MemoryStream stream = new(data);
-                return Image.FromStream(stream);
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    byte[] data = await httpClient.GetByteArrayAsync(model.Pro_Model_Preview_Path);
+                    using MemoryStream stream = new(data);
+                    return Image.FromStream(stream);
+                }
             }
             catch (Exception ex)
             {
@@ -316,9 +318,11 @@ namespace XstreaMonNET8
 
                 if (await Parameter.URL_Response(imageUrl))
                 {
-                    using WebClient client = new();
-                    using Stream stream = await client.OpenReadTaskAsync(imageUrl);
-                    info.Pro_Profil_Image = Image.FromStream(stream);
+                    using (HttpClient httpClient = new HttpClient())
+                    using (Stream stream = await httpClient.GetStreamAsync(imageUrl))
+                    {
+                        info.Pro_Profil_Image = Image.FromStream(stream);
+                    }
                 }
 
                 info.Pro_Online = await Bongacams.Online(info.Pro_Name) != 0;
