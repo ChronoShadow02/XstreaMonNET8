@@ -6,7 +6,7 @@ namespace XstreaMonNET8
     {
         internal static DateTime Last_Many_Request;
 
-        private static readonly HttpClient httpClient = new HttpClient
+        private static readonly HttpClient httpClient = new()
         {
             Timeout = TimeSpan.FromSeconds(15)
         };
@@ -24,17 +24,17 @@ namespace XstreaMonNET8
 
                 if ((Last_Many_Request != DateTime.MinValue && Last_Many_Request.AddSeconds(30) > DateTime.Now) ||
                     await Online(Model_Stream.Pro_Model_Name).ConfigureAwait(false) != 1)
-                    return null;
+                    return null!;
 
                 string result = await VParse.GetPOSTPHP($"https://m.chaturbate.com/api/chatvideocontext/{Model_Stream.Pro_Model_Name.ToLower()}").ConfigureAwait(false);
                 if (result == "429")
                 {
                     Last_Many_Request = DateTime.Now;
-                    return null;
+                    return null!;
                 }
 
                 if (result == null)
-                    return null;
+                    return null!;
 
                 string m3U8Path = Find_M3U8_Path(result);
                 return !string.IsNullOrEmpty(m3U8Path)
@@ -44,7 +44,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, $"Chaturbate.Stream_Adresses(Model_Name) = {Model_Stream.Pro_Model_Name}");
-                return null;
+                return null!;
             }
         }
 
@@ -59,7 +59,7 @@ namespace XstreaMonNET8
             catch (Exception ex)
             {
                 Parameter.Error_Message(ex, $"Chaturbate.M3u8_URL(Model_Name) = {Model_Stream.Pro_Model_Name.ToLower()}");
-                return null;
+                return null!;
             }
         }
 
@@ -78,20 +78,20 @@ namespace XstreaMonNET8
                 {
                     Last_Many_Request = DateTime.Now;
                 }
-                return null;
+                return null!;
             }
 
             if (TXT == "429")
             {
                 Last_Many_Request = DateTime.Now;
-                return null;
+                return null!;
             }
 
-            string[] playlist = TXT?.Split('#');
+            string[] playlist = TXT?.Split('#')!;
             string audioPath = playlist?.Reverse().FirstOrDefault(line => line.Contains("EXT-X-MEDIA:TYPE=AUDIO"))?
-                .Split(new[] { "URI=" }, StringSplitOptions.None)[1].Replace("\"", "");
+                .Split(new[] { "URI=" }, StringSplitOptions.None)[1].Replace("\"", "")!;
 
-            string chunkFile = Find_Chunk_File(playlist, Model_Stream.Pro_Qualität_ID);
+            string chunkFile = Find_Chunk_File(playlist!, Model_Stream.Pro_Qualität_ID);
 
             if (!string.IsNullOrEmpty(chunkFile))
             {
@@ -107,7 +107,7 @@ namespace XstreaMonNET8
 
                 Model_Stream.Pro_M3U8_Path = $"{baseUrl}{chunkFile}".Trim();
                 Model_Stream.Pro_TS_Path = baseUrl.Trim();
-                Model_Stream.Pro_Record_Resolution = Sites.Resolution_Find(playlist, chunkFile);
+                Model_Stream.Pro_Record_Resolution = Sites.Resolution_Find(playlist!, chunkFile);
                 Model_Stream.Pro_Audio_Path = !string.IsNullOrEmpty(audioPath) ? $"{baseUrl}{audioPath.Trim()}" : null;
                 Model_Stream.Pro_AU_Path = baseUrl.Trim();
                 Model_Stream.Pro_Preview_Image = $"https://jpeg.live.mmcdn.com/stream?room={Model_Stream.Pro_Model_Name.ToLower()}";
@@ -193,7 +193,7 @@ namespace XstreaMonNET8
 
                 if (string.IsNullOrEmpty(chunkFile))
                 {
-                    string lastLine = m3U8_File.LastOrDefault(l => l.Contains("chunk"));
+                    string lastLine = m3U8_File.LastOrDefault(l => l.Contains("chunk"))!;
                     if (lastLine != null)
                         chunkFile = lastLine.Substring(lastLine.IndexOf("chunk"));
                 }
@@ -210,7 +210,7 @@ namespace XstreaMonNET8
             try
             {
                 await Task.CompletedTask;
-                return Image_FromWeb(Model_Name?.ToLower()) == null ? 0 : 1;
+                return Image_FromWeb(Model_Name?.ToLower()!) == null ? 0 : 1;
             }
             catch (Exception ex)
             {
@@ -263,7 +263,7 @@ namespace XstreaMonNET8
                     }
                 }
 
-                return bitmap;
+                return bitmap!;
             }
             catch (Exception)
             {
@@ -372,7 +372,7 @@ namespace XstreaMonNET8
                     TopMost = true,
                     Pro_Download_Path = downloadUrl,
                     Pro_Target_Path = savePath,
-                    Pro_Class_Model = Model_Class,
+                    Pro_Class_Model = Model_Class!,
                     Pro_Target_Name = fileName
                 };
                 dialogSave.Show();

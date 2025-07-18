@@ -684,7 +684,7 @@ namespace XstreaMonNET8
                     this.RadProgressBar1.Value++;
                     if (INI_File.Read(Parameter.INI_Common, "Sites", "0", "True") == "True")
                     {
-                        Channel_Info result = await Chaturbate.Profil(this.Model_Name);
+                        Channel_Info result = await Chaturbate.Profil(Model_Name);
                         if (result.Pro_Exist) this.Profil_List.Add(result);
                     }
 
