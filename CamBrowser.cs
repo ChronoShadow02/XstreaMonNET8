@@ -698,7 +698,7 @@ namespace XstreaMonNET8
         {
             try
             {
-                Form_Main.Instance.Chanel_Add(WV_Site.Source.ToString());
+                Form_Main.Chanel_Add(WV_Site.Source.ToString());
                 WV_Site_Completed();
                 Online_User_Load();
             }

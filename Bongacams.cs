@@ -18,7 +18,7 @@ namespace XstreaMonNET8
                     return null;
                 }
 
-                string result = VParse.Chrome_Load("https://en.bongacams.com/" + modelStream.Pro_Model_Name, true).Result;
+                string result = VParse.Chrome_Load("https://en.bongacams.com/" + modelStream.Pro_Model_Name, true).Result!;
 
                 return Read_Model_Stream(Find_M3U8_Path(result, modelStream), modelStream, result);
             }
