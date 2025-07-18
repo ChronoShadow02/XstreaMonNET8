@@ -2113,7 +2113,7 @@ namespace XstreaMonNET8
             {
                 if (GRV_Model_Kanal.SelectedRows.Count != 1)
                     return;
-                Class_Website classWebsite = Sites.Website_Find((int)CMI_Webseite.Tag);
+                Class_Website classWebsite = Sites.Website_Find((int)CMI_Webseite.Tag!);
                 if (classWebsite == null)
                     return;
                 Guid modelGuid = (Guid)GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_GUID"].Value;
@@ -2137,7 +2137,7 @@ namespace XstreaMonNET8
                 if (GRV_Model_Kanal.SelectedRows.Count != 1)
                     return;
                 Guid modelGuid = (Guid)GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_GUID"].Value;
-                Class_Model_List.Class_Model_Find(modelGuid).Result?.Timer_Online_Change.Check_Run();
+                Class_Model_List.Class_Model_Find(modelGuid).Result?.Timer_Online_Change!.Check_Run();
             }
             catch (Exception ex)
             {
@@ -2152,11 +2152,9 @@ namespace XstreaMonNET8
                 if (GRV_Model_Kanal.SelectedRows.Count != 1)
                     return;
                 Guid modelGuid = (Guid)GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_GUID"].Value;
-                using (Dialog_Model_Einstellungen modelEinstellungen = new Dialog_Model_Einstellungen(modelGuid))
-                {
-                    modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
-                    modelEinstellungen.ShowDialog();
-                }
+                using Dialog_Model_Einstellungen modelEinstellungen = new(modelGuid);
+                modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                modelEinstellungen.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -2214,7 +2212,7 @@ namespace XstreaMonNET8
         {
             try
             {
-                Control_Model_Info1.Pro_Model_Preview = null;
+                Control_Model_Info1.Pro_Model_Preview = null!;
                 Control_Model_Info1.Pro_Model_GUID = Guid.Empty;
                 Control_Model_Info1.Pro_Model_Info = "";
                 Control_Model_Info1.Visible = false;
@@ -2248,9 +2246,11 @@ namespace XstreaMonNET8
 
                     CMI_Filter.Text = TXT.TXT_Description("Filter");
                     CMH_Status.Text = TXT.TXT_Description("Onlinestatus");
-                    // CMH_Status.FillPrimitive.BackColor = Parameter.Fore_Color_Hell; // No direct equivalent
+                    CMH_Status.BackColor = Parameter.Fore_Color_Hell;
+
                     CMH_Gender.Text = TXT.TXT_Description("Geschlecht");
-                    // CMH_Gender.FillPrimitive.BackColor = Parameter.Fore_Color_Hell; // No direct equivalent
+                    CMH_Gender.BackColor = Parameter.Fore_Color_Hell;
+
 
                     CMI_Couple.Text = TXT.TXT_Description("Paar");
                     CMI_Couple.Checked = bool.Parse(IniFile.Read(Parameter.INI_Common, "Filter", "Couple", "True"));
