@@ -14,8 +14,8 @@
             this.GRV_Model_Kanal = new System.Windows.Forms.DataGridView();
             this.RadPanel1 = new System.Windows.Forms.Panel();
             this.RadSplitContainer1 = new System.Windows.Forms.SplitContainer();
-            //this.PAN_Navigation = new System.Windows.Forms.Panel();
-            //this.PAN_Streams = new System.Windows.Forms.Panel();
+            this.PAN_Navigation = new System.Windows.Forms.Panel();
+            this.PAN_Streams = new System.Windows.Forms.Panel();
             this.PAN_Show = new XstreaMonNET8.CustomFlowLayoutPanel();
             this.PAN_Record = new XstreaMonNET8.CustomFlowLayoutPanel();
             this.PAN_Favoriten = new XstreaMonNET8.CustomFlowLayoutPanel();
@@ -778,10 +778,10 @@
             this.CBB_Model_Kanal.Size = new System.Drawing.Size(1086, 30);
             this.CBB_Model_Kanal.TabIndex = 1;
             this.CBB_Model_Kanal.Text = "toolStrip2";
-            this.CBB_Model_Kanal.Controls.Add(this.LAB_Warnung);
-            this.CBB_Model_Kanal.Controls.Add(this.RadLabel1);
-            this.CBB_Model_Kanal.Controls.Add(this.LAB_Drive);
-            this.CBB_Model_Kanal.Controls.Add(this.PGB_Disk);
+            //this.CBB_Model_Kanal.Controls.Add(this.LAB_Warnung);
+            //this.CBB_Model_Kanal.Controls.Add(this.RadLabel1);
+            //this.CBB_Model_Kanal.Controls.Add(this.LAB_Drive);
+            //this.CBB_Model_Kanal.Controls.Add(this.PGB_Disk);
             //
             // RadLabel1
             //

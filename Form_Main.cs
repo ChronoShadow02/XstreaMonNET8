@@ -81,8 +81,8 @@ namespace XstreaMonNET8
 
         internal virtual Panel RadPanel1 { get; set; }
         internal virtual SplitContainer RadSplitContainer1 { get; set; }
-        internal virtual SplitterPanel PAN_Navigation { get; set; }
-        internal virtual SplitterPanel PAN_Streams { get; set; }
+        internal virtual Panel PAN_Navigation { get; set; }
+        internal virtual Panel PAN_Streams { get; set; }
         // RadContextMenuManager1 has no direct equivalent, context menus are handled by ContextMenuStrip
         internal virtual ContextMenuStrip CME_Model_Kanal
         {
@@ -3091,7 +3091,19 @@ namespace XstreaMonNET8
 
         private static void CBB_CamsRecorder_Click(object sender, EventArgs e)
         {
-            Process.Start("https://xstreamon.com/");
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "https://xstreamon.com/",
+                    UseShellExecute = true
+                };
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                Parameter.Error_Message(ex, "CBB_CamsRecorder_Click");
+            }
         }
 
         private async void CBB_Favoriten_Click(object sender, EventArgs e)
@@ -3106,13 +3118,13 @@ namespace XstreaMonNET8
                     await oleDbConnection.OpenAsync();
                     if (oleDbConnection.State == ConnectionState.Open)
                     {
-                        using (OleDbDataAdapter adapter = new OleDbDataAdapter("Select * from DT_Record where Record_Favorit = True", oleDbConnection.ConnectionString))
+                        using (OleDbDataAdapter adapter = new("Select * from DT_Record where Record_Favorit = True", oleDbConnection.ConnectionString))
                         {
                             using (DataSet dataSet = new DataSet())
                             {
                                 adapter.Fill(dataSet, "DT_Record");
                                 await oleDbConnection.OpenAsync();
-                                using (DataView dataView = new DataView(dataSet.Tables["DT_Record"], null, "Record_Beginn DESC", DataViewRowState.CurrentRows))
+                                using (DataView dataView = new(dataSet.Tables["DT_Record"], null, "Record_Beginn DESC", DataViewRowState.CurrentRows))
                                 {
                                     foreach (DataRowView dataRowView in dataView)
                                     {

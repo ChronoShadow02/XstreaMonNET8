@@ -18,6 +18,7 @@ namespace XstreaMonNET8
         private bool Model_Exist;
         private bool Search_Run;
         private Channel_Info Profil_Info;
+        private Form_Main _formMain;
 
         public Dialog_Model_Einstellungen(Guid Model_GUID)
         {
@@ -464,7 +465,7 @@ namespace XstreaMonNET8
                                 Class_Model New_Model = new Class_Model(this.Pri_Model_GUID);
                                 Class_Model_List.Model_Add(New_Model);
                                 Model_Class = New_Model;
-                                Model_Class.Model_Online_Change += new Class_Model.Model_Online_ChangeEventHandler(Form_Main.Model_Online_Change);
+                                Model_Class.Model_Online_Change += new Class_Model.Model_Online_ChangeEventHandler(_formMain.Model_Online_Change);
                                 Model_Class.Pro_Last_Online = DateTime.Now;
                                 Model_Class.Model_Stream_Adressen_Load();
                                 Model_Class.Timer_Online_Change.Pro_Timer_Intervall = 15000;
@@ -494,7 +495,7 @@ namespace XstreaMonNET8
 
                             if (Model_Class.Get_Pro_Model_Online(true))
                             {
-                                Form_Main.Model_Online_Change(Model_Class);
+                                _formMain.Model_Online_Change(Model_Class);
                             }
                         }
 
