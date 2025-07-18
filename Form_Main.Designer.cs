@@ -354,24 +354,24 @@
             //
             // CMI_Galerie
             //
-            this.CMI_Galerie.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Galerie.Image")));
+            this.CMI_Galerie.Image = (Image)Resources.Calendar16;
             this.CMI_Galerie.Name = "CMI_Galerie";
             this.CMI_Galerie.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Galerie.Text = "Galerie";
+            this.CMI_Galerie.Text = "Galería";
             //
             // CMI_Optionen
             //
             this.CMI_Optionen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Optionen.Image")));
             this.CMI_Optionen.Name = "CMI_Optionen";
             this.CMI_Optionen.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Optionen.Text = "Einstellungen";
+            this.CMI_Optionen.Text = "Configuración";
             //
             // CMI_Folder_Open
             //
             this.CMI_Folder_Open.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Folder_Open.Image")));
             this.CMI_Folder_Open.Name = "CMI_Folder_Open";
             this.CMI_Folder_Open.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Folder_Open.Text = "Aufnahmeordner öffnen";
+            this.CMI_Folder_Open.Text = "Abrir carpeta de grabaciones";
             //
             // RadMenuSeparatorItem6
             //
@@ -385,7 +385,7 @@
             this.CMI_Filter});
             this.CMI_Ansicht.Name = "CMI_Ansicht";
             this.CMI_Ansicht.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Ansicht.Text = "Ansicht";
+            this.CMI_Ansicht.Text = "Ver";
             //
             // CMI_Grouping
             //
@@ -395,7 +395,7 @@
             this.CMI_Geschlecht});
             this.CMI_Grouping.Name = "CMI_Grouping";
             this.CMI_Grouping.Size = new System.Drawing.Size(169, 24);
-            this.CMI_Grouping.Text = "Gruppierung";
+            this.CMI_Grouping.Text = "Agrupar";
             //
             // CMI_LastOnline
             //
@@ -403,7 +403,7 @@
             this.CMI_LastOnline.Name = "CMI_LastOnline";
             this.CMI_LastOnline.Size = new System.Drawing.Size(209, 24);
             this.CMI_LastOnline.Tag = "0";
-            this.CMI_LastOnline.Text = "Letztes mal online";
+            this.CMI_LastOnline.Text = "Última vez en línea";
             //
             // CMI_Provider
             //
@@ -411,7 +411,7 @@
             this.CMI_Provider.Name = "CMI_Provider";
             this.CMI_Provider.Size = new System.Drawing.Size(209, 24);
             this.CMI_Provider.Tag = "1";
-            this.CMI_Provider.Text = "Webseite";
+            this.CMI_Provider.Text = "sitio web";
             //
             // CMI_Geschlecht
             //
@@ -419,7 +419,7 @@
             this.CMI_Geschlecht.Name = "CMI_Geschlecht";
             this.CMI_Geschlecht.Size = new System.Drawing.Size(209, 24);
             this.CMI_Geschlecht.Tag = "2";
-            this.CMI_Geschlecht.Text = "Geschlecht";
+            this.CMI_Geschlecht.Text = "Género";
             //
             // CMI_Filter
             //
@@ -438,13 +438,13 @@
             this.CMI_Unknow});
             this.CMI_Filter.Name = "CMI_Filter";
             this.CMI_Filter.Size = new System.Drawing.Size(169, 24);
-            this.CMI_Filter.Text = "Filter";
+            this.CMI_Filter.Text = "Filtrar";
             //
             // CMH_Status
             //
             this.CMH_Status.Name = "CMH_Status";
             this.CMH_Status.Size = new System.Drawing.Size(209, 20);
-            this.CMH_Status.Text = "Onlinestatus";
+            this.CMH_Status.Text = "Estado en línea";
             //
             // CMI_Online
             //
@@ -468,14 +468,14 @@
             this.CMI_Record.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Record.Image")));
             this.CMI_Record.Name = "CMI_Record";
             this.CMI_Record.Size = new System.Drawing.Size(209, 24);
-            this.CMI_Record.Text = "Aufnahmen";
+            this.CMI_Record.Text = "Grabaciones";
             //
             // CMI_New_Records
             //
             this.CMI_New_Records.Image = ((System.Drawing.Image)(resources.GetObject("CMI_New_Records.Image")));
             this.CMI_New_Records.Name = "CMI_New_Records";
             this.CMI_New_Records.Size = new System.Drawing.Size(209, 24);
-            this.CMI_New_Records.Text = "Neue Aufnahmen";
+            this.CMI_New_Records.Text = "Nuevas grabaciones";
             //
             // CMI_AutoRecord
             //
@@ -489,7 +489,7 @@
             //
             this.CMH_Gender.Name = "CMH_Gender";
             this.CMH_Gender.Size = new System.Drawing.Size(209, 20);
-            this.CMH_Gender.Text = "Geschlecht";
+            this.CMH_Gender.Text = "Género";
             //
             // CMI_Female
             //
@@ -497,7 +497,7 @@
             this.CMI_Female.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Female.Image")));
             this.CMI_Female.Name = "CMI_Female";
             this.CMI_Female.Size = new System.Drawing.Size(209, 24);
-            this.CMI_Female.Text = "Weiblich";
+            this.CMI_Female.Text = "Femenino";
             //
             // CMI_Male
             //
@@ -505,7 +505,7 @@
             this.CMI_Male.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Male.Image")));
             this.CMI_Male.Name = "CMI_Male";
             this.CMI_Male.Size = new System.Drawing.Size(209, 24);
-            this.CMI_Male.Text = "Männlich";
+            this.CMI_Male.Text = "Masculino";
             //
             // CMI_Couple
             //
@@ -513,7 +513,7 @@
             this.CMI_Couple.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Couple.Image")));
             this.CMI_Couple.Name = "CMI_Couple";
             this.CMI_Couple.Size = new System.Drawing.Size(209, 24);
-            this.CMI_Couple.Text = "Paar";
+            this.CMI_Couple.Text = "Parejas";
             //
             // CMI_Trans
             //
@@ -529,7 +529,7 @@
             this.CMI_Unknow.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Unknow.Image")));
             this.CMI_Unknow.Name = "CMI_Unknow";
             this.CMI_Unknow.Size = new System.Drawing.Size(209, 24);
-            this.CMI_Unknow.Text = "Unbekannt";
+            this.CMI_Unknow.Text = "Desconocido";
             //
             // RadMenuSeparatorItem3
             //
@@ -541,14 +541,14 @@
             this.CMI_Alle_Anzeigen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Alle_Anzeigen.Image")));
             this.CMI_Alle_Anzeigen.Name = "CMI_Alle_Anzeigen";
             this.CMI_Alle_Anzeigen.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Alle_Anzeigen.Text = "Alle Anzeigen";
+            this.CMI_Alle_Anzeigen.Text = "Todos los anuncios";
             //
             // CMI_Alle_Ausblenden
             //
             this.CMI_Alle_Ausblenden.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Alle_Ausblenden.Image")));
             this.CMI_Alle_Ausblenden.Name = "CMI_Alle_Ausblenden";
             this.CMI_Alle_Ausblenden.Size = new System.Drawing.Size(279, 24);
-            this.CMI_Alle_Ausblenden.Text = "Alle Ausblenden";
+            this.CMI_Alle_Ausblenden.Text = "Ocultar todo";
             //
             // CME_Preview
             //
@@ -564,14 +564,14 @@
             this.CMI_Favoriten.CheckOnClick = true;
             this.CMI_Favoriten.Name = "CMI_Favoriten";
             this.CMI_Favoriten.Size = new System.Drawing.Size(228, 24);
-            this.CMI_Favoriten.Text = "Favoriten gruppieren";
+            this.CMI_Favoriten.Text = "Favoritos del grupo";
             //
             // CMI_Records
             //
             this.CMI_Records.CheckOnClick = true;
             this.CMI_Records.Name = "CMI_Records";
             this.CMI_Records.Size = new System.Drawing.Size(228, 24);
-            this.CMI_Records.Text = "Aufnahmen gruppieren";
+            this.CMI_Records.Text = "Grabaciones grupales";
             //
             // CBB_Commands
             //
@@ -601,20 +601,20 @@
             // CBB_Hinzufügen
             //
             this.CBB_Hinzufügen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Hinzufügen.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Hinzufügen.Image")));
+            this.CBB_Hinzufügen.Image = Resources.Plus32;
             this.CBB_Hinzufügen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Hinzufügen.Name = "CBB_Hinzufügen";
             this.CBB_Hinzufügen.Size = new System.Drawing.Size(24, 24);
-            this.CBB_Hinzufügen.Text = "Hinzufügen";
+            this.CBB_Hinzufügen.Text = "Agregar canal";
             //
             // CBB_Löschen
             //
             this.CBB_Löschen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Löschen.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Löschen.Image")));
+            this.CBB_Löschen.Image = Resources.delete;
             this.CBB_Löschen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Löschen.Name = "CBB_Löschen";
             this.CBB_Löschen.Size = new System.Drawing.Size(24, 24);
-            this.CBB_Löschen.Text = "Löschen";
+            this.CBB_Löschen.Text = "Eliminar canal";
             //
             // CommandBarSeparator1
             //
@@ -626,7 +626,7 @@
             this.CBT_Suche.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.CBT_Suche.Name = "CBT_Suche";
             this.CBT_Suche.Size = new System.Drawing.Size(100, 27);
-            this.CBT_Suche.Text = "Suche...";
+            this.CBT_Suche.Text = "Buscar...";
             //
             // CommandBarSeparator3
             //
@@ -636,11 +636,11 @@
             // CBT_ShowAll
             //
             this.CBT_ShowAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBT_ShowAll.Image = ((System.Drawing.Image)(resources.GetObject("CBT_ShowAll.Image")));
+            this.CBT_ShowAll.Image = (Image)Resources.ShowAll16;
             this.CBT_ShowAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBT_ShowAll.Name = "CBT_ShowAll";
             this.CBT_ShowAll.Size = new System.Drawing.Size(24, 24);
-            this.CBT_ShowAll.Text = "Show all";
+            this.CBT_ShowAll.Text = "Mostrar todo";
             //
             // CBD_Liste_Sender
             //
@@ -652,7 +652,7 @@
             this.CBD_Liste_Sender.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBD_Liste_Sender.Name = "CBD_Liste_Sender";
             this.CBD_Liste_Sender.Size = new System.Drawing.Size(34, 24);
-            this.CBD_Liste_Sender.Text = "CommandBarDropDownButton1";
+            this.CBD_Liste_Sender.Text = "Seleccionar sitios web";
             //
             // DDI_Alle_Anzeigen
             //
@@ -668,20 +668,20 @@
             // CBB_Aufnahmen_Heute
             //
             this.CBB_Aufnahmen_Heute.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Aufnahmen_Heute.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Aufnahmen_Heute.Image")));
+            this.CBB_Aufnahmen_Heute.Image = (Image)Resources.Calendar16;
             this.CBB_Aufnahmen_Heute.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Aufnahmen_Heute.Name = "CBB_Aufnahmen_Heute";
             this.CBB_Aufnahmen_Heute.Size = new System.Drawing.Size(24, 24);
-            this.CBB_Aufnahmen_Heute.Text = "Galerie";
+            this.CBB_Aufnahmen_Heute.Text = "Galería";
             //
             // CBB_Favoriten
             //
             this.CBB_Favoriten.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Favoriten.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Favoriten.Image")));
+            this.CBB_Favoriten.Image = (Image)Resources.Favorite16;
             this.CBB_Favoriten.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Favoriten.Name = "CBB_Favoriten";
             this.CBB_Favoriten.Size = new System.Drawing.Size(24, 24);
-            this.CBB_Favoriten.Text = "Favoriten";
+            this.CBB_Favoriten.Text = "Grabando Favoritos";
             //
             // CommandBarSeparator2
             //
@@ -691,11 +691,11 @@
             // CBB_Einstellungen
             //
             this.CBB_Einstellungen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Einstellungen.Image = ((System.Drawing.Image)(resources.GetObject("CBB_Einstellungen.Image")));
+            this.CBB_Einstellungen.Image = ((System.Drawing.Image)XstreaMonNET8.Resources.Options16);
             this.CBB_Einstellungen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Einstellungen.Name = "CBB_Einstellungen";
             this.CBB_Einstellungen.Size = new System.Drawing.Size(24, 24);
-            this.CBB_Einstellungen.Text = "CommandBarButton1";
+            this.CBB_Einstellungen.Text = "Opciones de programa";
             //
             // CommandBarSeparator4
             //
@@ -705,7 +705,7 @@
             // CBB_CamsRecorder
             //
             this.CBB_CamsRecorder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_CamsRecorder.Image = ((System.Drawing.Image)(resources.GetObject("CBB_CamsRecorder.Image")));
+            this.CBB_CamsRecorder.Image = ((System.Drawing.Image)XstreaMonNET8.Resources.Camera16);
             this.CBB_CamsRecorder.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_CamsRecorder.Name = "CBB_CamsRecorder";
             this.CBB_CamsRecorder.Size = new System.Drawing.Size(24, 24);
