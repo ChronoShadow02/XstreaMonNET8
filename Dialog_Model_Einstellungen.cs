@@ -77,14 +77,14 @@ namespace XstreaMonNET8
                 // ContextMenu para TXB_Sender_Name (Copiar / Pegar)
                 ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
                 ToolStripMenuItem toolStripMenuItem1 = new ToolStripMenuItem(
-                    TXT.TXT_Description("Kopieren"),
+                    TXT.TXT_Description("Copiar"),
                     Resources.Kopieren16
                 );
                 toolStripMenuItem1.Click += new EventHandler(this.Copy_Click);
                 contextMenuStrip.Items.Add(toolStripMenuItem1);
 
                 ToolStripMenuItem toolStripMenuItem2 = new ToolStripMenuItem(
-                    TXT.TXT_Description("Einfügen"),
+                    TXT.TXT_Description("Pegar"),
                     Resources.Einfügen16
                 );
                 toolStripMenuItem2.Click += new EventHandler(this.Paste_Click);
@@ -96,7 +96,7 @@ namespace XstreaMonNET8
                 this.DDL_Webseite.Items.Clear();
                 this.DDL_Webseite.Items.Add(new ComboboxItem
                 {
-                    Text = TXT.TXT_Description("Webseite wählen"),
+                    Text = TXT.TXT_Description("Seleccionar sitio web"),
                     Value = -1
                 });
 
