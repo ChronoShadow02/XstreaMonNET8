@@ -1069,7 +1069,7 @@
             PVP_Webseiten.Padding = new Padding(3, 4, 3, 4);
             PVP_Webseiten.Size = new Size(578, 604);
             PVP_Webseiten.TabIndex = 3;
-            PVP_Webseiten.Text = "sitios web";
+            PVP_Webseiten.Text = "Sitios web";
             PVP_Webseiten.UseVisualStyleBackColor = true;
             // 
             // LIV_Websites
