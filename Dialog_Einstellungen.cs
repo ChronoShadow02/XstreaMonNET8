@@ -10,6 +10,7 @@ namespace XstreaMonNET8
 
         public Dialog_Einstellungen()
         {
+            InitializeComponent();
             this.Load += new EventHandler(this.Dialog_Einstellungen_Load);
         }
 
@@ -141,7 +142,7 @@ namespace XstreaMonNET8
 
                     string savedLang = IniFile.Read(Parameter.INI_Common, "Language", "Files");
 
-                    DDL_Languages.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    DDL_Languages.AutoCompleteMode = AutoCompleteMode.None;
                     DDL_Languages.AutoCompleteSource = AutoCompleteSource.ListItems;
                     DDL_Languages.Sorted = true;
 
@@ -223,8 +224,14 @@ namespace XstreaMonNET8
                 CBX_Player.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Player", "Intern", "true"), out bool playerIntern) && playerIntern;
                 CBX_Debug.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "false"), out bool debugMode) && debugMode;
 
-                // Update license-version label
-                LAB_LizenzVersion.Text = $"{Application.ProductVersion} {Parameter.Programlizenz.Lizenz_Bezeichnung}";
+                if (Parameter.Programlizenz != null && Parameter.Programlizenz.Lizenz_Bezeichnung != null)
+                {
+                    LAB_LizenzVersion.Text = $"{Application.ProductVersion} {Parameter.Programlizenz.Lizenz_Bezeichnung}";
+                }
+                else
+                {
+                    LAB_LizenzVersion.Text = $"{Application.ProductVersion} [Sin licencia]";
+                }
 
                 // Load design-header and online-check flags
                 CBX_StreamHeader.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Design", "Header", "true"), out bool headerVisible) && headerVisible;
