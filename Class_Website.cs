@@ -1,4 +1,4 @@
-﻿namespace XstreaMonNET8
+namespace XstreaMonNET8
 {
     public class Class_Website(
         int id,
@@ -48,8 +48,7 @@
                 { 12, EPlay.Profil }
             };
 
-            Func<string, Task<Channel_Info>>? action;
-            if (profilActions.TryGetValue(Pro_ID, out action))
+            if (profilActions.TryGetValue(Pro_ID, out Func<string, Task<Channel_Info>>? action))
             {
                 return await action(modelName);
             }
