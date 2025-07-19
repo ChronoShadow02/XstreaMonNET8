@@ -3234,12 +3234,17 @@ namespace XstreaMonNET8
             await Task.CompletedTask;
             try
             {
-                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
-                dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen
+                {
+                    StartPosition = FormStartPosition.CenterParent
+                };
                 using (dialogEinstellungen)
                 {
                     dialogEinstellungen.ShowDialog();
-                    Text = "XstreaMon " + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
+
+                    string nombreLicencia = Parameter.Programlizenz?.Lizenz_Programmbezeichnung ?? "[Sin licencia]";
+                    Text = $"XstreaMon {nombreLicencia}";
+
                     GRV_Model_Kanal.Refresh();
                 }
             }
