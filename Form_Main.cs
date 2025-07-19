@@ -19,10 +19,10 @@ namespace XstreaMonNET8
 
         public Form_Main()
         {
-            Load += new EventHandler(Form_Load);
-            Closing += new CancelEventHandler(Form_Closing);
-            Resize += new EventHandler(Mybase_Resize);
-            SizeChanged += new EventHandler(Form_Main_SizeChanged);
+            Load += new EventHandler(Form_Load!);
+            Closing += new CancelEventHandler(Form_Closing!);
+            Resize += new EventHandler(Mybase_Resize!);
+            SizeChanged += new EventHandler(Form_Main_SizeChanged!);
             Drive_Info_Refresh_Timer = new System.Windows.Forms.Timer()
             {
                 Interval = 300000
@@ -56,24 +56,24 @@ namespace XstreaMonNET8
             {
                 if (_GRV_Model_Kanal != null)
                 {
-                    _GRV_Model_Kanal.DoubleClick -= GRV_Model_Kanal_DoubleClick;
-                    _GRV_Model_Kanal.CellPainting -= GRV_Model_Kanal_CellPaint;
+                    _GRV_Model_Kanal.DoubleClick -= GRV_Model_Kanal_DoubleClick!;
+                    _GRV_Model_Kanal.CellPainting -= GRV_Model_Kanal_CellPaint!;
                     // _GRV_Model_Kanal.GroupSummaryEvaluate -= GRV_Model_Kanal_GroupSummaryEvaluate; // No direct equivalent in DataGridView
-                    _GRV_Model_Kanal.MouseDown -= GRV_Model_Kanal_MouseDown;
-                    _GRV_Model_Kanal.CellContextMenuStripNeeded -= GRV_Model_Kanal_ContextMenuOpening;
-                    _GRV_Model_Kanal.MouseMove -= GRV_Model_Kanal_MouseMove;
-                    _GRV_Model_Kanal.MouseLeave -= GRV_Model_Kanal_MouseLeave;
+                    _GRV_Model_Kanal.MouseDown -= GRV_Model_Kanal_MouseDown!;
+                    _GRV_Model_Kanal.CellContextMenuStripNeeded -= GRV_Model_Kanal_ContextMenuOpening!;
+                    _GRV_Model_Kanal.MouseMove -= GRV_Model_Kanal_MouseMove!;
+                    _GRV_Model_Kanal.MouseLeave -= GRV_Model_Kanal_MouseLeave!;
                 }
                 _GRV_Model_Kanal = value;
                 if (_GRV_Model_Kanal != null)
                 {
-                    _GRV_Model_Kanal.DoubleClick += GRV_Model_Kanal_DoubleClick;
-                    _GRV_Model_Kanal.CellPainting += GRV_Model_Kanal_CellPaint;
+                    _GRV_Model_Kanal.DoubleClick += GRV_Model_Kanal_DoubleClick!;
+                    _GRV_Model_Kanal.CellPainting += GRV_Model_Kanal_CellPaint!;
                     // _GRV_Model_Kanal.GroupSummaryEvaluate += GRV_Model_Kanal_GroupSummaryEvaluate;
-                    _GRV_Model_Kanal.MouseDown += GRV_Model_Kanal_MouseDown;
-                    _GRV_Model_Kanal.CellContextMenuStripNeeded += GRV_Model_Kanal_ContextMenuOpening;
-                    _GRV_Model_Kanal.MouseMove += GRV_Model_Kanal_MouseMove;
-                    _GRV_Model_Kanal.MouseLeave += GRV_Model_Kanal_MouseLeave;
+                    _GRV_Model_Kanal.MouseDown += GRV_Model_Kanal_MouseDown!;
+                    _GRV_Model_Kanal.CellContextMenuStripNeeded += GRV_Model_Kanal_ContextMenuOpening!;
+                    _GRV_Model_Kanal.MouseMove += GRV_Model_Kanal_MouseMove!;
+                    _GRV_Model_Kanal.MouseLeave += GRV_Model_Kanal_MouseLeave!;
                 }
             }
         }
@@ -91,12 +91,12 @@ namespace XstreaMonNET8
             {
                 if (_CME_Model_Kanal != null)
                 {
-                    _CME_Model_Kanal.Opening -= CME_Model_Kanal_DropDownOpening;
+                    _CME_Model_Kanal.Opening -= CME_Model_Kanal_DropDownOpening!;
                 }
                 _CME_Model_Kanal = value;
                 if (_CME_Model_Kanal != null)
                 {
-                    _CME_Model_Kanal.Opening += CME_Model_Kanal_DropDownOpening;
+                    _CME_Model_Kanal.Opening += CME_Model_Kanal_DropDownOpening!;
                 }
             }
         }
@@ -109,12 +109,12 @@ namespace XstreaMonNET8
             {
                 if (_CMI_Aufnahme != null)
                 {
-                    _CMI_Aufnahme.Click -= CMI_Aufnahme_Click;
+                    _CMI_Aufnahme.Click -= CMI_Aufnahme_Click!;
                 }
                 _CMI_Aufnahme = value;
                 if (_CMI_Aufnahme != null)
                 {
-                    _CMI_Aufnahme.Click += CMI_Aufnahme_Click;
+                    _CMI_Aufnahme.Click += CMI_Aufnahme_Click!;
                 }
             }
         }
@@ -1083,8 +1083,6 @@ namespace XstreaMonNET8
         {
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false); // Equivalent to UseCompatibleTextRendering = false
                 Visible = false;
                 Pri_Data_Load = true;
                 FileInfo fileInfo = new FileInfo(Application.ExecutablePath);
