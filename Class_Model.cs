@@ -815,92 +815,96 @@ namespace XstreaMonNET8
 
         private async void Record_load()
         {
-            await Task.CompletedTask;
             try
             {
-                string selectCommandText = "SELECT * FROM DT_Record WHERE User_GUID = '" + this.Pro_Model_GUID.ToString() + "' AND (Record_Ende IS NULL)";
+                string selectCommandText = "SELECT * FROM DT_Record WHERE User_GUID = ? AND (Record_Ende IS NULL)";
                 using DataSet dataSet = new();
                 using OleDbConnection oleDbConnection = new(Database_Connect.Aktiv_Datenbank());
-                await oleDbConnection.OpenAsync();
+                using OleDbCommand oleDbCommand = new(selectCommandText, oleDbConnection);
+                oleDbCommand.Parameters.AddWithValue("?", this.Pro_Model_GUID.ToString());
+
+                // Open con timeout vía connection string
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                await oleDbConnection.OpenAsync(cts.Token);
+
                 if (oleDbConnection.State != ConnectionState.Open)
                     return;
 
-                using (OleDbDataAdapter adapter = new OleDbDataAdapter(selectCommandText, oleDbConnection))
-                using (OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter))
+                using OleDbDataAdapter adapter = new OleDbDataAdapter(oleDbCommand);
+                adapter.SelectCommand.CommandTimeout = 5; // Timeout de lectura
+
+                using OleDbCommandBuilder builder = new(adapter);
+                adapter.Fill(dataSet, "DT_Record");
+
+                var table = dataSet.Tables["DT_Record"];
+                if (table == null || table.Rows.Count == 0)
+                    return;
+
+                foreach (DataRow row in table.Rows)
                 {
-                    adapter.Fill(dataSet, "DT_Record");
-                    if (dataSet.Tables["DT_Record"].Rows.Count > 0)
+                    try
                     {
-                        foreach (DataRow row in dataSet.Tables["DT_Record"].Rows)
+                        if (row.IsNull("Record_Ende") ||
+                            row.IsNull("Record_Convert_Ext") ||
+                            !row["Record_Name"].ToString().EndsWith(row["Record_Convert_Ext"]?.ToString() ?? ""))
                         {
-                            bool recordEndeNull = row.IsNull("Record_Ende");
-                            bool convertExtEmpty = row.IsNull("Record_Convert_Ext") || !row["Record_Name"].ToString().EndsWith(row["Record_Convert_Ext"]?.ToString() ?? "");
-
-                            if (recordEndeNull || convertExtEmpty)
+                            var classStreamRecord = new Class_Stream_Record
                             {
-                                try
-                                {
-                                    var classStreamRecord = new Class_Stream_Record()
-                                    {
-                                        Pro_Record_GUID = ValueBack.Get_CUnique(row["Record_GUID"]),
-                                        Record_GUID = ValueBack.Get_CUnique(row["Record_GUID"]),
-                                        Pro_User_GUID = ValueBack.Get_CUnique(row["User_GUID"]),
-                                        Pro_User_Name = this.Pro_Model_Name,
-                                        Pro_Recordname = Path.Combine(this.Pro_Model_Directory, row["Record_Name"].ToString()),
-                                        Pro_Record_Beginn = Convert.ToDateTime(row["Record_Beginn"]),
-                                        Pro_Record_PID = ValueBack.Get_CInteger(row["Record_PID"]),
-                                        ProzessID = ValueBack.Get_CInteger(row["Record_PID"]),
-                                        Pro_Maschine = row["Maschine"].ToString(),
-                                        Pro_Favorite = ValueBack.Get_CBoolean(row["Record_Favorit"]),
-                                        Pro_Stream_Extension = row["Record_Convert_Ext"]?.ToString() ?? "",
-                                        Pro_Decoder_item = Decoder.Decoder_Find(ValueBack.Get_CInteger(row["Record_Encoder_ID"])),
-                                        Pro_Auflösung = this.Pro_Model_Record_Resolution
-                                    };
+                                Pro_Record_GUID = ValueBack.Get_CUnique(row["Record_GUID"]),
+                                Record_GUID = ValueBack.Get_CUnique(row["Record_GUID"]),
+                                Pro_User_GUID = ValueBack.Get_CUnique(row["User_GUID"]),
+                                Pro_User_Name = this.Pro_Model_Name,
+                                Pro_Recordname = Path.Combine(this.Pro_Model_Directory, row["Record_Name"].ToString()),
+                                Pro_Record_Beginn = Convert.ToDateTime(row["Record_Beginn"]),
+                                Pro_Record_PID = ValueBack.Get_CInteger(row["Record_PID"]),
+                                ProzessID = ValueBack.Get_CInteger(row["Record_PID"]),
+                                Pro_Maschine = row["Maschine"].ToString(),
+                                Pro_Favorite = ValueBack.Get_CBoolean(row["Record_Favorit"]),
+                                Pro_Stream_Extension = row["Record_Convert_Ext"]?.ToString() ?? "",
+                                Pro_Decoder_item = Decoder.Decoder_Find(ValueBack.Get_CInteger(row["Record_Encoder_ID"])),
+                                Pro_Auflösung = this.Pro_Model_Record_Resolution
+                            };
 
-                                    if (!Parameter.Task_Runs(Convert.ToInt32(row["Record_PID"])))
-                                    {
-                                        classStreamRecord.Stream_Record_Stop();
-                                        classStreamRecord.Dispose();
-                                    }
-                                    else
-                                    {
-                                        this.Pro_Model_Stream_Record = classStreamRecord;
-                                        if (this.Pro_Model_Record && this.Get_Pro_Model_Online() && !this.Record_Check_Timer.Enabled)
-                                        {
-                                            this.Record_Check_Timer.Start();
-                                        }
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Parameter.Error_Message(ex, "Error processing active record");
-                                }
+                            if (!Parameter.Task_Runs(Convert.ToInt32(row["Record_PID"])))
+                            {
+                                classStreamRecord.Stream_Record_Stop();
+                                classStreamRecord.Dispose();
                             }
                             else
                             {
-                                try
+                                this.Pro_Model_Stream_Record = classStreamRecord;
+
+                                if (this.Pro_Model_Record && this.Get_Pro_Model_Online() && !this.Record_Check_Timer.Enabled)
                                 {
-                                    string path = Path.Combine(this.Pro_Model_Directory, row["Record_Name"].ToString());
-                                    if (!File.Exists(path))
-                                        row.Delete();
-                                }
-                                catch (Exception ex)
-                                {
-                                    Parameter.Error_Message(ex, "Error validating file existence");
+                                    this.Record_Check_Timer.Start();
                                 }
                             }
                         }
-
-                        try
+                        else
                         {
-                            adapter.Update(dataSet.Tables["DT_Record"]);
-                        }
-                        catch (Exception ex)
-                        {
-                            Parameter.Error_Message(ex, "Error updating DT_Record");
+                            string path = Path.Combine(this.Pro_Model_Directory, row["Record_Name"].ToString());
+                            if (!File.Exists(path))
+                                row.Delete();
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Parameter.Error_Message(ex, "Error processing active record");
+                    }
                 }
+
+                try
+                {
+                    adapter.Update(table);
+                }
+                catch (Exception ex)
+                {
+                    Parameter.Error_Message(ex, "Error updating DT_Record");
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                //Parameter.Error_Message("Database connection timed out", "Record_load");
             }
             catch (Exception ex)
             {

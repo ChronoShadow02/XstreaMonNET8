@@ -1730,8 +1730,8 @@ namespace XstreaMonNET8
                             // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
                             // foreach (GroupDescriptor groupDescriptor in (Collection<GroupDescriptor>)this.GRV_Model_Kanal.GroupDescriptors)
                             //    groupDescriptor.GroupNames[0].PropertyName = groupDescriptor.GroupNames[0].PropertyName;
-                            var groupDescriptor = new GroupDescriptor("User_Country"); // O el campo que quieres agrupar
-                            ApplyGrouping(GRV_Model_Kanal, groupDescriptor);
+                            //var groupDescriptor = new GroupDescriptor("User_Country"); // O el campo que quieres agrupar
+                            //ApplyGrouping(GRV_Model_Kanal, groupDescriptor);
 
                             if (result.Get_Pro_Model_Online())
                                 Model_Online_Change(result);
