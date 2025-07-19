@@ -223,7 +223,7 @@ namespace XstreaMonNET8
             {
                 if (_CMI_Info != null)
                 {
-                    _CMI_Info.Click -= CMI_Info_Click;
+                    _CMI_Info.Click -= CMI_Info_Click!;
                 }
                 _CMI_Info = value;
                 if (_CMI_Info != null)
