@@ -483,41 +483,41 @@ namespace XstreaMonNET8
         // CommandBarRowElement and CommandBarStripElement are Telerik specific, replaced with ToolStrip
         internal virtual ToolStrip CBB_Commands { get; set; }
 
-        internal virtual ToolStripButton CBB_Hinzufügen
+        internal virtual ToolStripButton CBB_HinzufÃ¼gen
         {
-            get => _CBB_Hinzufügen;
+            get => _CBB_HinzufÃ¼gen;
             set
             {
-                if (_CBB_Hinzufügen != null)
+                if (_CBB_HinzufÃ¼gen != null)
                 {
-                    _CBB_Hinzufügen.Click -= CBB_Hinzufügen_Click;
+                    _CBB_HinzufÃ¼gen.Click -= CBB_HinzufÃ¼gen_Click;
                 }
-                _CBB_Hinzufügen = value;
-                if (_CBB_Hinzufügen != null)
+                _CBB_HinzufÃ¼gen = value;
+                if (_CBB_HinzufÃ¼gen != null)
                 {
-                    _CBB_Hinzufügen.Click += CBB_Hinzufügen_Click;
+                    _CBB_HinzufÃ¼gen.Click += CBB_HinzufÃ¼gen_Click;
                 }
             }
         }
-        private ToolStripButton _CBB_Hinzufügen;
+        private ToolStripButton _CBB_HinzufÃ¼gen;
 
-        internal virtual ToolStripButton CBB_Löschen
+        internal virtual ToolStripButton CBB_LÃ¶schen
         {
-            get => _CBB_Löschen;
+            get => _CBB_LÃ¶schen;
             set
             {
-                if (_CBB_Löschen != null)
+                if (_CBB_LÃ¶schen != null)
                 {
-                    _CBB_Löschen.Click -= CBB_Löschen_Click;
+                    _CBB_LÃ¶schen.Click -= CBB_LÃ¶schen_Click;
                 }
-                _CBB_Löschen = value;
-                if (_CBB_Löschen != null)
+                _CBB_LÃ¶schen = value;
+                if (_CBB_LÃ¶schen != null)
                 {
-                    _CBB_Löschen.Click += CBB_Löschen_Click;
+                    _CBB_LÃ¶schen.Click += CBB_LÃ¶schen_Click;
                 }
             }
         }
-        private ToolStripButton _CBB_Löschen;
+        private ToolStripButton _CBB_LÃ¶schen;
 
         internal virtual ToolStripSeparator CommandBarSeparator1 { get; set; }
 
@@ -1190,14 +1190,14 @@ namespace XstreaMonNET8
                         CBB_Aufnahmen_Heute.ToolTipText = TXT.TXT_Description("Aufnahmen letzten 24 Stunden");
                         CBB_Einstellungen.ToolTipText = TXT.TXT_Description("Programm Optionen");
                         CBB_Favoriten.ToolTipText = TXT.TXT_Description("Aufnahme Favoriten");
-                        CBB_Hinzufügen.ToolTipText = TXT.TXT_Description("Kanal hinzufügen");
-                        CBB_Löschen.ToolTipText = TXT.TXT_Description("Kanal löschen");
+                        CBB_HinzufÃ¼gen.ToolTipText = TXT.TXT_Description("Kanal hinzufÃ¼gen");
+                        CBB_LÃ¶schen.ToolTipText = TXT.TXT_Description("Kanal lÃ¶schen");
                         CBT_ShowAll.ToolTipText = TXT.TXT_Description("Alle Anzeigen");
-                        CBD_Liste_Sender.ToolTipText = TXT.TXT_Description("Webseiten auswählen");
+                        CBD_Liste_Sender.ToolTipText = TXT.TXT_Description("Webseiten auswÃ¤hlen");
                         DDI_Alle_Anzeigen.Text = TXT.TXT_Description("Alle Anzeigen");
                         CBT_Suche.TextBox.PlaceholderText = TXT.TXT_Description("Suche..."); // PlaceholderText for ToolStripTextBox
 
-                        Modul_StatusScreen.Status_Show(TXT.TXT_Description("Kanäle werden geladen"));
+                        Modul_StatusScreen.Status_Show(TXT.TXT_Description("KanÃ¤le werden geladen"));
                         DataTable DT_User_Data = new DataTable();
                         using (OleDbConnection oleDbConnection = new OleDbConnection())
                         {
@@ -1236,7 +1236,7 @@ namespace XstreaMonNET8
                             if (!Lizenz.Lizenz_vorhanden || bool.Parse(IniFile.Read(Parameter.INI_Common, "Lizenz", "Advice", "True")))
                                 Model_Promo_load();
                         }
-                        Modul_StatusScreen.Status_Show(TXT.TXT_Description("Speicherplatz überprüft"));
+                        Modul_StatusScreen.Status_Show(TXT.TXT_Description("Speicherplatz Ã¼berprÃ¼ft"));
                         Drive_Info = new Class_Driveinfo(Modul_Ordner.Ordner_Pfad().Substring(0, 3));
                         DiskSpace();
                         Drive_Info_Refresh_Timer.Start();
@@ -1269,7 +1269,7 @@ namespace XstreaMonNET8
         }
 
         // Reemplaza cada llamada a oleDbConnection.Open(); por await oleDbConnection.OpenAsync(); 
-        // y asegúrate de que el método que contiene la llamada sea async y se espere correctamente.
+        // y asegÃºrate de que el mÃ©todo que contiene la llamada sea async y se espere correctamente.
 
         internal async void Model_load(DataTable DT_User_Data)
         {
@@ -1281,7 +1281,7 @@ namespace XstreaMonNET8
                 {
                     try
                     {
-                        Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} von {1} Kanäle werden geladen"), num, DT_User_Data.Rows.Count));
+                        Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} von {1} KanÃ¤le werden geladen"), num, DT_User_Data.Rows.Count));
                         num++;
                         object obj = row["User_GUID"];
                         Guid userGuid = obj != DBNull.Value ? (Guid)obj : Guid.Empty;
@@ -1393,11 +1393,11 @@ namespace XstreaMonNET8
                     PGB_Disk.Value = (int)Math.Round((Drive_Info.UsedSpace - Drive_Info.Record_Space) / 1024.0 / 1024.0); // Value1
                     // PGB_Disk.Value2 = (int)Math.Round(Form_Main.Drive_Info.UsedSpace / 1024.0 / 1024.0); // No Value2 in native ProgressBar
                     PGB_Disk.Text = ""; // Text property is not directly settable for ProgressBar, usually handled by a label
-                    ToolTip1.SetToolTip(PGB_Disk, TXT.TXT_Description("Belegt") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.UsedSpace) + "\r\n" + TXT.TXT_Description("Verfügbar") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.Total_Size - Drive_Info.UsedSpace) + "\r\n" + TXT.TXT_Description("Aufnahmen") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.Record_Space) + "\r\n" + TXT.TXT_Description("ca.") + " " + Math.Round(Drive_Info.Freespace / 1024.0 / 1024.0 / 2000.0, 1) + " " + TXT.TXT_Description("Stunden in HD möglich"));
+                    ToolTip1.SetToolTip(PGB_Disk, TXT.TXT_Description("Belegt") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.UsedSpace) + "\r\n" + TXT.TXT_Description("VerfÃ¼gbar") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.Total_Size - Drive_Info.UsedSpace) + "\r\n" + TXT.TXT_Description("Aufnahmen") + ": " + ValueBack.Get_Numeric2Bytes(Drive_Info.Record_Space) + "\r\n" + TXT.TXT_Description("ca.") + " " + Math.Round(Drive_Info.Freespace / 1024.0 / 1024.0 / 2000.0, 1) + " " + TXT.TXT_Description("Stunden in HD mÃ¶glich"));
 
                     if ((double)Drive_Info.Freespace / Drive_Info.Total_Size * 100.0 < 10.0)
                     {
-                        LAB_Warnung.Text = string.Format("{0} % freier Speicherplatz verfügbar", (int)Math.Round((double)Drive_Info.Freespace / Drive_Info.Total_Size * 100.0));
+                        LAB_Warnung.Text = string.Format("{0} % freier Speicherplatz verfÃ¼gbar", (int)Math.Round((double)Drive_Info.Freespace / Drive_Info.Total_Size * 100.0));
                         LAB_Warnung.Visible = true;
                     }
                     else
@@ -1690,7 +1690,7 @@ namespace XstreaMonNET8
                     }
                 }
             Label_9:
-                if (!flag2 && MessageBox.Show(TXT.TXT_Description("Möchten sie XstreaMon beenden?"), TXT.TXT_Description("XStreaMon beenden"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                if (!flag2 && MessageBox.Show(TXT.TXT_Description("MÃ¶chten sie XstreaMon beenden?"), TXT.TXT_Description("XStreaMon beenden"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
                     e.Cancel = true;
                     Visible = true;
@@ -1747,7 +1747,7 @@ namespace XstreaMonNET8
             {
                 if (Class_Model_List.Pro_Count > 4 && !Lizenz.Lizenz_vorhanden)
                 {
-                    if (MessageBox.Show(TXT.TXT_Description("Mehr Kanäle können nur in der freigeschalteten Version aufgenommen werden. Möchten Sie Ihre Version freischalten?"), TXT.TXT_Description("Trial Version"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show(TXT.TXT_Description("Mehr KanÃ¤le kÃ¶nnen nur in der freigeschalteten Version aufgenommen werden. MÃ¶chten Sie Ihre Version freischalten?"), TXT.TXT_Description("Trial Version"), MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
                         dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
@@ -1798,12 +1798,12 @@ namespace XstreaMonNET8
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, "Form_Class_Record.CBB_Hinzufügen_Click");
+                Parameter.Error_Message(ex, "Form_Class_Record.CBB_HinzufÃ¼gen_Click");
             }
             return flag1;
         }
 
-        private async void Galerie_Öffnen()
+        private async void Galerie_Ã–ffnen()
         {
             try
             {
@@ -1823,12 +1823,12 @@ namespace XstreaMonNET8
                 catch (Exception ex)
                 {
                     Cursor = Cursors.Default;
-                    Parameter.Error_Message(ex, "Form_Class_Record.Galerie_Öffnen");
+                    Parameter.Error_Message(ex, "Form_Class_Record.Galerie_Ã–ffnen");
                 }
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, "Form_Class_Record.Galerie_Öffnen");
+                Parameter.Error_Message(ex, "Form_Class_Record.Galerie_Ã–ffnen");
             }
         }
 
@@ -1836,7 +1836,7 @@ namespace XstreaMonNET8
         {
             try
             {
-                if (GRV_Model_Kanal.SelectedRows.Count == 0 || MessageBox.Show(string.Format(TXT.TXT_Description("Möchten Sie den Kanal {0} löschen?"), GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_Name"].Value.ToString()), TXT.TXT_Description("Kanal löschen"), MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (GRV_Model_Kanal.SelectedRows.Count == 0 || MessageBox.Show(string.Format(TXT.TXT_Description("MÃ¶chten Sie den Kanal {0} lÃ¶schen?"), GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_Name"].Value.ToString()), TXT.TXT_Description("Kanal lÃ¶schen"), MessageBoxButtons.YesNo) != DialogResult.Yes)
                     return;
 
                 Guid modelGuid = (Guid)GRV_Model_Kanal.SelectedRows[0].Cells["Pro_Model_GUID"].Value;
@@ -1974,9 +1974,9 @@ namespace XstreaMonNET8
                         num1++;
                 }
                 if (num1 > 0)
-                    str = str + num1 + " " + TXT.TXT_Description("von") + " " + Class_Model_List.Pro_Count + " " + TXT.TXT_Description("Kanäle Online") + "\r\n";
+                    str = str + num1 + " " + TXT.TXT_Description("von") + " " + Class_Model_List.Pro_Count + " " + TXT.TXT_Description("KanÃ¤le Online") + "\r\n";
                 if (num2 > 0)
-                    str = str + num2 + " " + TXT.TXT_Description("Kanäle werden aufgenommen");
+                    str = str + num2 + " " + TXT.TXT_Description("KanÃ¤le werden aufgenommen");
                 Cam_Benachrichtigung.Text = str; // TooltipText for NotifyIcon
             }
             catch (Exception ex)
@@ -2021,7 +2021,7 @@ namespace XstreaMonNET8
             }
         }
 
-        private void CMI_Galerie_Click(object sender, EventArgs e) => Galerie_Öffnen();
+        private void CMI_Galerie_Click(object sender, EventArgs e) => Galerie_Ã–ffnen();
 
         private void CMI_Promo_Add_Click(object sender, EventArgs e)
         {
@@ -2226,12 +2226,12 @@ namespace XstreaMonNET8
                     CMI_Promo_Add.Text = TXT.TXT_Description("in die Modelliste aufnehmen");
                     CMI_Stream_Refresh.Text = TXT.TXT_Description("Streamadressen aktualisieren");
                     CMI_Galerie.Text = TXT.TXT_Description("Galerie");
-                    CMI_Folder_Open.Text = TXT.TXT_Description("Aufnahmeordner öffnen");
+                    CMI_Folder_Open.Text = TXT.TXT_Description("Aufnahmeordner Ã¶ffnen");
                     CMI_Optionen.Text = TXT.TXT_Description("Optionen");
                     CMI_Info.Text = TXT.TXT_Description("Info bearbeiten");
-                    CMI_Online_Check.Text = TXT.TXT_Description("Online-Prüfung");
+                    CMI_Online_Check.Text = TXT.TXT_Description("Online-PrÃ¼fung");
                     CMI_Deaktivieren.Text = TXT.TXT_Description("Kanal aktiv");
-                    CMI_Delete.Text = TXT.TXT_Description("Löschen");
+                    CMI_Delete.Text = TXT.TXT_Description("LÃ¶schen");
                     CMI_Gesehen.Text = TXT.TXT_Description("Als gesehen markieren");
                     CMI_Ansicht.Text = TXT.TXT_Description("Ansicht");
                     CMI_Grouping.Text = TXT.TXT_Description("Gruppierung");
@@ -2260,7 +2260,7 @@ namespace XstreaMonNET8
                     CMI_Female.Checked = bool.Parse(IniFile.Read(Parameter.INI_Common, "Filter", "Female", "True"));
                     CMI_Female.ForeColor = CMI_Female.Checked ? Parameter.Fore_Color_Dark : Parameter.Fore_Color_Hell;
 
-                    CMI_Male.Text = TXT.TXT_Description("Männlich");
+                    CMI_Male.Text = TXT.TXT_Description("MÃ¤nnlich");
                     CMI_Male.Checked = bool.Parse(IniFile.Read(Parameter.INI_Common, "Filter", "Male", "True"));
                     CMI_Male.ForeColor = CMI_Male.Checked ? Parameter.Fore_Color_Dark : Parameter.Fore_Color_Hell;
 
@@ -2356,19 +2356,19 @@ namespace XstreaMonNET8
                     if (result.Pro_Model_Favorite)
                     {
                         CMI_Favorite.Image = Resources.Favorite16;
-                        CMI_Favorite.Text = TXT.TXT_Description("aus Favoriten löschen");
+                        CMI_Favorite.Text = TXT.TXT_Description("aus Favoriten lÃ¶schen");
                     }
                     else
                     {
                         CMI_Favorite.Image = Resources.FavoriteDeaktiv16;
-                        CMI_Favorite.Text = TXT.TXT_Description("zu Favoriten hinzufügen");
+                        CMI_Favorite.Text = TXT.TXT_Description("zu Favoriten hinzufÃ¼gen");
                     }
                     CMI_Deaktivieren.Checked = !result.Pro_Model_Deaktiv;
 
                     Class_Website classWebsite = Sites.Website_Find(result.Pro_Website_ID);
                     if (classWebsite != null)
                     {
-                        CMI_Webseite.Text = classWebsite.Pro_Name + " " + TXT.TXT_Description("Webseite öffnen");
+                        CMI_Webseite.Text = classWebsite.Pro_Name + " " + TXT.TXT_Description("Webseite Ã¶ffnen");
                         CMI_Webseite.Image = new Bitmap(classWebsite.Pro_Image, 16, 16);
                         CMI_Webseite.Tag = classWebsite.Pro_ID;
                     }
@@ -2556,7 +2556,7 @@ namespace XstreaMonNET8
 
                     if (GRV_Model_Kanal.SelectedRows.Count != 1)
                         return;
-                    Galerie_Öffnen();
+                    Galerie_Ã–ffnen();
                 }
             }
             catch (Exception ex)
@@ -2946,7 +2946,7 @@ namespace XstreaMonNET8
                     default:
                         if (Lastonline_Value > 6)
                         {
-                            str = TXT.TXT_Description("älter als 1 Woche");
+                            str = TXT.TXT_Description("Ã¤lter als 1 Woche");
                         }
                         else
                         {
@@ -3016,7 +3016,7 @@ namespace XstreaMonNET8
             }
         }
 
-        private void CBB_Hinzufügen_Click(object sender, EventArgs e) => Chanel_Add();
+        private void CBB_HinzufÃ¼gen_Click(object sender, EventArgs e) => Chanel_Add();
 
         private async void CBB_Aufnahmen_Heute_Click(object sender, EventArgs e)
         {
@@ -3054,7 +3054,7 @@ namespace XstreaMonNET8
                                             videoFile.Pro_Model_Name = result.Pro_Model_Name;
                                             videoFile.Pro_FrameRate = (int)dataRowView["Record_FrameRate"];
                                             videoFile.Pro_Resolution = dataRowView["Record_Resolution"].ToString();
-                                            videoFile.Pro_Video_Länge = (int)dataRowView["Record_Länge_Minuten"];
+                                            videoFile.Pro_Video_LÃ¤nge = (int)dataRowView["Record_LÃ¤nge_Minuten"];
                                             videoFile.Pro_Website_ID = result.Pro_Website_ID;
                                             videoFile.Pro_IsInDB = true;
                                             if (dataRowView["Record_Ende"] != DBNull.Value)
@@ -3141,7 +3141,7 @@ namespace XstreaMonNET8
                                                 Pro_Model_GUID = result.Pro_Model_GUID,
                                                 Pro_FrameRate = (int)dataRowView["Record_FrameRate"],
                                                 Pro_Resolution = dataRowView["Record_Resolution"].ToString(),
-                                                Pro_Video_Länge = (int)dataRowView["Record_Länge_Minuten"],
+                                                Pro_Video_LÃ¤nge = (int)dataRowView["Record_LÃ¤nge_Minuten"],
                                                 Pro_Website_ID = result.Pro_Website_ID,
                                                 Pro_IsInDB = true
                                             };
@@ -3197,7 +3197,7 @@ namespace XstreaMonNET8
                                             videoFile.Pro_Ende = row["Record_Ende"] != DBNull.Value ? (DateTime)row["Record_Ende"] : default(DateTime);
                                             videoFile.Pro_FrameRate = (int)row["Record_FrameRate"];
                                             videoFile.Pro_Resolution = row["Record_Resolution"].ToString();
-                                            videoFile.Pro_Video_Länge = (int)row["Record_Länge_Minuten"];
+                                            videoFile.Pro_Video_LÃ¤nge = (int)row["Record_LÃ¤nge_Minuten"];
                                         }
                                     }
                                 }
@@ -3241,7 +3241,7 @@ namespace XstreaMonNET8
             }
         }
 
-        private void CBB_Löschen_Click(object sender, EventArgs e)
+        private void CBB_LÃ¶schen_Click(object sender, EventArgs e)
         {
             try
             {
@@ -3249,7 +3249,7 @@ namespace XstreaMonNET8
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, "Form_Class_Record.CBB_Löschen_Click");
+                Parameter.Error_Message(ex, "Form_Class_Record.CBB_LÃ¶schen_Click");
             }
         }
 

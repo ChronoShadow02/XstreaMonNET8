@@ -233,11 +233,9 @@ namespace XstreaMonNET8
                     LAB_LizenzVersion.Text = $"{Application.ProductVersion} [Sin licencia]";
                 }
 
-                // Load design-header and online-check flags
                 CBX_StreamHeader.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Design", "Header", "true"), out bool headerVisible) && headerVisible;
                 CBX_Start_Check.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Online", "Check", "true"), out bool onlineCheck) && onlineCheck;
 
-                // Load maximum concurrent conversions
                 if (!int.TryParse(IniFile.Read(Parameter.INI_Common, "Record", "MaxConversion", "5"), out int maxConv))
                     maxConv = 5;
                 SPE_Conversion.Value = maxConv;
@@ -334,40 +332,40 @@ namespace XstreaMonNET8
         private void Set_ToolTip()
         {
             ToolTip ttpEinstellungen = this.TTP_Einstellungen;
-            ttpEinstellungen.SetToolTip(DDL_Languages, TXT.TXT_Description("Wähle die Sprache für XstreaMon"));
-            ttpEinstellungen.SetToolTip(DDL_Browser, TXT.TXT_Description("Wähle den Standardbrowser mit dem Streams geöffnet werden sollen"));
-            ttpEinstellungen.SetToolTip(DDL_Design, TXT.TXT_Description("Wähle ein Design um das Aussehen von XstreaMon zu verändern"));
-            ttpEinstellungen.SetToolTip(CBX_Minimize, TXT.TXT_Description("XstreaMon wird als Symbolleistensymbol abgelegt."));
-            ttpEinstellungen.SetToolTip(CBX_Notification, TXT.TXT_Description("Es werden alle Benachrichtigungen von den Kanälen angezeigt bei denen die Benachrichtiugung aktiviert sind. Deaktiviert werden keine Benachrichtigungen angezeigt."));
-            ttpEinstellungen.SetToolTip(CBX_Player, TXT.TXT_Description("Verwendet beim öffnen aus den Galerien den internen Player. Deaktiviert wird die Datei mit dem Standard Programm geöffnet"));
-            ttpEinstellungen.SetToolTip(CBX_StreamHeader, TXT.TXT_Description("Bei der Streamvorschau werden die Streaminformationen dauerhaft angezeigt. Deaktiviert werden die Informationen nur angezeigt wenn sich der Mauszeiger auf dem Streamelement befindet."));
-            ttpEinstellungen.SetToolTip(CBX_Debug, TXT.TXT_Description("Schalten den Debugmodus an. Ausgeblendete Fenster wie die Aufnahmefenster und Konvertierungen werden eingeblendet. Es werden Fehler protokolliert."));
-            ttpEinstellungen.SetToolTip(SPE_Conversion, TXT.TXT_Description("Die maximale Anzahl der ausstehenden Videokonverierungen die gleichzeitig ausgeführt werden können. Die Aufnahmen von einigen Webseiten müssen in das MP4 Format konvertiert werden."));
-            ttpEinstellungen.SetToolTip(DDL_Size_Preview, TXT.TXT_Description("Die Größe des Streamelements"));
-            ttpEinstellungen.SetToolTip(DDL_Size_Record, TXT.TXT_Description("Die Größe des Streamelements wenn eine Aufnahme erfolgt"));
-            ttpEinstellungen.SetToolTip(CBX_Start_Check, TXT.TXT_Description("Alle Kanäle werden beim Start geprüft. Deaktiviert werden die Kanäle nach dem Ablauf des Prüfintervalls geprüft. (Empfohlen bei mehr als 50 erfassten Kanälen bei einer Webseite)"));
-            ttpEinstellungen.SetToolTip(CBX_Suche, TXT.TXT_Description("Beim Anlegen eines neuen Kanals werden alle Plattformen nach dem Kanalname durchsucht."));
-            ttpEinstellungen.SetToolTip(TXB_Aufnahmen, TXT.TXT_Description("Das Verzeichnis in denen die Aufnahmen der Kanäle gespeichert werden"));
-            ttpEinstellungen.SetToolTip(TXB_Datenbank, TXT.TXT_Description("Das Verzeichnis in dem sich die XstreaMon.mdb Datei befindet"));
-            ttpEinstellungen.SetToolTip(TXB_Favoriten, TXT.TXT_Description("Das Verzeichnis in den die Aufnahmen gespeichert werden die als Favoriten gekennzeichet sind."));
-            ttpEinstellungen.SetToolTip(CBX_FavoritenRecords, TXT.TXT_Description("Kopiert die als Favoriten gekennzeichneten Aufnahmen zusätzlich in den Favoritenordner."));
-            ttpEinstellungen.SetToolTip(TXB_Dateiname, TXT.TXT_Description("Die Bezeichnung der Aufnahmen im Dateiverzeichnis. Mit dem Fragzeichen könne alle Optionen angzeigt werden."));
-            ttpEinstellungen.SetToolTip(BTN_Anfordern, TXT.TXT_Description("Öffnet den Webshop um eine Lizenz für XstreaMon zu erwerben."));
-            ttpEinstellungen.SetToolTip(TXB_LizenzValue, TXT.TXT_Description("Dein Lizenzschlüssel für XstreaMon. Mit der Lupe kann die Lizenz überprüft werden."));
-            ttpEinstellungen.SetToolTip(PVP_Vorgaben, TXT.TXT_Description("Vorgaben für neue Kanäle"));
-            ttpEinstellungen.SetToolTip(CBX_Benachrichtigung, TXT.TXT_Description("Benachrichtigung wird eingeblendet wenn der Kanal online geht."));
-            ttpEinstellungen.SetToolTip(CBX_Visible, TXT.TXT_Description("Der Stream wird angezeigt wenn der Kanal online ist"));
-            ttpEinstellungen.SetToolTip(CBX_Record, TXT.TXT_Description("Die Aufnahme wird automatisch gestartet wenn der Kanal online ist."));
-            ttpEinstellungen.SetToolTip(DDL_Video_Encoder, TXT.TXT_Description("Legt das Programm fest welches für die Aufnahmen genutzt wird. (CRStreamRec empfohlen)"));
-            ttpEinstellungen.SetToolTip(RBT_Video_Send, TXT.TXT_Description("Aufnahmen werden in der besten verfügbaren Auflösung gespeichert"));
-            ttpEinstellungen.SetToolTip(DDL_Speicherformat, TXT.TXT_Description("Das Videoformat in dem die Aufnahme gespeichert werden soll. Eine nötige Konvertierung wird nach der Aufnahme ausgeführt"));
-            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_NoStop, TXT.TXT_Description("Die Aufnahme endet erst wenn der Sender nicht mehr sendet. Die Dateigröße kann sehr groß werden. (empfohlen ist der Aufnahmestop nach Zeit oder Dateigröße)"));
-            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_Size, TXT.TXT_Description("Die Aufnahme wird beendet wenn die Dateigröße erreicht ist und gleich wieder neu gestartet."));
-            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_Time, TXT.TXT_Description("Die Aufnahme wird beendet wenn die Aufnahmezeit erreicht ist und gleich wieder neu gestartet."));
-            ttpEinstellungen.SetToolTip(BTN_Optionen_Update, TXT.TXT_Description("Die Optionen-Einstellungen werden auf alle Kanäle übertragen"));
-            ttpEinstellungen.SetToolTip(BTN_Aufnahme_Update, TXT.TXT_Description("Die Aufnahme-Einstellungen werden auf alle Kanäle übertragen"));
-            ttpEinstellungen.SetToolTip(BTN_Stop_Update, TXT.TXT_Description("Die Aufnahmestop-Einstellungen werden auf alle Kanäle übertragen"));
-            ttpEinstellungen.SetToolTip(SPE_Tooltip, TXT.TXT_Description("Zeit in Sekunden bis der Tooltip eingeblendet wird."));
+            ttpEinstellungen.SetToolTip(DDL_Languages, TXT.TXT_Description("Selecciona el idioma para XstreaMon"));
+            ttpEinstellungen.SetToolTip(DDL_Browser, TXT.TXT_Description("Selecciona el navegador predeterminado con el que se abrirán los streams"));
+            ttpEinstellungen.SetToolTip(DDL_Design, TXT.TXT_Description("Selecciona un diseño para cambiar la apariencia de XstreaMon"));
+            ttpEinstellungen.SetToolTip(CBX_Minimize, TXT.TXT_Description("XstreaMon se minimizará a la bandeja del sistema"));
+            ttpEinstellungen.SetToolTip(CBX_Notification, TXT.TXT_Description("Se mostrarán todas las notificaciones de los canales con notificaciones activadas. Si está desactivado no se mostrarán notificaciones."));
+            ttpEinstellungen.SetToolTip(CBX_Player, TXT.TXT_Description("Usa el reproductor interno al abrir desde las galerías. Si está desactivado, los archivos se abren con el programa predeterminado"));
+            ttpEinstellungen.SetToolTip(CBX_StreamHeader, TXT.TXT_Description("La información del stream se mostrará siempre en la vista previa. Si está desactivado, solo se mostrará al pasar el ratón sobre el elemento de stream"));
+            ttpEinstellungen.SetToolTip(CBX_Debug, TXT.TXT_Description("Activa el modo depuración. Ventanas ocultas como las de grabación y conversión se mostrarán. Se registrarán los errores."));
+            ttpEinstellungen.SetToolTip(SPE_Conversion, TXT.TXT_Description("Número máximo de conversiones de video pendientes que se pueden ejecutar simultáneamente. Algunas grabaciones deben convertirse al formato MP4."));
+            ttpEinstellungen.SetToolTip(DDL_Size_Preview, TXT.TXT_Description("Tamaño del elemento de stream en la vista previa"));
+            ttpEinstellungen.SetToolTip(DDL_Size_Record, TXT.TXT_Description("Tamaño del elemento de stream durante una grabación"));
+            ttpEinstellungen.SetToolTip(CBX_Start_Check, TXT.TXT_Description("Todos los canales se comprobarán al inicio. Si está desactivado, se comprobarán tras el intervalo definido (recomendado si hay más de 50 canales registrados en un sitio web)"));
+            ttpEinstellungen.SetToolTip(CBX_Suche, TXT.TXT_Description("Al crear un nuevo canal, se buscará el nombre del canal en todas las plataformas"));
+            ttpEinstellungen.SetToolTip(TXB_Aufnahmen, TXT.TXT_Description("Directorio donde se guardan las grabaciones de los canales"));
+            ttpEinstellungen.SetToolTip(TXB_Datenbank, TXT.TXT_Description("Directorio donde se encuentra el archivo XstreaMon.mdb"));
+            ttpEinstellungen.SetToolTip(TXB_Favoriten, TXT.TXT_Description("Directorio donde se guardan las grabaciones marcadas como favoritos"));
+            ttpEinstellungen.SetToolTip(CBX_FavoritenRecords, TXT.TXT_Description("Copia las grabaciones marcadas como favoritos también en la carpeta de favoritos"));
+            ttpEinstellungen.SetToolTip(TXB_Dateiname, TXT.TXT_Description("Nombre de las grabaciones en el directorio. Haz clic en el signo de interrogación para ver todas las opciones disponibles."));
+            ttpEinstellungen.SetToolTip(BTN_Anfordern, TXT.TXT_Description("Abre la tienda en línea para comprar una licencia para XstreaMon"));
+            ttpEinstellungen.SetToolTip(TXB_LizenzValue, TXT.TXT_Description("Tu clave de licencia para XstreaMon. Haz clic en la lupa para comprobar la licencia."));
+            ttpEinstellungen.SetToolTip(PVP_Vorgaben, TXT.TXT_Description("Configuraciones predeterminadas para nuevos canales"));
+            ttpEinstellungen.SetToolTip(CBX_Benachrichtigung, TXT.TXT_Description("Se mostrará una notificación cuando el canal esté en línea"));
+            ttpEinstellungen.SetToolTip(CBX_Visible, TXT.TXT_Description("El stream se mostrará cuando el canal esté en línea"));
+            ttpEinstellungen.SetToolTip(CBX_Record, TXT.TXT_Description("La grabación se iniciará automáticamente cuando el canal esté en línea"));
+            ttpEinstellungen.SetToolTip(DDL_Video_Encoder, TXT.TXT_Description("Define el programa que se usará para las grabaciones (se recomienda CRStreamRec)"));
+            ttpEinstellungen.SetToolTip(RBT_Video_Send, TXT.TXT_Description("Las grabaciones se guardarán en la mejor resolución disponible"));
+            ttpEinstellungen.SetToolTip(DDL_Speicherformat, TXT.TXT_Description("Formato de video en el que se guardará la grabación. Si es necesario, la conversión se realizará después de la grabación"));
+            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_NoStop, TXT.TXT_Description("La grabación solo termina cuando el canal deja de transmitir. El tamaño del archivo puede ser muy grande (se recomienda detener por tiempo o tamaño)"));
+            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_Size, TXT.TXT_Description("La grabación se detiene cuando se alcanza el tamaño de archivo y se reinicia automáticamente"));
+            ttpEinstellungen.SetToolTip(RBT_Aufnahmestop_Time, TXT.TXT_Description("La grabación se detiene cuando se alcanza el tiempo de grabación y se reinicia automáticamente"));
+            ttpEinstellungen.SetToolTip(BTN_Optionen_Update, TXT.TXT_Description("Aplica la configuración de opciones a todos los canales"));
+            ttpEinstellungen.SetToolTip(BTN_Aufnahme_Update, TXT.TXT_Description("Aplica la configuración de grabación a todos los canales"));
+            ttpEinstellungen.SetToolTip(BTN_Stop_Update, TXT.TXT_Description("Aplica la configuración de parada de grabación a todos los canales"));
+            ttpEinstellungen.SetToolTip(SPE_Tooltip, TXT.TXT_Description("Tiempo en segundos antes de mostrar el tooltip"));
         }
 
         private void Load_Websites()

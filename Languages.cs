@@ -7,8 +7,8 @@ namespace XstreaMonNET8
 
         internal static void Language_load()
         {
-            Language_List = new List<Class_Language>()
-            {
+            Language_List =
+            [
                 new Class_Language("bg", "Български"),
                 new Class_Language("cs", "Česky"),
                 new Class_Language("da", "Dansk"),
@@ -38,7 +38,7 @@ namespace XstreaMonNET8
                 new Class_Language("tr", "Türkçe"),
                 new Class_Language("uk", "Українська"),
                 new Class_Language("zh", "中文")
-            };
+            ];
         }
 
         internal static Class_Language Language_Find(string countryCode)

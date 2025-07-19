@@ -277,14 +277,14 @@
             //
             // CMI_Stream_Refresh
             //
-            this.CMI_Stream_Refresh.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Stream_Refresh.Image")));
+            this.CMI_Stream_Refresh.Image = Resources.View16;
             this.CMI_Stream_Refresh.Name = "CMI_Stream_Refresh";
             this.CMI_Stream_Refresh.Size = new System.Drawing.Size(279, 24);
             this.CMI_Stream_Refresh.Text = "Streamadressen aktualisieren";
             //
             // CMI_Anzeigen
             //
-            this.CMI_Anzeigen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Anzeigen.Image")));
+            this.CMI_Anzeigen.Image = Resources.View16;
             this.CMI_Anzeigen.Name = "CMI_Anzeigen";
             this.CMI_Anzeigen.Size = new System.Drawing.Size(279, 24);
             this.CMI_Anzeigen.Text = "anzeigen";
@@ -296,14 +296,14 @@
             //
             // CMI_Favorite
             //
-            this.CMI_Favorite.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Favorite.Image")));
+            this.CMI_Favorite.Image = Resources.FavoriteDeaktiv16;
             this.CMI_Favorite.Name = "CMI_Favorite";
             this.CMI_Favorite.Size = new System.Drawing.Size(279, 24);
             this.CMI_Favorite.Text = "";
             //
             // CMI_Info
             //
-            this.CMI_Info.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Info.Image")));
+            this.CMI_Info.Image = Resources.Info16;
             this.CMI_Info.Name = "CMI_Info";
             this.CMI_Info.Size = new System.Drawing.Size(279, 24);
             this.CMI_Info.Text = "Info bearbeiten";
@@ -328,14 +328,14 @@
             //
             // CMI_Gesehen
             //
-            this.CMI_Gesehen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Gesehen.Image")));
+            this.CMI_Gesehen.Image = Resources.Play16;
             this.CMI_Gesehen.Name = "CMI_Gesehen";
             this.CMI_Gesehen.Size = new System.Drawing.Size(279, 24);
             this.CMI_Gesehen.Text = "Als gesehen markieren";
             //
             // CMI_Delete
             //
-            this.CMI_Delete.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Delete.Image")));
+            this.CMI_Delete.Image = Resources.delete;
             this.CMI_Delete.Name = "CMI_Delete";
             this.CMI_Delete.Size = new System.Drawing.Size(279, 24);
             this.CMI_Delete.Text = "Löschen";
@@ -361,14 +361,14 @@
             //
             // CMI_Optionen
             //
-            this.CMI_Optionen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Optionen.Image")));
+            this.CMI_Optionen.Image = Resources.Options16;
             this.CMI_Optionen.Name = "CMI_Optionen";
             this.CMI_Optionen.Size = new System.Drawing.Size(279, 24);
             this.CMI_Optionen.Text = "Configuración";
             //
             // CMI_Folder_Open
             //
-            this.CMI_Folder_Open.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Folder_Open.Image")));
+            this.CMI_Folder_Open.Image = Resources.Folder16;
             this.CMI_Folder_Open.Name = "CMI_Folder_Open";
             this.CMI_Folder_Open.Size = new System.Drawing.Size(279, 24);
             this.CMI_Folder_Open.Text = "Abrir carpeta de grabaciones";
@@ -449,7 +449,7 @@
             // CMI_Online
             //
             this.CMI_Online.CheckOnClick = true;
-            this.CMI_Online.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Online.Image")));
+            this.CMI_Online.Image = Resources.Model_Online16;
             this.CMI_Online.Name = "CMI_Online";
             this.CMI_Online.Size = new System.Drawing.Size(209, 24);
             this.CMI_Online.Text = "Online";
@@ -457,7 +457,7 @@
             // CMI_Offline
             //
             this.CMI_Offline.CheckOnClick = true;
-            this.CMI_Offline.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Offline.Image")));
+            this.CMI_Offline.Image = Resources.Model_Offline16;
             this.CMI_Offline.Name = "CMI_Offline";
             this.CMI_Offline.Size = new System.Drawing.Size(209, 24);
             this.CMI_Offline.Text = "Offline";
@@ -465,14 +465,14 @@
             // CMI_Record
             //
             this.CMI_Record.CheckOnClick = true;
-            this.CMI_Record.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Record.Image")));
+            this.CMI_Record.Image = Resources.Play16;
             this.CMI_Record.Name = "CMI_Record";
             this.CMI_Record.Size = new System.Drawing.Size(209, 24);
             this.CMI_Record.Text = "Grabaciones";
             //
             // CMI_New_Records
             //
-            this.CMI_New_Records.Image = ((System.Drawing.Image)(resources.GetObject("CMI_New_Records.Image")));
+            this.CMI_New_Records.Image = Resources.Play16New;
             this.CMI_New_Records.Name = "CMI_New_Records";
             this.CMI_New_Records.Size = new System.Drawing.Size(209, 24);
             this.CMI_New_Records.Text = "Nuevas grabaciones";
@@ -480,7 +480,7 @@
             // CMI_AutoRecord
             //
             this.CMI_AutoRecord.CheckOnClick = true;
-            this.CMI_AutoRecord.Image = ((System.Drawing.Image)(resources.GetObject("CMI_AutoRecord.Image")));
+            this.CMI_AutoRecord.Image = Resources.RecordWait16;
             this.CMI_AutoRecord.Name = "CMI_AutoRecord";
             this.CMI_AutoRecord.Size = new System.Drawing.Size(209, 24);
             this.CMI_AutoRecord.Text = "Autorecord";
@@ -494,7 +494,7 @@
             // CMI_Female
             //
             this.CMI_Female.CheckOnClick = true;
-            this.CMI_Female.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Female.Image")));
+            this.CMI_Female.Image = Resources.Gender_Female;
             this.CMI_Female.Name = "CMI_Female";
             this.CMI_Female.Size = new System.Drawing.Size(209, 24);
             this.CMI_Female.Text = "Femenino";
@@ -502,7 +502,7 @@
             // CMI_Male
             //
             this.CMI_Male.CheckOnClick = true;
-            this.CMI_Male.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Male.Image")));
+            this.CMI_Male.Image = Resources.Gender_Male;
             this.CMI_Male.Name = "CMI_Male";
             this.CMI_Male.Size = new System.Drawing.Size(209, 24);
             this.CMI_Male.Text = "Masculino";
@@ -510,7 +510,7 @@
             // CMI_Couple
             //
             this.CMI_Couple.CheckOnClick = true;
-            this.CMI_Couple.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Couple.Image")));
+            this.CMI_Couple.Image = Resources.Gender_Couple;
             this.CMI_Couple.Name = "CMI_Couple";
             this.CMI_Couple.Size = new System.Drawing.Size(209, 24);
             this.CMI_Couple.Text = "Parejas";
@@ -518,7 +518,7 @@
             // CMI_Trans
             //
             this.CMI_Trans.CheckOnClick = true;
-            this.CMI_Trans.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Trans.Image")));
+            this.CMI_Trans.Image = Resources.Gender_Trans;
             this.CMI_Trans.Name = "CMI_Trans";
             this.CMI_Trans.Size = new System.Drawing.Size(209, 24);
             this.CMI_Trans.Text = "Trans";
@@ -526,7 +526,7 @@
             // CMI_Unknow
             //
             this.CMI_Unknow.CheckOnClick = true;
-            this.CMI_Unknow.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Unknow.Image")));
+            this.CMI_Unknow.Image = Resources.Gender_Unknow;
             this.CMI_Unknow.Name = "CMI_Unknow";
             this.CMI_Unknow.Size = new System.Drawing.Size(209, 24);
             this.CMI_Unknow.Text = "Desconocido";
@@ -538,14 +538,14 @@
             //
             // CMI_Alle_Anzeigen
             //
-            this.CMI_Alle_Anzeigen.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Alle_Anzeigen.Image")));
+            this.CMI_Alle_Anzeigen.Image = Resources.ShowAll16;
             this.CMI_Alle_Anzeigen.Name = "CMI_Alle_Anzeigen";
             this.CMI_Alle_Anzeigen.Size = new System.Drawing.Size(279, 24);
             this.CMI_Alle_Anzeigen.Text = "Todos los anuncios";
             //
             // CMI_Alle_Ausblenden
             //
-            this.CMI_Alle_Ausblenden.Image = ((System.Drawing.Image)(resources.GetObject("CMI_Alle_Ausblenden.Image")));
+            this.CMI_Alle_Ausblenden.Image = Resources.ShowAll16;
             this.CMI_Alle_Ausblenden.Name = "CMI_Alle_Ausblenden";
             this.CMI_Alle_Ausblenden.Size = new System.Drawing.Size(279, 24);
             this.CMI_Alle_Ausblenden.Text = "Ocultar todo";
@@ -636,7 +636,7 @@
             // CBT_ShowAll
             //
             this.CBT_ShowAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBT_ShowAll.Image = (Image)Resources.ShowAll16;
+            this.CBT_ShowAll.Image = Resources.ShowAll16;
             this.CBT_ShowAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBT_ShowAll.Name = "CBT_ShowAll";
             this.CBT_ShowAll.Size = new System.Drawing.Size(24, 24);
@@ -648,7 +648,7 @@
             this.CBD_Liste_Sender.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DDI_Alle_Anzeigen,
             this.RadMenuSeparatorItem4});
-            this.CBD_Liste_Sender.Image = ((System.Drawing.Image)(resources.GetObject("CBD_Liste_Sender.Image")));
+            this.CBD_Liste_Sender.Image = (Image)null;
             this.CBD_Liste_Sender.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBD_Liste_Sender.Name = "CBD_Liste_Sender";
             this.CBD_Liste_Sender.Size = new System.Drawing.Size(34, 24);
@@ -668,7 +668,7 @@
             // CBB_Aufnahmen_Heute
             //
             this.CBB_Aufnahmen_Heute.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Aufnahmen_Heute.Image = (Image)Resources.Calendar16;
+            this.CBB_Aufnahmen_Heute.Image = Resources.Calendar16;
             this.CBB_Aufnahmen_Heute.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Aufnahmen_Heute.Name = "CBB_Aufnahmen_Heute";
             this.CBB_Aufnahmen_Heute.Size = new System.Drawing.Size(24, 24);
@@ -677,7 +677,7 @@
             // CBB_Favoriten
             //
             this.CBB_Favoriten.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Favoriten.Image = (Image)Resources.Favorite16;
+            this.CBB_Favoriten.Image = Resources.Favorite16;
             this.CBB_Favoriten.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Favoriten.Name = "CBB_Favoriten";
             this.CBB_Favoriten.Size = new System.Drawing.Size(24, 24);
@@ -691,7 +691,7 @@
             // CBB_Einstellungen
             //
             this.CBB_Einstellungen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_Einstellungen.Image = ((System.Drawing.Image)XstreaMonNET8.Resources.Options16);
+            this.CBB_Einstellungen.Image = Resources.Options16;
             this.CBB_Einstellungen.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_Einstellungen.Name = "CBB_Einstellungen";
             this.CBB_Einstellungen.Size = new System.Drawing.Size(24, 24);
@@ -705,7 +705,7 @@
             // CBB_CamsRecorder
             //
             this.CBB_CamsRecorder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CBB_CamsRecorder.Image = ((System.Drawing.Image)XstreaMonNET8.Resources.Camera16);
+            this.CBB_CamsRecorder.Image = Resources.Camera16;
             this.CBB_CamsRecorder.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.CBB_CamsRecorder.Name = "CBB_CamsRecorder";
             this.CBB_CamsRecorder.Size = new System.Drawing.Size(24, 24);
@@ -786,7 +786,7 @@
             // RadLabel1
             //
             this.RadLabel1.AutoSize = true;
-            this.RadLabel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("RadLabel1.BackgroundImage")));
+            this.RadLabel1.BackgroundImage = Resources.XstreaMon;
             this.RadLabel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.RadLabel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.RadLabel1.Location = new System.Drawing.Point(756, 0);
@@ -796,7 +796,7 @@
             //
             // Cam_Benachrichtigung
             //
-            this.Cam_Benachrichtigung.Icon = ((System.Drawing.Icon)(resources.GetObject("Cam_Benachrichtigung.Icon")));
+            this.Cam_Benachrichtigung.Icon = ((System.Drawing.Icon)(resources.GetObject("Cam_Benachrichtigung.BalloonIcon")));
             this.Cam_Benachrichtigung.Text = "notifyIcon1";
             this.Cam_Benachrichtigung.Visible = true;
             this.Cam_Benachrichtigung.ContextMenuStrip = this.CMS_Benachrichtigung;
