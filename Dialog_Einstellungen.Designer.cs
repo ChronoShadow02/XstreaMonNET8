@@ -248,6 +248,7 @@
             BTN_Übernehmen.TabIndex = 0;
             BTN_Übernehmen.Text = "Übernehmen";
             BTN_Übernehmen.UseVisualStyleBackColor = true;
+            BTN_Übernehmen.Click += BTN_Übernehmen_Click;
             // 
             // BTN_Abbrechen
             // 
@@ -259,6 +260,7 @@
             BTN_Abbrechen.TabIndex = 1;
             BTN_Abbrechen.Text = "Abbrechen";
             BTN_Abbrechen.UseVisualStyleBackColor = true;
+            BTN_Abbrechen.Click += BTN_Abbrechen_Click;
             // 
             // BTN_Anfordern
             // 
@@ -269,6 +271,7 @@
             BTN_Anfordern.TabIndex = 0;
             BTN_Anfordern.Text = "anfordern";
             BTN_Anfordern.UseVisualStyleBackColor = true;
+            BTN_Anfordern.Click += BTN_Anfordern_Click;
             // 
             // TXB_LizenzValue
             // 
