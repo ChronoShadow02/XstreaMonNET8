@@ -20,7 +20,7 @@ namespace XstreaMonNET8
         public Form_Main()
         {
             InitializeComponent();
-            Load += new EventHandler(Form_Load);
+            Load += new EventHandler(Form_Load!);
             Closing += new CancelEventHandler(Form_Closing);
             Resize += new EventHandler(Mybase_Resize);
             SizeChanged += new EventHandler(Form_Main_SizeChanged);
