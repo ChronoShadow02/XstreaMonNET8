@@ -19,7 +19,6 @@ namespace XstreaMonNET8
 
         public Form_Main()
         {
-            InitializeComponent();
             Load += new EventHandler(Form_Load);
             Closing += new CancelEventHandler(Form_Closing);
             Resize += new EventHandler(Mybase_Resize);
@@ -31,6 +30,7 @@ namespace XstreaMonNET8
             Pri_Show_All = false;
             Pri_Show_Visible = true;
             Pri_Data_Load = false;
+            InitializeComponent();
         }
 
         protected override void Dispose(bool disposing)
@@ -1083,6 +1083,8 @@ namespace XstreaMonNET8
         {
             try
             {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false); // Equivalent to UseCompatibleTextRendering = false
                 Visible = false;
                 Pri_Data_Load = true;
                 FileInfo fileInfo = new FileInfo(Application.ExecutablePath);
@@ -1231,6 +1233,8 @@ namespace XstreaMonNET8
                         else
                         {
                             Model_load(DT_User_Data);
+                            if (!Lizenz.Lizenz_vorhanden || bool.Parse(IniFile.Read(Parameter.INI_Common, "Lizenz", "Advice", "True")))
+                                Model_Promo_load();
                         }
                         Modul_StatusScreen.Status_Show(TXT.TXT_Description("Speicherplatz überprüft"));
                         Drive_Info = new Class_Driveinfo(Modul_Ordner.Ordner_Pfad().Substring(0, 3));
@@ -1659,100 +1663,76 @@ namespace XstreaMonNET8
         {
             try
             {
-                bool recordingStopped = false;
-                bool allowClose = false;
-
+                bool flag1 = false;
+                bool flag2 = false;
                 foreach (Class_Model model in Class_Model_List.Model_List)
                 {
                     if (model.Pro_Model_Stream_Record != null)
                     {
-                        DialogResult dialogResult = MessageBox.Show(
-                            TXT.TXT_Description("Sollen die Aufnahmen beendet werden?"),
-                            TXT.TXT_Description("Aufnahmen beenden"),
-                            MessageBoxButtons.YesNoCancel,
-                            MessageBoxIcon.Question);
-
-                        if (dialogResult == DialogResult.Cancel)
+                        DialogResult dialogResult = MessageBox.Show(TXT.TXT_Description("Sollen die Aufnahmen beendet werden?"), TXT.TXT_Description("Aufnahmen beenden"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                        switch (dialogResult)
                         {
-                            e.Cancel = true;
-                            Visible = true;
-                            return;
+                            case DialogResult.Cancel:
+                                e.Cancel = true;
+                                Visible = true;
+                                flag2 = false;
+                                return;
+                            case DialogResult.Yes:
+                                Parameter.Recording_Stop = true;
+                                flag1 = true;
+                                flag2 = true;
+                                goto Label_9;
+                            default:
+                                Parameter.Recording_Stop = true;
+                                flag2 = true;
+                                goto Label_9;
                         }
-
-                        Parameter.Recording_Stop = true;
-                        recordingStopped = true;
-                        allowClose = true;
-                        break;
                     }
                 }
-
-                if (!allowClose)
+            Label_9:
+                if (!flag2 && MessageBox.Show(TXT.TXT_Description("Möchten sie XstreaMon beenden?"), TXT.TXT_Description("XStreaMon beenden"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
-                    DialogResult confirmExit = MessageBox.Show(
-                        TXT.TXT_Description("Möchten sie XstreaMon beenden?"),
-                        TXT.TXT_Description("XStreaMon beenden"),
-                        MessageBoxButtons.YesNo,
-                        MessageBoxIcon.Question);
-
-                    if (confirmExit == DialogResult.No)
-                    {
-                        e.Cancel = true;
-                        Visible = true;
-                        return;
-                    }
+                    e.Cancel = true;
+                    Visible = true;
                 }
-
-                Modul_StatusScreen.Status_Show(TXT.TXT_Description("wird beendet"));
-                Visible = false;
-
-                if (recordingStopped)
+                else
                 {
-                    int num = 0;
-                    foreach (Class_Model model in Class_Model_List.Model_List)
+                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("wird beendet"));
+                    Visible = false;
+                    if (flag1)
                     {
-                        Modul_StatusScreen.Status_Show(string.Format(
-                            TXT.TXT_Description("{0} von {1} werden geschlossen"),
-                            num, Class_Model_List.Pro_Count));
-                        num++;
-
-                        if (model.Pro_Model_Stream_Record != null)
+                        int num = 0;
+                        foreach (Class_Model model in Class_Model_List.Model_List)
                         {
-                            Modul_StatusScreen.Status_Show(string.Format(
-                                TXT.TXT_Description("{0} Aufnahme wird beendet"),
-                                model.Pro_Model_Name));
-
-                            model.Pro_Model_Stream_Record.Stream_Record_Stop();
-
-                            foreach (Control_Stream control in PAN_Record.Controls.OfType<Control_Stream>().ToList())
+                            Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} von {1} werden geschlossen"), num, Class_Model_List.Pro_Count));
+                            num++;
+                            if (model.Pro_Model_Stream_Record != null)
                             {
-                                if (control.Pro_Model_Class == model)
-                                    control.Dispose();
+                                Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} Aufnahme wird beendet"), model.Pro_Model_Name));
+                                model.Pro_Model_Stream_Record.Stream_Record_Stop();
+                                foreach (Control_Stream control in PAN_Record.Controls.OfType<Control_Stream>().ToList())
+                                {
+                                    if (control.Pro_Model_Class == model)
+                                        control.Dispose();
+                                }
+                                model.Dispose();
                             }
-
-                            model.Dispose();
                         }
                     }
+                    foreach (Control control in PAN_Show.Controls.OfType<Control>().ToList()) // Changed to Control to match original
+                        control.Dispose();
+
+                    for (int i = Class_Record_Manual.Manual_Record_List.Count - 1; i >= 0; i--)
+                    {
+                        Class_Record_Manual.Stop_Record(Class_Record_Manual.Manual_Record_List[i]);
+                    }
+                    Cam_Benachrichtigung.Dispose(); // Dispose NotifyIcon
+                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("Datenbackup wird erstellt"));
+                    Database.Backup();
+                    if (Directory.Exists(Parameter.CommonPath + "\\Temp"))
+                        Directory.Delete(Parameter.CommonPath + "\\Temp", true);
+                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("Danke"));
                 }
-
-                foreach (Control control in PAN_Show.Controls.OfType<Control>().ToList())
-                {
-                    control.Dispose();
-                }
-
-                for (int i = Class_Record_Manual.Manual_Record_List.Count - 1; i >= 0; i--)
-                {
-                    Class_Record_Manual.Stop_Record(Class_Record_Manual.Manual_Record_List[i]);
-                }
-
-                Cam_Benachrichtigung.Dispose();
-                Modul_StatusScreen.Status_Show(TXT.TXT_Description("Datenbackup wird erstellt"));
-                Database.Backup();
-
-                string tempPath = Path.Combine(Parameter.CommonPath, "Temp");
-                if (Directory.Exists(tempPath))
-                    Directory.Delete(tempPath, true);
-
-                Modul_StatusScreen.Status_Show(TXT.TXT_Description("Danke"));
             }
             catch (Exception ex)
             {
@@ -1765,44 +1745,56 @@ namespace XstreaMonNET8
             bool flag1 = false;
             try
             {
-
-                Guid Model_GUID = Guid.NewGuid();
-                Dialog_Model_Einstellungen modelEinstellungen;
-                if (Site_URL.Length > 0)
+                if (Class_Model_List.Pro_Count > 4 && !Lizenz.Lizenz_vorhanden)
                 {
-                    modelEinstellungen = new Dialog_Model_Einstellungen(Site_URL, Model_GUID);
-                    modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                    if (MessageBox.Show(TXT.TXT_Description("Mehr Kanäle können nur in der freigeschalteten Version aufgenommen werden. Möchten Sie Ihre Version freischalten?"), TXT.TXT_Description("Trial Version"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
+                        dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                        dialogEinstellungen.Show();
+                        Process.Start("https://duehring-edv.com/?cat=40");
+                    }
+                    return flag1;
                 }
                 else
                 {
-                    modelEinstellungen = new Dialog_Model_Einstellungen(Model_GUID);
-                    modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
-                }
-                using (modelEinstellungen)
-                {
-                    if (modelEinstellungen.ShowDialog() == DialogResult.OK)
+                    Guid Model_GUID = Guid.NewGuid();
+                    Dialog_Model_Einstellungen modelEinstellungen;
+                    if (Site_URL.Length > 0)
                     {
-                        Class_Model result = Class_Model_List.Class_Model_Find(Model_GUID).Result;
-                        if (result != null)
+                        modelEinstellungen = new Dialog_Model_Einstellungen(Site_URL, Model_GUID);
+                        modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                    }
+                    else
+                    {
+                        modelEinstellungen = new Dialog_Model_Einstellungen(Model_GUID);
+                        modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                    }
+                    using (modelEinstellungen)
+                    {
+                        if (modelEinstellungen.ShowDialog() == DialogResult.OK)
                         {
-                            result.Model_Online_Change += Model_Online_Change;
-                            result.Model_Show_Notification += Cam_Benachrichtigung_Notification;
-                            DataGridViewRow GRV_Row = new DataGridViewRow();
-                            GRV_Row.CreateCells(GRV_Model_Kanal);
-                            GRV_Row_Fill(GRV_Row, result);
-                            GRV_Model_Kanal.Rows.Add(GRV_Row);
+                            Class_Model result = Class_Model_List.Class_Model_Find(Model_GUID).Result;
+                            if (result != null)
+                            {
+                                result.Model_Online_Change += Model_Online_Change;
+                                result.Model_Show_Notification += Cam_Benachrichtigung_Notification;
+                                DataGridViewRow GRV_Row = new DataGridViewRow();
+                                GRV_Row.CreateCells(GRV_Model_Kanal);
+                                GRV_Row_Fill(GRV_Row, result);
+                                GRV_Model_Kanal.Rows.Add(GRV_Row);
 
-                            // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
-                            // foreach (GroupDescriptor groupDescriptor in (Collection<GroupDescriptor>)this.GRV_Model_Kanal.GroupDescriptors)
-                            //    groupDescriptor.GroupNames[0].PropertyName = groupDescriptor.GroupNames[0].PropertyName;
+                                // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
+                                // foreach (GroupDescriptor groupDescriptor in (Collection<GroupDescriptor>)this.GRV_Model_Kanal.GroupDescriptors)
+                                //    groupDescriptor.GroupNames[0].PropertyName = groupDescriptor.GroupNames[0].PropertyName;
 
-                            if (result.Get_Pro_Model_Online())
-                                Model_Online_Change(result);
-                            flag1 = true;
+                                if (result.Get_Pro_Model_Online())
+                                    Model_Online_Change(result);
+                                flag1 = true;
+                            }
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -3234,17 +3226,12 @@ namespace XstreaMonNET8
             await Task.CompletedTask;
             try
             {
-                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen
-                {
-                    StartPosition = FormStartPosition.CenterParent
-                };
+                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
+                dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
                 using (dialogEinstellungen)
                 {
                     dialogEinstellungen.ShowDialog();
-
-                    string nombreLicencia = Parameter.Programlizenz?.Lizenz_Programmbezeichnung ?? "[Sin licencia]";
-                    Text = $"XstreaMon {nombreLicencia}";
-
+                    Text = "XstreaMon " + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
                     GRV_Model_Kanal.Refresh();
                 }
             }
