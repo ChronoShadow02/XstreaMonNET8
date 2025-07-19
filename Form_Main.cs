@@ -1083,8 +1083,6 @@ namespace XstreaMonNET8
         {
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false); // Equivalent to UseCompatibleTextRendering = false
                 Visible = false;
                 Pri_Data_Load = true;
                 FileInfo fileInfo = new FileInfo(Application.ExecutablePath);
@@ -1149,8 +1147,8 @@ namespace XstreaMonNET8
                 {
                     Modul_StatusScreen.Status_Show(TXT.TXT_Description("XstreaMon wird geladen"));
                     Parameter.Debug_Modus = bool.Parse(IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False"));
-                    Parameter.Programlizenz = new Lizenz(true);
-                    Text = "XstreaMon" + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
+                    //Parameter.Programlizenz = new Lizenz(true);
+                    //Text = "XstreaMon" + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
                     if (Modul_Ordner.Ordner_Pfad().Length == 0)
                     {
                         Application.Exit();
@@ -1233,15 +1231,13 @@ namespace XstreaMonNET8
                         else
                         {
                             Model_load(DT_User_Data);
-                            if (!Lizenz.Lizenz_vorhanden || bool.Parse(IniFile.Read(Parameter.INI_Common, "Lizenz", "Advice", "True")))
-                                Model_Promo_load();
                         }
                         Modul_StatusScreen.Status_Show(TXT.TXT_Description("Speicherplatz überprüft"));
                         Drive_Info = new Class_Driveinfo(Modul_Ordner.Ordner_Pfad().Substring(0, 3));
                         DiskSpace();
                         Drive_Info_Refresh_Timer.Start();
                         GRV_Model_Kanal.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                        Parameter.Programlizenz.Laufzeit_Benachrichtigung();
+                        //Parameter.Programlizenz.Laufzeit_Benachrichtigung();
 
                         // Setting shortcuts for ToolStripMenuItems
                         CMI_Gesehen.ShortcutKeys = Keys.Control | Keys.D;
@@ -1267,9 +1263,6 @@ namespace XstreaMonNET8
                 Visible = true;
             }
         }
-
-        // Reemplaza cada llamada a oleDbConnection.Open(); por await oleDbConnection.OpenAsync(); 
-        // y asegúrate de que el método que contiene la llamada sea async y se espere correctamente.
 
         internal async void Model_load(DataTable DT_User_Data)
         {
@@ -1304,72 +1297,6 @@ namespace XstreaMonNET8
                 }
                 GRV_Model_Kanal.FirstDisplayedScrollingRowIndex = 0; // Equivalent to VScrollBar.Value = 0
                 // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
-            }
-            catch (Exception ex)
-            {
-                Parameter.Error_Message(ex, "Form_Class_Record.Model_load");
-            }
-        }
-
-        internal async void Model_Promo_load()
-        {
-            await Task.CompletedTask;
-            try
-            {
-                string str1 = "";
-                try
-                {
-                    using HttpClient httpClient = new();
-                    httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("XstreaMon Promo" + Application.ProductVersion);
-                    str1 = await httpClient.GetStringAsync("https://xstreamon.com/model_promo");
-                }
-                catch (Exception ex)
-                {
-                    // Log or handle exception
-                }
-
-                string[] strArray = str1.Split('\r');
-                int index = 0;
-                while (index < strArray.Length)
-                {
-                    string str2 = strArray[index];
-                    if (str2.Trim().Length > 0)
-                    {
-                        string[] parts = str2.Split('|');
-                        if (parts.Length >= 2)
-                        {
-                            string modelName = parts[0].Trim();
-                            int websiteId = int.Parse(parts[1].Trim());
-
-                            if (await Class_Model_List.Class_Model_Find(websiteId, modelName) == null)
-                            {
-                                try
-                                {
-                                    Class_Model classModel = new Class_Model(modelName, websiteId)
-                                    {
-                                        Pro_Model_Promo = true
-                                    };
-                                    classModel.Model_Online_Change += Model_Online_Change;
-                                    classModel.Model_Show_Notification += Cam_Benachrichtigung_Notification;
-                                    Class_Model_List.Model_Add(classModel);
-                                    if (classModel.Get_Pro_Model_Online())
-                                        Model_Online_Change(classModel);
-
-                                    DataGridViewRow GRV_Row = new DataGridViewRow();
-                                    GRV_Row.CreateCells(GRV_Model_Kanal);
-                                    GRV_Row_Fill(GRV_Row, classModel);
-                                    GRV_Model_Kanal.Rows.Add(GRV_Row);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Parameter.Error_Message(ex, "Form_Class_Record.Model_load");
-                                }
-                            }
-                        }
-                    }
-                    index++;
-                }
-                GRV_Model_Kanal.FirstDisplayedScrollingRowIndex = 0;
             }
             catch (Exception ex)
             {

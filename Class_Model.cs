@@ -582,7 +582,7 @@ namespace XstreaMonNET8
             this.LoadModel(Model_GUID);
         }
 
-        private async void LoadModel(Guid Model_GUID)
+        private void LoadModel(Guid Model_GUID)
         {
             try
             {
@@ -592,32 +592,36 @@ namespace XstreaMonNET8
                 };
 
                 string query = $@"
-            SELECT 
-                DT_User.User_GUID, DT_User.User_Name, DT_User.User_Record, DT_User.User_Visible, 
-                Max(DT_Online.Online_Ende) AS MaxvonOnline_Ende, DT_User.Aufnahmestop_Auswahl, 
-                DT_User.Aufnahmestop_Minuten, DT_User.Aufnahmestop_Größe, DT_User.Videoqualität, 
-                DT_User.Website_ID, DT_User.Benachrichtigung, User_Favorite, User_Birthday, 
-                User_Language, User_Gender, User_Country, User_Memo, Recorder_ID, 
-                User_Description, User_Directory, User_Deaktiv, SaveFormat, 
-                User_Token, User_LastVisit
-            FROM DT_User 
-            LEFT JOIN DT_Online ON DT_User.User_GUID = DT_Online.Model_GUID 
-            GROUP BY 
-                DT_User.User_GUID, DT_User.User_Name, DT_User.User_Record, DT_User.User_Visible, 
-                DT_User.Aufnahmestop_Auswahl, DT_User.Aufnahmestop_Minuten, DT_User.Aufnahmestop_Größe, 
-                DT_User.Videoqualität, Website_ID, DT_User.Benachrichtigung, User_Favorite, 
-                User_Birthday, User_Language, User_Gender, User_Country, User_Memo, Recorder_ID, 
-                User_Description, User_Directory, User_Deaktiv, SaveFormat, User_Token, User_LastVisit 
-            HAVING DT_User.User_GUID = '{Model_GUID}'";
+                    SELECT 
+                        DT_User.User_GUID, DT_User.User_Name, DT_User.User_Record, DT_User.User_Visible, 
+                        Max(DT_Online.Online_Ende) AS MaxvonOnline_Ende, DT_User.Aufnahmestop_Auswahl, 
+                        DT_User.Aufnahmestop_Minuten, DT_User.Aufnahmestop_Größe, DT_User.Videoqualität, 
+                        DT_User.Website_ID, DT_User.Benachrichtigung, User_Favorite, User_Birthday, 
+                        User_Language, User_Gender, User_Country, User_Memo, Recorder_ID, 
+                        User_Description, User_Directory, User_Deaktiv, SaveFormat, 
+                        User_Token, User_LastVisit
+                    FROM DT_User 
+                    LEFT JOIN DT_Online ON DT_User.User_GUID = DT_Online.Model_GUID 
+                    GROUP BY 
+                        DT_User.User_GUID, DT_User.User_Name, DT_User.User_Record, DT_User.User_Visible, 
+                        DT_User.Aufnahmestop_Auswahl, DT_User.Aufnahmestop_Minuten, DT_User.Aufnahmestop_Größe, 
+                        DT_User.Videoqualität, Website_ID, DT_User.Benachrichtigung, User_Favorite, 
+                        User_Birthday, User_Language, User_Gender, User_Country, User_Memo, Recorder_ID, 
+                        User_Description, User_Directory, User_Deaktiv, SaveFormat, User_Token, User_LastVisit 
+                    HAVING DT_User.User_GUID = ?
+                    ";
 
-                using var oleDbDataAdapter = new OleDbDataAdapter(query, oleDbConnection.ConnectionString);
+                using var oleDbCommand = new OleDbCommand(query, oleDbConnection);
+                oleDbCommand.Parameters.AddWithValue("?", Model_GUID.ToString());
+
+                oleDbConnection.Open();
+
+                using var oleDbDataAdapter = new OleDbDataAdapter(oleDbCommand);
                 var dataSet = new DataSet();
 
-                await oleDbConnection.OpenAsync().ConfigureAwait(false);
-                if (oleDbConnection.State != ConnectionState.Open) return;
-
                 oleDbDataAdapter.Fill(dataSet, "DT_Model");
-                if (dataSet.Tables[0].Rows.Count != 1) return;
+                if (dataSet.Tables[0].Rows.Count != 1)
+                    return;
 
                 DataRow row = dataSet.Tables[0].Rows[0];
                 this.Pro_Model_GUID = ValueBack.Get_CUnique(row["User_GUID"]);
@@ -690,7 +694,7 @@ namespace XstreaMonNET8
             }
             catch (Exception ex)
             {
-                Parameter.Error_Message(ex, $"Class_Model.New({Model_GUID})");
+                Parameter.Error_Message(ex, $"Class_Model.LoadModel({Model_GUID})");
             }
         }
 
