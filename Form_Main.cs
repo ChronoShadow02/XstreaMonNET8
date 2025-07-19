@@ -1083,6 +1083,8 @@ namespace XstreaMonNET8
         {
             try
             {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
                 Visible = false;
                 Pri_Data_Load = true;
                 FileInfo fileInfo = new FileInfo(Application.ExecutablePath);
