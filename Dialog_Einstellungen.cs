@@ -224,8 +224,6 @@ namespace XstreaMonNET8
                 CBX_Player.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Player", "Intern", "true"), out bool playerIntern) && playerIntern;
                 CBX_Debug.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "false"), out bool debugMode) && debugMode;
 
-                // Update license-version label
-                //LAB_LizenzVersion.Text = $"{Application.ProductVersion} {Parameter.Programlizenz.Lizenz_Bezeichnung}";
                 if (Parameter.Programlizenz != null && Parameter.Programlizenz.Lizenz_Bezeichnung != null)
                 {
                     LAB_LizenzVersion.Text = $"{Application.ProductVersion} {Parameter.Programlizenz.Lizenz_Bezeichnung}";
@@ -235,12 +233,9 @@ namespace XstreaMonNET8
                     LAB_LizenzVersion.Text = $"{Application.ProductVersion} [Sin licencia]";
                 }
 
-
-                // Load design-header and online-check flags
                 CBX_StreamHeader.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Design", "Header", "true"), out bool headerVisible) && headerVisible;
                 CBX_Start_Check.Checked = bool.TryParse(IniFile.Read(Parameter.INI_Common, "Online", "Check", "true"), out bool onlineCheck) && onlineCheck;
 
-                // Load maximum concurrent conversions
                 if (!int.TryParse(IniFile.Read(Parameter.INI_Common, "Record", "MaxConversion", "5"), out int maxConv))
                     maxConv = 5;
                 SPE_Conversion.Value = maxConv;
