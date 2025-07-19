@@ -19,6 +19,7 @@ namespace XstreaMonNET8
 
         public Form_Main()
         {
+            InitializeComponent();
             Load += new EventHandler(Form_Load);
             Closing += new CancelEventHandler(Form_Closing);
             Resize += new EventHandler(Mybase_Resize);
@@ -29,8 +30,7 @@ namespace XstreaMonNET8
             };
             Pri_Show_All = false;
             Pri_Show_Visible = true;
-            Pri_Data_Load = false;
-            InitializeComponent();
+            Pri_Data_Load = false; 
         }
 
         protected override void Dispose(bool disposing)
@@ -3226,12 +3226,18 @@ namespace XstreaMonNET8
             await Task.CompletedTask;
             try
             {
-                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
-                dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen
+                {
+                    StartPosition = FormStartPosition.CenterParent
+                };
+
                 using (dialogEinstellungen)
                 {
                     dialogEinstellungen.ShowDialog();
-                    Text = "XstreaMon " + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
+
+                    string nombreLicencia = Parameter.Programlizenz?.Lizenz_Programmbezeichnung ?? "[Sin licencia]";
+                    Text = $"XstreaMon {nombreLicencia}";
+
                     GRV_Model_Kanal.Refresh();
                 }
             }
