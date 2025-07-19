@@ -1745,53 +1745,39 @@ namespace XstreaMonNET8
             bool flag1 = false;
             try
             {
-                if (Class_Model_List.Pro_Count > 4 && !Lizenz.Lizenz_vorhanden)
+                Guid Model_GUID = Guid.NewGuid();
+                Dialog_Model_Einstellungen modelEinstellungen;
+                if (Site_URL.Length > 0)
                 {
-                    if (MessageBox.Show(TXT.TXT_Description("Mehr Kanäle können nur in der freigeschalteten Version aufgenommen werden. Möchten Sie Ihre Version freischalten?"), TXT.TXT_Description("Trial Version"), MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        Dialog_Einstellungen dialogEinstellungen = new Dialog_Einstellungen();
-                        dialogEinstellungen.StartPosition = FormStartPosition.CenterParent;
-                        dialogEinstellungen.Show();
-                        Process.Start("https://duehring-edv.com/?cat=40");
-                    }
-                    return flag1;
+                    modelEinstellungen = new Dialog_Model_Einstellungen(Site_URL, Model_GUID);
+                    modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
                 }
                 else
                 {
-                    Guid Model_GUID = Guid.NewGuid();
-                    Dialog_Model_Einstellungen modelEinstellungen;
-                    if (Site_URL.Length > 0)
+                    modelEinstellungen = new Dialog_Model_Einstellungen(Model_GUID);
+                    modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
+                }
+                using (modelEinstellungen)
+                {
+                    if (modelEinstellungen.ShowDialog() == DialogResult.OK)
                     {
-                        modelEinstellungen = new Dialog_Model_Einstellungen(Site_URL, Model_GUID);
-                        modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
-                    }
-                    else
-                    {
-                        modelEinstellungen = new Dialog_Model_Einstellungen(Model_GUID);
-                        modelEinstellungen.StartPosition = FormStartPosition.CenterParent;
-                    }
-                    using (modelEinstellungen)
-                    {
-                        if (modelEinstellungen.ShowDialog() == DialogResult.OK)
+                        Class_Model result = Class_Model_List.Class_Model_Find(Model_GUID).Result;
+                        if (result != null)
                         {
-                            Class_Model result = Class_Model_List.Class_Model_Find(Model_GUID).Result;
-                            if (result != null)
-                            {
-                                result.Model_Online_Change += Model_Online_Change;
-                                result.Model_Show_Notification += Cam_Benachrichtigung_Notification;
-                                DataGridViewRow GRV_Row = new DataGridViewRow();
-                                GRV_Row.CreateCells(GRV_Model_Kanal);
-                                GRV_Row_Fill(GRV_Row, result);
-                                GRV_Model_Kanal.Rows.Add(GRV_Row);
+                            result.Model_Online_Change += Model_Online_Change;
+                            result.Model_Show_Notification += Cam_Benachrichtigung_Notification;
+                            DataGridViewRow GRV_Row = new DataGridViewRow();
+                            GRV_Row.CreateCells(GRV_Model_Kanal);
+                            GRV_Row_Fill(GRV_Row, result);
+                            GRV_Model_Kanal.Rows.Add(GRV_Row);
 
-                                // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
-                                // foreach (GroupDescriptor groupDescriptor in (Collection<GroupDescriptor>)this.GRV_Model_Kanal.GroupDescriptors)
-                                //    groupDescriptor.GroupNames[0].PropertyName = groupDescriptor.GroupNames[0].PropertyName;
+                            // GroupDescriptors are Telerik specific, would need custom grouping logic for DataGridView
+                            // foreach (GroupDescriptor groupDescriptor in (Collection<GroupDescriptor>)this.GRV_Model_Kanal.GroupDescriptors)
+                            //    groupDescriptor.GroupNames[0].PropertyName = groupDescriptor.GroupNames[0].PropertyName;
 
-                                if (result.Get_Pro_Model_Online())
-                                    Model_Online_Change(result);
-                                flag1 = true;
-                            }
+                            if (result.Get_Pro_Model_Online())
+                                Model_Online_Change(result);
+                            flag1 = true;
                         }
                     }
                 }
@@ -3231,7 +3217,6 @@ namespace XstreaMonNET8
                 using (dialogEinstellungen)
                 {
                     dialogEinstellungen.ShowDialog();
-                    Text = "XstreaMon " + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
                     GRV_Model_Kanal.Refresh();
                 }
             }

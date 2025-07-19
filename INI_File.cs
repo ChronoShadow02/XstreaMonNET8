@@ -8,7 +8,7 @@ namespace XstreaMonNET8
     {
         private readonly string strFilename;
 
-        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileStringA", CharSet = CharSet.Ansi, SetLastError = true)]
+        [DllImport("kernel32.dll", EntryPoint = "GetPrivateProfileStringA", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern int GetPrivateProfileString(
             string lpApplicationName,
             string lpKeyName,

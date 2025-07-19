@@ -318,7 +318,7 @@
             // 
             Label1.Location = new Point(5, 28);
             Label1.Name = "Label1";
-            Label1.Size = new Size(53, 24);
+            Label1.Size = new Size(64, 24);
             Label1.TabIndex = 13;
             Label1.Text = "Idioma";
             // 
@@ -336,7 +336,7 @@
             // 
             Label2.Location = new Point(5, 64);
             Label2.Name = "Label2";
-            Label2.Size = new Size(53, 24);
+            Label2.Size = new Size(64, 24);
             Label2.TabIndex = 17;
             Label2.Text = "Browser";
             // 
@@ -364,7 +364,7 @@
             // 
             Label3.Location = new Point(5, 97);
             Label3.Name = "Label3";
-            Label3.Size = new Size(47, 24);
+            Label3.Size = new Size(64, 24);
             Label3.TabIndex = 18;
             Label3.Text = "Diseño";
             // 
@@ -657,6 +657,8 @@
             BTN_Aufnahme_Update.TabIndex = 7;
             TTP_Einstellungen.SetToolTip(BTN_Aufnahme_Update, "Aplicar a todos los canales");
             BTN_Aufnahme_Update.UseVisualStyleBackColor = true;
+            BTN_Aufnahme_Update.Click += BTN_Aufnahme_Update_Click;
+            BTN_Aufnahme_Update.Image = Resources.UpdateDB24;
             // 
             // RBT_Video_Send
             // 
@@ -741,6 +743,8 @@
             BTN_Stop_Update.TabIndex = 5;
             TTP_Einstellungen.SetToolTip(BTN_Stop_Update, "Aplicar a todos los canales");
             BTN_Stop_Update.UseVisualStyleBackColor = true;
+            BTN_Stop_Update.Click += BTN_Stop_Update_Click;
+            BTN_Stop_Update.Image = Resources.UpdateDB24;
             // 
             // Label7
             // 
@@ -832,6 +836,8 @@
             BTN_Optionen_Update.Size = new Size(41, 48);
             BTN_Optionen_Update.TabIndex = 3;
             BTN_Optionen_Update.UseVisualStyleBackColor = true;
+            BTN_Optionen_Update.Click += BTN_Optionen_Update_Click;
+            BTN_Optionen_Update.Image = Resources.UpdateDB24;
             // 
             // CBX_Record
             // 
