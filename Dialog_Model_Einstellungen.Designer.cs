@@ -269,7 +269,7 @@
             // 
             // BTN_Folder
             // 
-            this.BTN_Folder.Image = ((System.Drawing.Image)(resources.GetObject("BTN_Folder.Image")));
+            this.BTN_Folder.Image = Resources.Folder16;
             this.BTN_Folder.Location = new System.Drawing.Point(453, 46);
             this.BTN_Folder.Name = "BTN_Folder";
             this.BTN_Folder.Size = new System.Drawing.Size(26, 24);
@@ -550,7 +550,7 @@
             // RBT_Geschlecht_Trans
             // 
             this.RBT_Geschlecht_Trans.AutoSize = true;
-            this.RBT_Geschlecht_Trans.Image = ((System.Drawing.Image)(resources.GetObject("RBT_Geschlecht_Trans.Image")));
+            this.RBT_Geschlecht_Trans.Image = Resources.Gender_Trans;
             this.RBT_Geschlecht_Trans.Location = new System.Drawing.Point(10, 55);
             this.RBT_Geschlecht_Trans.Name = "RBT_Geschlecht_Trans";
             this.RBT_Geschlecht_Trans.Size = new System.Drawing.Size(60, 17);
@@ -564,7 +564,7 @@
             // RBT_Geschlecht_Sonstiges
             // 
             this.RBT_Geschlecht_Sonstiges.AutoSize = true;
-            this.RBT_Geschlecht_Sonstiges.Image = ((System.Drawing.Image)(resources.GetObject("RBT_Geschlecht_Sonstiges.Image")));
+            this.RBT_Geschlecht_Sonstiges.Image = Resources.Gender_Unknow;
             this.RBT_Geschlecht_Sonstiges.Location = new System.Drawing.Point(174, 55);
             this.RBT_Geschlecht_Sonstiges.Name = "RBT_Geschlecht_Sonstiges";
             this.RBT_Geschlecht_Sonstiges.Size = new System.Drawing.Size(79, 17);
@@ -578,7 +578,7 @@
             // RBT_Geschlecht_Paar
             // 
             this.RBT_Geschlecht_Paar.AutoSize = true;
-            this.RBT_Geschlecht_Paar.Image = ((System.Drawing.Image)(resources.GetObject("RBT_Geschlecht_Paar.Image")));
+            this.RBT_Geschlecht_Paar.Image = Resources.Gender_Couple;
             this.RBT_Geschlecht_Paar.Location = new System.Drawing.Point(317, 27);
             this.RBT_Geschlecht_Paar.Name = "RBT_Geschlecht_Paar";
             this.RBT_Geschlecht_Paar.Size = new System.Drawing.Size(55, 17);
@@ -592,7 +592,7 @@
             // RBT_Geschlecht_Männlich
             // 
             this.RBT_Geschlecht_Männlich.AutoSize = true;
-            this.RBT_Geschlecht_Männlich.Image = ((System.Drawing.Image)(resources.GetObject("RBT_Geschlecht_Männlich.Image")));
+            this.RBT_Geschlecht_Männlich.Image = Resources.Gender_Male;
             this.RBT_Geschlecht_Männlich.Location = new System.Drawing.Point(174, 24);
             this.RBT_Geschlecht_Männlich.Name = "RBT_Geschlecht_Männlich";
             this.RBT_Geschlecht_Männlich.Size = new System.Drawing.Size(77, 17);
@@ -606,7 +606,7 @@
             // RBT_Geschlecht_Weiblich
             // 
             this.RBT_Geschlecht_Weiblich.AutoSize = true;
-            this.RBT_Geschlecht_Weiblich.Image = ((System.Drawing.Image)(resources.GetObject("RBT_Geschlecht_Weiblich.Image")));
+            this.RBT_Geschlecht_Weiblich.Image = Resources.Gender_Female;
             this.RBT_Geschlecht_Weiblich.Location = new System.Drawing.Point(10, 24);
             this.RBT_Geschlecht_Weiblich.Name = "RBT_Geschlecht_Weiblich";
             this.RBT_Geschlecht_Weiblich.Size = new System.Drawing.Size(75, 17);
