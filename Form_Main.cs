@@ -19,6 +19,7 @@ namespace XstreaMonNET8
 
         public Form_Main()
         {
+            InitializeComponent();
             Load += new EventHandler(Form_Load);
             Closing += new CancelEventHandler(Form_Closing);
             Resize += new EventHandler(Mybase_Resize);
@@ -30,7 +31,6 @@ namespace XstreaMonNET8
             Pri_Show_All = false;
             Pri_Show_Visible = true;
             Pri_Data_Load = false;
-            InitializeComponent();
         }
 
         protected override void Dispose(bool disposing)
@@ -1083,8 +1083,6 @@ namespace XstreaMonNET8
         {
             try
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false); // Equivalent to UseCompatibleTextRendering = false
                 Visible = false;
                 Pri_Data_Load = true;
                 FileInfo fileInfo = new FileInfo(Application.ExecutablePath);
@@ -1233,8 +1231,6 @@ namespace XstreaMonNET8
                         else
                         {
                             Model_load(DT_User_Data);
-                            if (!Lizenz.Lizenz_vorhanden || bool.Parse(IniFile.Read(Parameter.INI_Common, "Lizenz", "Advice", "True")))
-                                Model_Promo_load();
                         }
                         Modul_StatusScreen.Status_Show(TXT.TXT_Description("Speicherplatz überprüft"));
                         Drive_Info = new Class_Driveinfo(Modul_Ordner.Ordner_Pfad().Substring(0, 3));
@@ -1663,76 +1659,100 @@ namespace XstreaMonNET8
         {
             try
             {
-                bool flag1 = false;
-                bool flag2 = false;
+                bool recordingStopped = false;
+                bool allowClose = false;
+
                 foreach (Class_Model model in Class_Model_List.Model_List)
                 {
                     if (model.Pro_Model_Stream_Record != null)
                     {
-                        DialogResult dialogResult = MessageBox.Show(TXT.TXT_Description("Sollen die Aufnahmen beendet werden?"), TXT.TXT_Description("Aufnahmen beenden"), MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                        switch (dialogResult)
-                        {
-                            case DialogResult.Cancel:
-                                e.Cancel = true;
-                                Visible = true;
-                                flag2 = false;
-                                return;
-                            case DialogResult.Yes:
-                                Parameter.Recording_Stop = true;
-                                flag1 = true;
-                                flag2 = true;
-                                goto Label_9;
-                            default:
-                                Parameter.Recording_Stop = true;
-                                flag2 = true;
-                                goto Label_9;
-                        }
-                    }
-                }
-            Label_9:
-                if (!flag2 && MessageBox.Show(TXT.TXT_Description("Möchten sie XstreaMon beenden?"), TXT.TXT_Description("XStreaMon beenden"), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-                {
-                    e.Cancel = true;
-                    Visible = true;
-                }
-                else
-                {
-                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("wird beendet"));
-                    Visible = false;
-                    if (flag1)
-                    {
-                        int num = 0;
-                        foreach (Class_Model model in Class_Model_List.Model_List)
-                        {
-                            Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} von {1} werden geschlossen"), num, Class_Model_List.Pro_Count));
-                            num++;
-                            if (model.Pro_Model_Stream_Record != null)
-                            {
-                                Modul_StatusScreen.Status_Show(string.Format(TXT.TXT_Description("{0} Aufnahme wird beendet"), model.Pro_Model_Name));
-                                model.Pro_Model_Stream_Record.Stream_Record_Stop();
-                                foreach (Control_Stream control in PAN_Record.Controls.OfType<Control_Stream>().ToList())
-                                {
-                                    if (control.Pro_Model_Class == model)
-                                        control.Dispose();
-                                }
-                                model.Dispose();
-                            }
-                        }
-                    }
-                    foreach (Control control in PAN_Show.Controls.OfType<Control>().ToList()) // Changed to Control to match original
-                        control.Dispose();
+                        DialogResult dialogResult = MessageBox.Show(
+                            TXT.TXT_Description("Sollen die Aufnahmen beendet werden?"),
+                            TXT.TXT_Description("Aufnahmen beenden"),
+                            MessageBoxButtons.YesNoCancel,
+                            MessageBoxIcon.Question);
 
-                    for (int i = Class_Record_Manual.Manual_Record_List.Count - 1; i >= 0; i--)
-                    {
-                        Class_Record_Manual.Stop_Record(Class_Record_Manual.Manual_Record_List[i]);
+                        if (dialogResult == DialogResult.Cancel)
+                        {
+                            e.Cancel = true;
+                            Visible = true;
+                            return;
+                        }
+
+                        Parameter.Recording_Stop = true;
+                        recordingStopped = true;
+                        allowClose = true;
+                        break;
                     }
-                    Cam_Benachrichtigung.Dispose(); // Dispose NotifyIcon
-                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("Datenbackup wird erstellt"));
-                    Database.Backup();
-                    if (Directory.Exists(Parameter.CommonPath + "\\Temp"))
-                        Directory.Delete(Parameter.CommonPath + "\\Temp", true);
-                    Modul_StatusScreen.Status_Show(TXT.TXT_Description("Danke"));
                 }
+
+                if (!allowClose)
+                {
+                    DialogResult confirmExit = MessageBox.Show(
+                        TXT.TXT_Description("Möchten sie XstreaMon beenden?"),
+                        TXT.TXT_Description("XStreaMon beenden"),
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question);
+
+                    if (confirmExit == DialogResult.No)
+                    {
+                        e.Cancel = true;
+                        Visible = true;
+                        return;
+                    }
+                }
+
+                Modul_StatusScreen.Status_Show(TXT.TXT_Description("wird beendet"));
+                Visible = false;
+
+                if (recordingStopped)
+                {
+                    int num = 0;
+                    foreach (Class_Model model in Class_Model_List.Model_List)
+                    {
+                        Modul_StatusScreen.Status_Show(string.Format(
+                            TXT.TXT_Description("{0} von {1} werden geschlossen"),
+                            num, Class_Model_List.Pro_Count));
+                        num++;
+
+                        if (model.Pro_Model_Stream_Record != null)
+                        {
+                            Modul_StatusScreen.Status_Show(string.Format(
+                                TXT.TXT_Description("{0} Aufnahme wird beendet"),
+                                model.Pro_Model_Name));
+
+                            model.Pro_Model_Stream_Record.Stream_Record_Stop();
+
+                            foreach (Control_Stream control in PAN_Record.Controls.OfType<Control_Stream>().ToList())
+                            {
+                                if (control.Pro_Model_Class == model)
+                                    control.Dispose();
+                            }
+
+                            model.Dispose();
+                        }
+                    }
+                }
+
+                foreach (Control control in PAN_Show.Controls.OfType<Control>().ToList())
+                {
+                    control.Dispose();
+                }
+
+                for (int i = Class_Record_Manual.Manual_Record_List.Count - 1; i >= 0; i--)
+                {
+                    Class_Record_Manual.Stop_Record(Class_Record_Manual.Manual_Record_List[i]);
+                }
+
+                Cam_Benachrichtigung.Dispose();
+                Modul_StatusScreen.Status_Show(TXT.TXT_Description("Datenbackup wird erstellt"));
+                Database.Backup();
+
+                string tempPath = Path.Combine(Parameter.CommonPath, "Temp");
+                if (Directory.Exists(tempPath))
+                    Directory.Delete(tempPath, true);
+
+                Modul_StatusScreen.Status_Show(TXT.TXT_Description("Danke"));
             }
             catch (Exception ex)
             {
