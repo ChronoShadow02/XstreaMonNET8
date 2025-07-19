@@ -91,12 +91,12 @@ namespace XstreaMonNET8
             {
                 if (_CME_Model_Kanal != null)
                 {
-                    _CME_Model_Kanal.Opening -= CME_Model_Kanal_DropDownOpening;
+                    _CME_Model_Kanal.Opening -= CME_Model_Kanal_DropDownOpening!;
                 }
                 _CME_Model_Kanal = value;
                 if (_CME_Model_Kanal != null)
                 {
-                    _CME_Model_Kanal.Opening += CME_Model_Kanal_DropDownOpening;
+                    _CME_Model_Kanal.Opening += CME_Model_Kanal_DropDownOpening!;
                 }
             }
         }
@@ -237,7 +237,7 @@ namespace XstreaMonNET8
         internal virtual Control_Model_Info Control_Model_Info1 { get; set; }
 
         internal virtual ToolStripMenuItem CMI_Filter { get; set; }
-        internal virtual ToolStripLabel CMH_Status { get; set; } // Changed from RadMenuHeaderItem to ToolStripLabel for native equivalent
+        internal virtual ToolStripLabel CMH_Status { get; set; }
 
         internal virtual ToolStripMenuItem CMI_Online
         {
@@ -1147,8 +1147,6 @@ namespace XstreaMonNET8
                 {
                     Modul_StatusScreen.Status_Show(TXT.TXT_Description("XstreaMon wird geladen"));
                     Parameter.Debug_Modus = bool.Parse(IniFile.Read(Parameter.INI_Common, "Debug", "Debug", "False"));
-                    //Parameter.Programlizenz = new Lizenz(true);
-                    //Text = "XstreaMon" + Parameter.Programlizenz.Lizenz_Programmbezeichnung;
                     if (Modul_Ordner.Ordner_Pfad().Length == 0)
                     {
                         Application.Exit();
@@ -1172,13 +1170,15 @@ namespace XstreaMonNET8
                                 commandBarButton.Name = website.Pro_Name;
                                 commandBarButton.ToolTipText = website.Pro_Name;
                                 commandBarButton.Click += CBB_Site_Click;
-                                CBB_Commands.Items.Add(commandBarButton); // Assuming CBB_Commands is a ToolStrip
-                                ToolStripMenuItem radMenuItem = new ToolStripMenuItem();
-                                radMenuItem.Name = website.Pro_ID.ToString();
-                                radMenuItem.Text = website.Pro_Name;
-                                radMenuItem.CheckOnClick = true;
-                                radMenuItem.Checked = website.Pro_ShowAll;
-                                radMenuItem.Click += (s, args) => DDI_Site_Click((ToolStripMenuItem)s, args);
+                                CBB_Commands.Items.Add(commandBarButton);
+                                ToolStripMenuItem radMenuItem = new()
+                                {
+                                    Name = website.Pro_ID.ToString(),
+                                    Text = website.Pro_Name,
+                                    CheckOnClick = true,
+                                    Checked = website.Pro_ShowAll
+                                };
+                                radMenuItem.Click += (s, args) => DDI_Site_Click((ToolStripMenuItem)s!, args);
                                 CBD_Liste_Sender.DropDownItems.Add(radMenuItem);
                             }
                         }
@@ -1197,7 +1197,7 @@ namespace XstreaMonNET8
 
                         Modul_StatusScreen.Status_Show(TXT.TXT_Description("Kanäle werden geladen"));
                         DataTable DT_User_Data = new DataTable();
-                        using (OleDbConnection oleDbConnection = new OleDbConnection())
+                        using (OleDbConnection oleDbConnection = new())
                         {
                             oleDbConnection.ConnectionString = Database_Connect.Aktiv_Datenbank();
                             using (DataSet dataSet = new DataSet())
@@ -1207,7 +1207,7 @@ namespace XstreaMonNET8
                                 {
                                     try
                                     {
-                                        using (OleDbDataAdapter oleDbDataAdapter = new OleDbDataAdapter("Select User_GUID from DT_User ORDER BY User_Deaktiv DESC , User_Favorite, User_Record, User_Visible;", oleDbConnection.ConnectionString))
+                                        using (OleDbDataAdapter oleDbDataAdapter = new("Select User_GUID from DT_User ORDER BY User_Deaktiv DESC , User_Favorite, User_Record, User_Visible;", oleDbConnection.ConnectionString))
                                             oleDbDataAdapter.Fill(dataSet, "DT_User");
                                     }
                                     catch (Exception ex)
@@ -1216,7 +1216,7 @@ namespace XstreaMonNET8
                                         Database.Database_Defekt(ex);
                                     }
                                     oleDbConnection.Close();
-                                    DT_User_Data = dataSet.Tables["DT_User"];
+                                    DT_User_Data = dataSet.Tables["DT_User"]!;
                                 }
                             }
                         }

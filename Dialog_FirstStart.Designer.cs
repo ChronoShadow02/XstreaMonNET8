@@ -57,10 +57,7 @@ namespace XstreaMonNET8
             this.RadLabel1.Name = "RadLabel1";
             this.RadLabel1.Size = new System.Drawing.Size(481, 124);
             this.RadLabel1.TabIndex = 7;
-            // Assuming XstreaMon.My.Resources.Resources.Logo is accessible, otherwise replace with actual image path
-            // For native controls, you'd typically set Image property directly or use a PictureBox
-            // For now, leaving as is, assuming it's handled externally or will be replaced.
-            // this.RadLabel1.Image = ((System.Drawing.Image)(resources.GetObject("RadLabel1.Image"))); // Example if it's an image resource
+            this.RadLabel1.Image = Resources.Logo;
             //
             // LAB_1
             //
@@ -137,9 +134,6 @@ namespace XstreaMonNET8
             //
             // BTN_Folder
             //
-            // For native Button, Image property is used. Assuming XstreaMon.My.Resources.Resources.Folder16 is accessible.
-            // Otherwise, replace with actual image path or resource.
-            // this.BTN_Folder.Image = ((System.Drawing.Image)(resources.GetObject("BTN_Folder.Image")));
             this.BTN_Folder.Image = ((System.Drawing.Image)(Resources.Folder16)); // Example if Folder16 is in project resources
             this.BTN_Folder.ImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.BTN_Folder.Location = new System.Drawing.Point(443, 314);
